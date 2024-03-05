@@ -1,0 +1,63 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Movie",
+  "url": "/title/tt4513678/",
+  "name": "Ghostbusters: Afterlife",
+  "alternateName": "Ghostbusters: Legacy",
+  "image": "https://m.media-amazon.com/images/M/MV5BMmZiMjdlN2UtYzdiZS00YjgxLTgyZGMtYzE4ZGU5NTlkNjhhXkEyXkFqcGdeQXVyMTEyMjM2NDc2._V1_.jpg",
+  "description": "When a single mom and her two kids arrive in a small town, they begin to discover their connection to the original Ghostbusters and the secret legacy their grandfather left behind.",
+  "review": {
+    "@type": "Review",
+    "itemReviewed": { "@type": "CreativeWork", "url": "/title/tt4513678/" },
+    "author": { "@type": "Person", "name": "samuelelegolasfilippi" },
+    "dateCreated": "2021-11-01",
+    "inLanguage": "English",
+    "name": "The closing and the beginning",
+    "reviewBody": "I saw it preview last night. A film that in some points recalls the first Gostbuster, but which has its own ideology. The characters they present to us are almost all well characterized and useful to the plot. The director did a good job, given the great responsibility he had with this film. Some ideas are very bright and innovative. The first hour and a half is very beautiful, full of jokes and suspenseful scenes, the problem is the last half hour that is lost a bit by recalling the first film a lot. The soundtrack is irrelevant, apart from those two moments when you hear the original themes. Overall it is a good film, not at the levels of the first but certainly superior to the female Gostbuster.",
+    "reviewRating": {
+      "@type": "Rating",
+      "worstRating": 1,
+      "bestRating": 10,
+      "ratingValue": 7
+    }
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingCount": 99525,
+    "bestRating": 10,
+    "worstRating": 1,
+    "ratingValue": 7.3
+  },
+  "contentRating": "PG-13",
+  "genre": ["Adventure", "Comedy", "Fantasy"],
+  "datePublished": "2021-11-19",
+  "keywords": "sequel,ghost,ghostbusters,ghostbuster,teenager",
+  "trailer": {
+    "@type": "VideoObject",
+    "name": "Official Trailer",
+    "embedUrl": "/video/imdb/vi637322009",
+    "thumbnail": {
+      "@type": "ImageObject",
+      "contentUrl": "https://m.media-amazon.com/images/M/MV5BYWFhZDk5NjEtNmU4OS00NGQyLTk2N2MtNTk5YWE5NDQ2ZjcyXkEyXkFqcGdeQWRvb2xpbmhk._V1_.jpg"
+    },
+    "thumbnailUrl": "https://m.media-amazon.com/images/M/MV5BYWFhZDk5NjEtNmU4OS00NGQyLTk2N2MtNTk5YWE5NDQ2ZjcyXkEyXkFqcGdeQWRvb2xpbmhk._V1_.jpg",
+    "description": "Afterlife, when a single mom and her two kids arrive in a small town, they begin to discover their connection to the original ghostbusters and the secret legacy their grandfather left behind."
+  },
+  "actor": [
+    { "@type": "Person", "url": "/name/nm4689420/", "name": "Carrie Coon" },
+    { "@type": "Person", "url": "/name/nm0748620/", "name": "Paul Rudd" },
+    { "@type": "Person", "url": "/name/nm6016511/", "name": "Finn Wolfhard" }
+  ],
+  "director": [
+    { "@type": "Person", "url": "/name/nm0718646/", "name": "Jason Reitman" }
+  ],
+  "creator": [
+    { "@type": "Organization", "url": "/company/co0050868/" },
+    { "@type": "Organization", "url": "/company/co0309252/" },
+    { "@type": "Organization", "url": "/company/co0526864/" },
+    { "@type": "Person", "url": "/name/nm1481493/", "name": "Gil Kenan" },
+    { "@type": "Person", "url": "/name/nm0718646/", "name": "Jason Reitman" },
+    { "@type": "Person", "url": "/name/nm0000101/", "name": "Dan Aykroyd" }
+  ],
+  "duration": "PT2H4M"
+}
