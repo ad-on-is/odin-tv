@@ -1,17 +1,17 @@
-# Odin TV
+<h1 align="center">
+<img src="./assets/images/logo.svg" /><br />
+Odin TV
+</h1>
 
-A new Flutter project.
+<h4 align="center">Android TV app for Odin</h4>
 
-## Getting Started
+![screenshot](./screenshots/odin-tv.png)
 
-This project is a starting point for a Flutter application.
+## License
 
-A few resources to get you started if this is your first Flutter project:
-un de
+MIT
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+---
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+> [adisdurakovic.com](https://adisdurakovic.com) &nbsp;&middot;&nbsp;
+> GitHub [@ad-on-is](https://github.com/ad-on-is)
