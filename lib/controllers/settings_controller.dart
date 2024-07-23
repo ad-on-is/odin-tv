@@ -14,7 +14,7 @@ class SettingsController extends StateNotifier<bool> {
   }
 
   void save() {
-    settings.config.player = players[player]['title'] ?? 'nova';
+    settings.config.player = players[player]['title'] ?? 'just';
     settings.save();
     state = !state;
   }

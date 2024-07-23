@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:json_annotation/json_annotation.dart';
 part 'scrape.g.dart';
 
@@ -10,6 +12,7 @@ class Scrape {
   @JsonKey(name: 'scraper')
   @JsonKey(defaultValue: 'unknown')
   String scraper;
+  int size;
   String quality;
   List<String> info;
   List<dynamic> realdebrid;
@@ -19,6 +22,7 @@ class Scrape {
       this.magnet = '',
       this.title = '',
       this.scraper = '',
+      this.size = 0,
       this.quality = '',
       this.realdebrid = const [],
       this.info = const []});

@@ -1,25 +1,39 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:odin/data/services/db.dart';
+import 'package:odin/data/models/auth_model.dart';
 import 'package:odin/helpers.dart';
 
 class ApiService with BaseHelper {
   final Ref ref;
   final Dio dio = Dio();
-  HiveBox hive;
-  ApiService(this.ref, this.hive) {
+  AuthModel auth;
+  ApiService(this.ref, this.auth) {
     // ref.watch(authProvider);
     onInit();
   }
 
   void onInit() async {
+    (dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
+      final client = HttpClient();
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) {
+        return true;
+      };
+      return client;
+    };
     dio.interceptors
         .add(InterceptorsWrapper(onRequest: (options, handler) async {
-      var apiUrl = await hive.hive?.get('apiUrl');
-      var device = await hive.hive?.get('apiDevice');
+      var creds = await auth.getCredentials();
+      var apiUrl = creds["url"];
+      var device = creds["device"];
       options.baseUrl = '$apiUrl';
       options.headers.addAll({'Device': device});
+      options.followRedirects = true;
+
       return handler.next(options);
     }));
   }
@@ -47,7 +61,5 @@ class ApiService with BaseHelper {
   }
 }
 
-final apiProvider = Provider((ref) => ApiService(
-      ref,
-      ref.watch(hiveProvider),
-    ));
+final apiProvider =
+    Provider((ref) => ApiService(ref, ref.watch(authProvider.notifier)));

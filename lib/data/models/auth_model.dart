@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:odin/data/services/db.dart';
 import 'package:odin/helpers.dart';
@@ -15,10 +16,25 @@ class AuthModel extends StateNotifier<bool> with BaseHelper {
   AuthModel(this.ref, this.hive) : super(false);
 
   Future<bool> check() async {
-    var url = await hive.hive?.get("apiUrl");
-    var device = await hive.hive?.get("apiDevice");
+    var creds = await getCredentials();
+    var apiUrl = creds["url"];
+    var device = creds["device"];
 
-    return url != null && device != null;
+    return apiUrl != null && device != null;
+  }
+
+  Future<dynamic> getCredentials() async {
+    if (kDebugMode) {
+      return {
+        "url": "https://local-8090.add.dnmc.in",
+        "device": "ucof4e5affm2jq0"
+      };
+    }
+
+    return {
+      "url": await hive.hive?.get("apiUrl"),
+      "device": await hive.hive?.get("apiDevice")
+    };
   }
 
   Future<void> login() async {
@@ -58,7 +74,9 @@ class AuthModel extends StateNotifier<bool> with BaseHelper {
       await Dio().get('$url/device/verify/$id');
       await hive.hive?.put("apiUrl", url);
       await hive.hive?.put("apiDevice", id);
-    } catch (_) {}
+    } catch (e) {
+      logError(e, null);
+    }
 
     state = !state;
   }

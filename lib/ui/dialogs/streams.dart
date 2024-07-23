@@ -48,18 +48,16 @@ class StreamsDialogState extends ConsumerState<StreamsDialog>
 
   Color qualityToColor(String quality) {
     switch (quality) {
+      case 'HDR':
+        return AppColors.red;
       case '4K':
-        return AppColors.green;
+        return AppColors.orange;
       case '1080p':
         return AppColors.green;
       case '720p':
         return AppColors.blue;
-      case 'SD':
-        return AppColors.yellow;
-      case 'CAM':
-        return AppColors.red;
     }
-    return AppColors.blue;
+    return Colors.white;
   }
 
   @override

@@ -8,6 +8,7 @@ import 'package:odin/data/entities/scrape.dart';
 import 'package:odin/data/entities/trakt.dart';
 import 'package:odin/data/models/auth_model.dart';
 import 'package:odin/data/models/settings_model.dart';
+import 'package:odin/data/services/api.dart';
 import 'package:odin/data/services/scrape_service.dart';
 import 'package:odin/data/services/trakt_service.dart';
 import 'package:odin/helpers.dart';
@@ -27,7 +28,7 @@ class StreamUrl {
 
 class StreamsController extends StateNotifier<bool> with BaseHelper {
   ScrapeService scrapeService;
-  AuthModel auth;
+  ApiService api;
   TraktService traktService;
   DetailController detail;
   SettingsModel settings;
@@ -44,6 +45,7 @@ class StreamsController extends StateNotifier<bool> with BaseHelper {
   String playerTitle = '';
 
   Map<String, List<Scrape>> scrapes = {
+    'HDR': [],
     '4K': [],
     '1080p': [],
     '720p': [],
@@ -52,6 +54,7 @@ class StreamsController extends StateNotifier<bool> with BaseHelper {
   };
 
   Map<String, List<RealDebrid>> links = {
+    'HDR': [],
     '4K': [],
     '1080p': [],
     '720p': [],
@@ -59,7 +62,7 @@ class StreamsController extends StateNotifier<bool> with BaseHelper {
     'CAM': []
   };
 
-  StreamsController(this.ref, this.auth, this.scrapeService, this.traktService,
+  StreamsController(this.ref, this.api, this.scrapeService, this.traktService,
       this.settings, this.detail)
       : super(false);
 
@@ -151,6 +154,9 @@ class StreamsController extends StateNotifier<bool> with BaseHelper {
     for (Scrape s in await scrapeService.scrape(
         item: item!, show: show, season: season, doCache: cache)) {
       String q = s.quality;
+      if (q == '4K' && (s.info.contains('HDR') || s.info.contains('DV'))) {
+        q = 'HDR';
+      }
 
       scrapes[q]!.add(s);
     }
@@ -202,7 +208,7 @@ class StreamsController extends StateNotifier<bool> with BaseHelper {
 final streamsController = StateNotifierProvider.autoDispose((ref) =>
     StreamsController(
         ref,
-        ref.watch(authProvider.notifier),
+        ref.watch(apiProvider),
         ref.watch(scrapeProvider),
         ref.watch(traktProvider),
         ref.watch(settingsProvider),

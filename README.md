@@ -7,6 +7,18 @@ Odin TV
 
 ![screenshot](./screenshots/odin-tv.png)
 
+## Video Player
+
+Odin TV **does not include a video player**, since there are better players out there that support audio-passthrough, etc.
+
+Recommended players:
+
+- Just (default)
+- Nova
+- Kodi
+- MX Player
+- VLC
+
 ## License
 
 MIT

@@ -52,8 +52,6 @@ class TraktService with BaseHelper {
   }
 
   Future<dynamic> _scrobble(String endpoint, dynamic data) async {
-    // final res = await dio.post('/scrobble/$endpoint', data: data);
-    logInfo(json.encode(data));
     return (await api.post("/_trakt/scrobble/$endpoint", data))
         .match((l) => null, (r) => r);
   }

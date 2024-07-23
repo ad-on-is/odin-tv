@@ -42,7 +42,10 @@ dependencies:
   mime:
   path_provider: 
   font_awesome_flutter: 
-  helpers: 1.2.3
+  helpers:
+    git:
+      url: https://github.com/mitch2na/helpers.git
+      ref: main
   localstorage: 
   logging:
   flutter_riverpod:

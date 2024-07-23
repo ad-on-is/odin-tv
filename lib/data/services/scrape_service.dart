@@ -8,9 +8,9 @@ import 'package:odin/helpers.dart';
 
 class ScrapeService extends StateNotifier<bool> with BaseHelper {
   final DB db;
-  final HiveBox hive;
+  final ApiService api;
   final Ref ref;
-  ScrapeService(this.ref, this.db, this.hive) : super(false);
+  ScrapeService(this.ref, this.db, this.api) : super(false);
 
   Future<List<Scrape>> scrape(
       {required Trakt item,
@@ -47,14 +47,21 @@ class ScrapeService extends StateNotifier<bool> with BaseHelper {
       };
     }
 
-    final api = ref.watch(apiProvider);
-
     final res = await api.post('/scrape', data);
 
     return res.match(
         (l) => [], (r) => List.from(r).map((e) => Scrape.fromJson(e)).toList());
   }
+
+  Future<String> unrestrict(String magnet) async {
+    var data = await api.post('/unrestrict', {'magnet': magnet});
+    var res = data.match((l) => "", (r) => r);
+    if (res["download"] != null) {
+      return res["download"];
+    }
+    return "";
+  }
 }
 
-final scrapeProvider = Provider((ref) =>
-    ScrapeService(ref, ref.watch(dbProvider), ref.watch(hiveProvider)));
+final scrapeProvider = Provider(
+    (ref) => ScrapeService(ref, ref.watch(dbProvider), ref.watch(apiProvider)));

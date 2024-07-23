@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:odin/data/models/auth_model.dart';
 import 'package:odin/data/services/db.dart';
 import 'package:odin/helpers.dart';
 
@@ -7,19 +8,20 @@ class TmdbService with BaseHelper {
   String url = 'https://api.themoviedb.org/3';
   String imageURL = 'https://image.tmdb.org/t/p/w500';
   final DB db;
-  final HiveBox hive;
+  final AuthModel auth;
   final Ref ref;
   Dio dio = Dio();
 
-  TmdbService(this.ref, this.db, this.hive) {
+  TmdbService(this.ref, this.db, this.auth) {
     dio.options.baseUrl = url;
     dio.interceptors.add(InterceptorsWrapper(onError: (e, handler) {
       logWarning(e.requestOptions.uri);
       logError(e, e.stackTrace);
       return handler.next(e);
     }, onRequest: (options, handler) async {
-      var apiUrl = await hive.hive?.get('apiUrl');
-      var device = await hive.hive?.get('apiDevice');
+      var creds = await auth.getCredentials();
+      var apiUrl = creds["url"];
+      var device = creds["device"];
       options.baseUrl = '$apiUrl';
       options.headers.addAll({'Device': device});
       return handler.next(options);
@@ -53,5 +55,5 @@ class TmdbService with BaseHelper {
   }
 }
 
-final tmdbProvider = Provider(
-    (ref) => TmdbService(ref, ref.watch(dbProvider), ref.watch(hiveProvider)));
+final tmdbProvider = Provider((ref) =>
+    TmdbService(ref, ref.watch(dbProvider), ref.watch(authProvider.notifier)));
