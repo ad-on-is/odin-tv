@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
-import 'package:dio/io.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:odin/data/models/auth_model.dart';
@@ -17,14 +14,14 @@ class ApiService with BaseHelper {
   }
 
   void onInit() async {
-    (dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
-      final client = HttpClient();
-      client.badCertificateCallback =
-          (X509Certificate cert, String host, int port) {
-        return true;
-      };
-      return client;
-    };
+    // (dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
+    //   final client = HttpClient();
+    //   client.badCertificateCallback =
+    //       (X509Certificate cert, String host, int port) {
+    //     return true;
+    //   };
+    //   return client;
+    // };
     dio.interceptors
         .add(InterceptorsWrapper(onRequest: (options, handler) async {
       var creds = await auth.getCredentials();

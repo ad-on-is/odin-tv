@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:odin/data/entities/scrape.dart';
 import 'package:odin/data/entities/trakt.dart';
@@ -51,15 +50,6 @@ class ScrapeService extends StateNotifier<bool> with BaseHelper {
 
     return res.match(
         (l) => [], (r) => List.from(r).map((e) => Scrape.fromJson(e)).toList());
-  }
-
-  Future<String> unrestrict(String magnet) async {
-    var data = await api.post('/unrestrict', {'magnet': magnet});
-    var res = data.match((l) => "", (r) => r);
-    if (res["download"] != null) {
-      return res["download"];
-    }
-    return "";
   }
 }
 

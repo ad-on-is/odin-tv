@@ -1,14 +1,17 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:helpers/helpers.dart';
+import 'package:mqtt_client/mqtt_client.dart';
 import 'package:odin/controllers/detail_controller.dart';
 import 'package:odin/data/entities/realdebrid.dart';
 import 'package:odin/data/entities/scrape.dart';
 import 'package:odin/data/entities/trakt.dart';
-import 'package:odin/data/models/auth_model.dart';
 import 'package:odin/data/models/settings_model.dart';
 import 'package:odin/data/services/api.dart';
+import 'package:odin/data/services/mqtt.dart';
 import 'package:odin/data/services/scrape_service.dart';
 import 'package:odin/data/services/trakt_service.dart';
 import 'package:odin/helpers.dart';
@@ -29,6 +32,7 @@ class StreamUrl {
 class StreamsController extends StateNotifier<bool> with BaseHelper {
   ScrapeService scrapeService;
   ApiService api;
+  MQTTService mqtt;
   TraktService traktService;
   DetailController detail;
   SettingsModel settings;
@@ -62,8 +66,8 @@ class StreamsController extends StateNotifier<bool> with BaseHelper {
     'CAM': []
   };
 
-  StreamsController(this.ref, this.api, this.scrapeService, this.traktService,
-      this.settings, this.detail)
+  StreamsController(this.ref, this.api, this.mqtt, this.scrapeService,
+      this.traktService, this.settings, this.detail)
       : super(false);
 
   void init(Trakt item, Trakt? show, Trakt? season) async {
@@ -151,15 +155,37 @@ class StreamsController extends StateNotifier<bool> with BaseHelper {
 
   void getUrls({bool cache = true}) async {
     logWarning("getting Urls");
-    for (Scrape s in await scrapeService.scrape(
-        item: item!, show: show, season: season, doCache: cache)) {
+    String topic = 'odin-movieshow/movie/${item!.ids.trakt}';
+    if (item!.type == 'episode') {
+      topic = 'odin-movieshow/episode//${item!.ids.trakt}';
+    }
+    await mqtt.initializeMQTTClient("wss://mqtt.dnmc.in", 443, topic);
+    mqtt.client.updates!.listen((dynamic t) {
+      final MqttPublishMessage recMess = t[0].payload;
+      final message =
+          MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+      final s = Scrape.fromJson(json.decode(message));
       String q = s.quality;
       if (q == '4K' && (s.info.contains('HDR') || s.info.contains('DV'))) {
         q = 'HDR';
       }
-
       scrapes[q]!.add(s);
-    }
+      state = !state;
+      // logInfo('message : ${s.quality}');
+    });
+
+    await scrapeService.scrape(
+        item: item!, show: show, season: season, doCache: cache);
+
+    // for (Scrape s in await scrapeService.scrape(
+    //     item: item!, show: show, season: season, doCache: cache)) {
+    //   String q = s.quality;
+    //   if (q == '4K' && (s.info.contains('HDR') || s.info.contains('DV'))) {
+    //     q = 'HDR';
+    //   }
+
+    //   scrapes[q]!.add(s);
+    // }
 
     status = "Done";
 
@@ -205,11 +231,13 @@ class StreamsController extends StateNotifier<bool> with BaseHelper {
   }
 }
 
-final streamsController = StateNotifierProvider.autoDispose((ref) =>
-    StreamsController(
-        ref,
-        ref.watch(apiProvider),
-        ref.watch(scrapeProvider),
-        ref.watch(traktProvider),
-        ref.watch(settingsProvider),
-        ref.watch(detailController.notifier)));
+final streamsController = StateNotifierProvider.autoDispose((ref) {
+  return StreamsController(
+      ref,
+      ref.watch(apiProvider),
+      ref.watch(mqttProvider),
+      ref.watch(scrapeProvider),
+      ref.watch(traktProvider),
+      ref.watch(settingsProvider),
+      ref.watch(detailController.notifier));
+});

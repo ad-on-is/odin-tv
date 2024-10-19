@@ -1,10 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fpdart/fpdart.dart';
 import 'package:odin/data/entities/trakt.dart';
 import 'package:odin/data/entities/user.dart';
 import 'package:odin/data/services/api.dart';
@@ -27,7 +24,7 @@ class TraktService with BaseHelper {
 
   WatchedItems watchedItems;
 
-  TraktService(this.ref, this.db, this.hive, this.watchedItems, this.api) {}
+  TraktService(this.ref, this.db, this.hive, this.watchedItems, this.api);
 
   Future<void> setWatched(
       {required Trakt item, Trakt? show, Trakt? season}) async {

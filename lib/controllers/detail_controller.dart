@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:odin/data/entities/trakt.dart';
 import 'package:odin/data/models/auth_model.dart';
+import 'package:odin/data/services/mqtt.dart';
 import 'package:odin/data/services/trakt_service.dart';
 import 'package:odin/helpers.dart';
 
@@ -29,6 +30,7 @@ class DetailController extends StateNotifier<bool> with BaseHelper {
       seasonButtonNode.requestFocus();
       getEpisodeImages();
     }
+    ref.read(mqttProvider).disConnectMQTT();
     // seasonWorker = ever(season, (_) {
     //   getEpisodeImages(season.value);
     // });
