@@ -82,13 +82,6 @@ class MQTTService with BaseHelper {
 
     try {
       client.subscribe(topic!, MqttQos.atLeastOnce);
-      client.updates!.listen((dynamic t) {
-        final MqttPublishMessage recMess = t[0].payload;
-        final message =
-            MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
-
-        // logInfo('message : $message');
-      });
     } catch (e) {
       logWarning(e.toString());
     }

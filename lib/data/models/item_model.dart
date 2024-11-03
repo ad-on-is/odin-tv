@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:helpers/helpers.dart';
 import 'package:odin/data/services/trakt_service.dart';
 
 import 'package:odin/data/entities/trakt.dart';

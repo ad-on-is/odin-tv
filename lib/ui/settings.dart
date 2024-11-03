@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:helpers/helpers.dart';
-import 'package:odin/data/models/auth_model.dart';
 import 'package:odin/data/models/settings_model.dart';
 import 'package:odin/theme.dart';
 

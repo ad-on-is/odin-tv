@@ -5,7 +5,6 @@ import 'package:helpers/helpers/widgets/text.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:odin/controllers/streams_controller.dart';
 import 'package:odin/data/entities/trakt.dart';
-import 'package:odin/data/services/mqtt.dart';
 import 'package:odin/helpers.dart';
 import 'package:odin/theme.dart';
 import 'package:odin/ui/detail/widgets.dart';
