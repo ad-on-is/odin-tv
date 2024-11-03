@@ -57,15 +57,6 @@ class StreamsController extends StateNotifier<bool> with BaseHelper {
     'CAM': []
   };
 
-  Map<String, List<RealDebrid>> links = {
-    'HDR': [],
-    '4K': [],
-    '1080p': [],
-    '720p': [],
-    'SD': [],
-    'CAM': []
-  };
-
   StreamsController(this.ref, this.api, this.mqtt, this.scrapeService,
       this.traktService, this.settings, this.detail)
       : super(false);
@@ -169,23 +160,13 @@ class StreamsController extends StateNotifier<bool> with BaseHelper {
       if (q == '4K' && (s.info.contains('HDR') || s.info.contains('DV'))) {
         q = 'HDR';
       }
+      logInfo(s.title);
       scrapes[q]!.add(s);
       state = !state;
-      // logInfo('message : ${s.quality}');
     });
 
     await scrapeService.scrape(
         item: item!, show: show, season: season, doCache: cache);
-
-    // for (Scrape s in await scrapeService.scrape(
-    //     item: item!, show: show, season: season, doCache: cache)) {
-    //   String q = s.quality;
-    //   if (q == '4K' && (s.info.contains('HDR') || s.info.contains('DV'))) {
-    //     q = 'HDR';
-    //   }
-
-    //   scrapes[q]!.add(s);
-    // }
 
     status = "Done";
 

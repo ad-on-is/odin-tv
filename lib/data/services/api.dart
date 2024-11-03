@@ -31,6 +31,7 @@ class ApiService with BaseHelper {
       options.headers.addAll({'Device': device});
       options.connectTimeout = const Duration(minutes: 15);
       options.receiveTimeout = const Duration(minutes: 15);
+      options.sendTimeout = const Duration(minutes: 15);
       options.followRedirects = true;
 
       return handler.next(options);

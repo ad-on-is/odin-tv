@@ -28,8 +28,10 @@ class MQTTService with BaseHelper {
       ..onDisconnected = onDisConnected
       ..setProtocolV311()
       ..onSubscribed = onSubscribed
-      ..keepAlivePeriod = 20
+      ..keepAlivePeriod = 60 * 15
       ..useWebSocket = true
+      ..autoReconnect = true
+      ..resubscribeOnAutoReconnect = true
       // ..secure = true
       ..onConnected = onConnected;
 

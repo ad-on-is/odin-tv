@@ -11,7 +11,7 @@ class ScrapeService extends StateNotifier<bool> with BaseHelper {
   final Ref ref;
   ScrapeService(this.ref, this.db, this.api) : super(false);
 
-  Future<List<Scrape>> scrape(
+  Future<void> scrape(
       {required Trakt item,
       Trakt? show,
       Trakt? season,
@@ -46,10 +46,7 @@ class ScrapeService extends StateNotifier<bool> with BaseHelper {
       };
     }
 
-    final res = await api.post('/scrape', data);
-
-    return res.match(
-        (l) => [], (r) => List.from(r).map((e) => Scrape.fromJson(e)).toList());
+    await api.post('/scrape', data);
   }
 }
 
