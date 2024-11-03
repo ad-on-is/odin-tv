@@ -66,7 +66,7 @@ class ListSetting {
 class ItemsProvider extends StateNotifier<List<Trakt>> {
   final Ref ref;
   final TraktService traktService;
-  final appRefreshProvider;
+  final dynamic appRefreshProvider;
   int page = 0;
   // List<Trakt> items = [];
   ItemsProvider(this.ref, this.traktService, this.appRefreshProvider)

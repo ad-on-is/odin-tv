@@ -27,7 +27,7 @@ class EnsureVisible extends StatefulWidget {
 }
 
 class _EnsureVisibleState extends State<EnsureVisible> {
-  KeyEventResult _handleKey(BuildContext context, RawKeyEvent rawKeyEvent) {
+  KeyEventResult _handleKey(BuildContext context, KeyEvent rawKeyEvent) {
     if (rawKeyEvent.logicalKey == LogicalKeyboardKey.arrowRight &&
         widget.isLast) {
       return KeyEventResult.handled;
@@ -41,7 +41,7 @@ class _EnsureVisibleState extends State<EnsureVisible> {
 
   @override
   Widget build(BuildContext context) => Focus(
-        onKey: (_, rawKeyEvent) => _handleKey(context, rawKeyEvent),
+        onKeyEvent: (_, rawKeyEvent) => _handleKey(context, rawKeyEvent),
         canRequestFocus: false,
         onFocusChange: (focused) {
           if (focused) {
@@ -84,7 +84,7 @@ class EnsureVisibleList extends StatefulWidget {
 }
 
 class _EnsureVisibleListState extends State<EnsureVisibleList> {
-  KeyEventResult _handleKey(BuildContext context, RawKeyEvent rawKeyEvent) {
+  KeyEventResult _handleKey(BuildContext context, KeyEvent rawKeyEvent) {
     if (rawKeyEvent.logicalKey == LogicalKeyboardKey.arrowRight &&
         widget.isLast) {
       return KeyEventResult.handled;
@@ -98,7 +98,7 @@ class _EnsureVisibleListState extends State<EnsureVisibleList> {
 
   @override
   Widget build(BuildContext context) => Focus(
-        onKey: (_, rawKeyEvent) => _handleKey(context, rawKeyEvent),
+        onKeyEvent: (_, rawKeyEvent) => _handleKey(context, rawKeyEvent),
         canRequestFocus: false,
         onFocusChange: (focused) {
           if (focused) {

@@ -14,16 +14,15 @@ class AppThemes {
       fontFamily: GoogleFonts.lato().fontFamily,
       textButtonTheme: TextButtonThemeData(
         style: ButtonStyle(
-            elevation: MaterialStateProperty.all(0),
-            padding: MaterialStateProperty.all(
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 7)),
-            backgroundColor:
-                MaterialStateProperty.all(Colors.white.withAlpha(0)),
-            foregroundColor: MaterialStateProperty.all(Colors.white),
-            overlayColor: MaterialStateProperty.all(Colors.white.withAlpha(70)),
+            elevation: const WidgetStatePropertyAll(0),
+            padding: const WidgetStatePropertyAll(
+                EdgeInsets.symmetric(horizontal: 20, vertical: 7)),
+            backgroundColor: WidgetStatePropertyAll(Colors.white.withAlpha(0)),
+            foregroundColor: const WidgetStatePropertyAll(Colors.white),
+            overlayColor: WidgetStatePropertyAll(Colors.white.withAlpha(70)),
             textStyle:
-                MaterialStateProperty.all(const TextStyle(color: Colors.black)),
-            shape: MaterialStateProperty.all(
+                const WidgetStatePropertyAll(TextStyle(color: Colors.black)),
+            shape: WidgetStatePropertyAll(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(50),
                 side: BorderSide(color: Colors.white.withAlpha(70), width: 2),
