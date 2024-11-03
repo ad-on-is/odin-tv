@@ -13,6 +13,7 @@ class DetailController extends StateNotifier<bool> with BaseHelper {
   final Ref ref;
   int episode = 0;
   int season = 0;
+  List<Trakt> seasons = [];
   final TraktService traktService;
   final TmdbService tmdbService;
   final AuthModel auth;
@@ -28,6 +29,9 @@ class DetailController extends StateNotifier<bool> with BaseHelper {
       playButtonNode.requestFocus();
     } else {
       seasonButtonNode.requestFocus();
+      seasons.addAll(await traktService.getSeasons(item!.ids.trakt));
+      logInfo(seasons.length.toString());
+      state = !state;
       getEpisodeImages();
     }
     ref.read(mqttProvider).disConnectMQTT();
@@ -38,9 +42,11 @@ class DetailController extends StateNotifier<bool> with BaseHelper {
     // state = !state;
   }
 
+  Future<void> getTraktSeasons() async {}
+
   void getEpisodeImages() async {
     episodeImages = await tmdbService.getEpisodeImages(
-        item?.ids.tmdb ?? 0, item?.seasons.map((s) => s.number).toList() ?? []);
+        item?.ids.tmdb ?? 0, seasons.map((s) => s.number).toList());
     state = !state;
   }
 

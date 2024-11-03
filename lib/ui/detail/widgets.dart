@@ -330,50 +330,54 @@ class SeasonsAndEpisodes extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     ref.watch(detailController);
-    List<Trakt> seasons = item.seasons;
-    return Column(
-      children: [
-        const Align(
-          alignment: Alignment.topLeft,
-          child: Headline4("SEASONS & EPISODES"),
-        ),
-        const SizedBox(height: 20),
-        SizedBox(
-          height: 50,
-          child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: seasons.length,
-              itemBuilder: (ctx, index) => EnsureVisible(
-                  isFirst: index == 0,
-                  isLast: index == seasons.length - 1,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 10),
-                    child: TextButton(
-                      child: Row(children: [
-                        CaptionText('Season ${seasons[index].number}'),
-                        ref.watch(watchedProvider.notifier).items.contains(
-                                    '${BaseHelper.hiveKey(item.type, item.ids.trakt, seasons[index].number)}full') ||
-                                seasons[index].episodeCount > 0 &&
-                                    seasons[index].episodeCount ==
-                                        seasons[index]
-                                            .episodes
-                                            .where((e) => e.watched)
-                                            .length
-                            ? const Padding(
-                                padding: EdgeInsets.only(left: 5),
-                                child: Watched(iconOnly: true))
-                            : const SizedBox()
-                      ]),
-                      onPressed: () {
-                        ref.read(detailController.notifier).setSeason(index);
-                      },
-                    ),
-                  ))),
-        ),
-        Episodes(
-            season: seasons[ref.watch(detailController.notifier).season],
-            show: item)
-      ],
-    );
+    List<Trakt> seasons = ref.read(detailController.notifier).seasons;
+    return seasons.isEmpty
+        ? const SizedBox()
+        : Column(
+            children: [
+              const Align(
+                alignment: Alignment.topLeft,
+                child: Headline4("SEASONS & EPISODES"),
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                height: 50,
+                child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: seasons.length,
+                    itemBuilder: (ctx, index) => EnsureVisible(
+                        isFirst: index == 0,
+                        isLast: index == seasons.length - 1,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: TextButton(
+                            child: Row(children: [
+                              CaptionText('Season ${seasons[index].number}'),
+                              ref.watch(watchedProvider.notifier).items.contains(
+                                          '${BaseHelper.hiveKey(item.type, item.ids.trakt, seasons[index].number)}full') ||
+                                      seasons[index].episodeCount > 0 &&
+                                          seasons[index].episodeCount ==
+                                              seasons[index]
+                                                  .episodes
+                                                  .where((e) => e.watched)
+                                                  .length
+                                  ? const Padding(
+                                      padding: EdgeInsets.only(left: 5),
+                                      child: Watched(iconOnly: true))
+                                  : const SizedBox()
+                            ]),
+                            onPressed: () {
+                              ref
+                                  .read(detailController.notifier)
+                                  .setSeason(index);
+                            },
+                          ),
+                        ))),
+              ),
+              Episodes(
+                  season: seasons[ref.watch(detailController.notifier).season],
+                  show: item)
+            ],
+          );
   }
 }

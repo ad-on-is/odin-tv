@@ -79,6 +79,11 @@ class TraktService with BaseHelper {
     };
   }
 
+  Future<List<Trakt>> getSeasons(int showId) async {
+    return (await api.get("/traktseasons/$showId"))
+        .match((l) => [], (r) => _getItems(r));
+  }
+
   Future<List<Trakt>> _getItems(dynamic map) async {
     List<Trakt> list = List.from(map).map((e) {
       var elem = e;

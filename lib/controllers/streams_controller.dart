@@ -156,8 +156,8 @@ class StreamsController extends StateNotifier<bool> with BaseHelper {
   void getUrls({bool cache = true}) async {
     logWarning("getting Urls");
     String topic = 'odin-movieshow/movie/${item!.ids.trakt}';
-    if (item!.type == 'episode') {
-      topic = 'odin-movieshow/episode//${item!.ids.trakt}';
+    if (show != null) {
+      topic = 'odin-movieshow/episode/${item!.ids.trakt}';
     }
     await mqtt.initializeMQTTClient("wss://mqtt.dnmc.in", 443, topic);
     mqtt.client.updates!.listen((dynamic t) {
@@ -199,6 +199,7 @@ class StreamsController extends StateNotifier<bool> with BaseHelper {
     scrapes.forEach((q, values) {
       for (var s in values) {
         for (var rd in s.realdebrid) {
+          if (rd?["filename"] == null) continue;
           var su = StreamUrl(
               rd["filename"], rd["filesize"], rd["download"], s.info, q);
           all.add(su);

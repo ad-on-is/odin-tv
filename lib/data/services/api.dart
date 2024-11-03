@@ -29,6 +29,8 @@ class ApiService with BaseHelper {
       var device = creds["device"];
       options.baseUrl = '$apiUrl';
       options.headers.addAll({'Device': device});
+      options.connectTimeout = const Duration(minutes: 15);
+      options.receiveTimeout = const Duration(minutes: 15);
       options.followRedirects = true;
 
       return handler.next(options);
