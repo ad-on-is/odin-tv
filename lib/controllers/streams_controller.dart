@@ -6,7 +6,6 @@ import 'package:android_intent_plus/android_intent.dart';
 import 'package:helpers/helpers.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:odin/controllers/detail_controller.dart';
-import 'package:odin/data/entities/realdebrid.dart';
 import 'package:odin/data/entities/scrape.dart';
 import 'package:odin/data/entities/trakt.dart';
 import 'package:odin/data/models/settings_model.dart';

@@ -82,7 +82,7 @@ class Buttons extends ConsumerWidget {
           icon: const Icon(FontAwesomeIcons.youtube,
               size: 15, color: Colors.white),
           onPress: () {
-            // model.playTrailer();
+            controller.playTrailer();
           },
         ),
         const SizedBox(width: 20),

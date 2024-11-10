@@ -1,3 +1,5 @@
+import 'package:android_intent_plus/android_intent.dart';
+import 'package:android_intent_plus/flag.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:odin/data/entities/trakt.dart';
@@ -50,8 +52,21 @@ class DetailController extends StateNotifier<bool> with BaseHelper {
     state = !state;
   }
 
-  void playTrailer() {
-    // mediaItemModel.playTrailer(mediaItem);
+  Future<void> playTrailer() async {
+    const intent = AndroidIntent(
+      action: 'action_view',
+      package: "com.teamsmart.videomanager.tv",
+      data: "https://youtube.com/watch?v=9vN6DHB6bJc",
+      arguments: {
+        'force_fullscreen': 'true',
+        'finish_on_end': 'true',
+      },
+      flags: [
+        Flag.FLAG_ACTIVITY_MULTIPLE_TASK,
+        Flag.FLAG_ACTIVITY_NO_HISTORY,
+      ],
+    );
+    await intent.launch();
   }
 
   String getEpisodeImage(int season, int episode) {

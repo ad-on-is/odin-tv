@@ -23,7 +23,6 @@ class HomePage extends ConsumerWidget {
     provider.whenData((value) {
       sections = value;
     });
-    // final sections = ref.watch(homeSectionProvider);
 
     return SingleChildScrollView(
         child: Column(
