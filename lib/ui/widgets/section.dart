@@ -3,11 +3,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:helpers/helpers.dart';
 import 'package:helpers/helpers/widgets/text.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:infinite_carousel/infinite_carousel.dart';
 import 'package:odin/controllers/app_controller.dart';
 import 'package:odin/data/models/item_model.dart';
 import 'package:odin/theme.dart';
@@ -34,10 +32,6 @@ class Section extends HookConsumerWidget {
     if (e.filterWatched) {
       items = items.where((element) => element.watched == false).toList();
     }
-    final controller = useState(InfiniteScrollController());
-    final fn = useFocusNode();
-    final dur = useState(300);
-    final dir = useState("");
     double extent = e.big ? 220 : 90;
 
     return Column(
@@ -64,9 +58,10 @@ class Section extends HookConsumerWidget {
               )
             : Container(
                 transform: Matrix4.translationValues(0, -10, 0),
-                height: 180,
-                width: double.infinity,
+                height: e.big ? 170 : 180,
+                // width: double.infinity,
                 child: OdinCarousel(
+                    key: Key("section ${e.title}"),
                     itemBuilder: (context, itemIndex, realIndex, controller) {
                       final currentOffset = extent * realIndex;
                       const maxScale = 1;
@@ -78,7 +73,7 @@ class Section extends HookConsumerWidget {
                           final diff = (controller.offset - currentOffset);
 
                           final carouselRatio = extent / fallOff;
-                          double r = (maxScale - (diff / carouselRatio));
+                          // double r = (maxScale - (diff / carouselRatio));
                           double s = (maxScale - (diff / carouselRatio).abs());
 
                           double f = s;
@@ -109,6 +104,16 @@ class Section extends HookConsumerWidget {
                       );
                     },
                     extent: extent,
+                    onIndexChanged: (index) {
+                      ref.read(selectedItemProvider.notifier).state =
+                          items[index];
+                    },
+                    onEnter: () {
+                      final item = ref.read(selectedItemProvider);
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => Detail(item: item),
+                      ));
+                    },
                     keys: const [
                       PhysicalKeyboardKey.arrowLeft,
                       PhysicalKeyboardKey.arrowRight

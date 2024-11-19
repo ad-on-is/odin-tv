@@ -42,12 +42,10 @@ class PosterCover extends HookConsumerWidget {
               ),
               imageBuilder: (context, imageProvider) => ClipRRect(
                   borderRadius: BorderRadius.circular(7),
-                  child: Container(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(5),
-                      child: Image(
-                        image: imageProvider,
-                      ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(5),
+                    child: Image(
+                      image: imageProvider,
                     ),
                   )),
               placeholder: (context, url) => Container(

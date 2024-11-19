@@ -40,13 +40,11 @@ class BackdropCover extends HookConsumerWidget {
             ),
             imageBuilder: (context, imageProvider) => ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Container(
-                  // padding: const EdgeInsets.all(2),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image(
-                      image: imageProvider,
-                    ),
+                // padding: const EdgeInsets.all(2),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image(
+                    image: imageProvider,
                   ),
                 )),
             placeholder: (_, __) => Container(

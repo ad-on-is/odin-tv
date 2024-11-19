@@ -80,6 +80,7 @@ class App extends HookConsumerWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 0, vertical: 5),
                         focusColor: Colors.white.withAlpha(40),
+                        splashRadius: 20,
                         focusNode: menufocus[0],
                         icon: Icon(FontAwesomeIcons.gear,
                             size: 10, color: AppColors.purple),

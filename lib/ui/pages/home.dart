@@ -25,27 +25,28 @@ class HomePage extends HookConsumerWidget {
     List<SectionItem> sections = [];
     provider.whenData((value) {
       sections = value;
-      for (var i = 0; i < sections.length; i++) {
-        sections[i].big = false;
-      }
     });
 
-    double extent = 235;
+    double extent = 275;
 
     return sections.isEmpty
         ? const SizedBox()
         : SizedBox(
             height: extent * sections.length,
             child: OdinCarousel(
+                key: const Key("home"),
                 itemBuilder: (context, itemIndex, realIndex, controller) {
                   return SizedBox(
                       height: 100, child: Section(e: sections[itemIndex]));
                 },
-                extent: 235,
+                extent: extent,
                 keys: const [
                   PhysicalKeyboardKey.arrowUp,
                   PhysicalKeyboardKey.arrowDown
                 ],
+                onIndexChanged: (index) {
+                  print(index);
+                },
                 count: sections.length,
                 axis: Axis.vertical));
   }
