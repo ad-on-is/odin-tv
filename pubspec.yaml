@@ -31,7 +31,8 @@ dependencies:
     sdk: flutter
   android_intent_plus:
   animations:
-  carousel_slider:
+  flutter_animate:
+  infinite_carousel:
   cached_network_image:
   dio:
   mqtt_client:

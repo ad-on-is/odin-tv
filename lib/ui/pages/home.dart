@@ -1,19 +1,23 @@
+import 'dart:ffi';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/services.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:odin/controllers/home_controller.dart';
 import 'package:odin/data/models/item_model.dart';
+import 'package:odin/ui/focusnodes.dart';
+import 'package:odin/ui/widgets/carousel.dart';
 import 'package:odin/ui/widgets/section.dart';
 
-class HomePage extends ConsumerWidget {
+class HomePage extends HookConsumerWidget {
   const HomePage({Key? key}) : super(key: key);
 
-  // @override
-  // Widget build(BuildContext context, ref) {
-  //   final provider = ref.watch(homeSectionProvider);
-
-  //   List<SectionItem> sections = [];
-
-  // }
+  toggleMenuFocus(bool focus) {
+    for (var i = 0; i < menufocus.length; i++) {
+      menufocus[i].canRequestFocus = focus;
+    }
+  }
 
   @override
   Widget build(BuildContext context, ref) {
@@ -22,15 +26,32 @@ class HomePage extends ConsumerWidget {
     List<SectionItem> sections = [];
     provider.whenData((value) {
       sections = value;
+      for (var i = 0; i < sections.length; i++) {
+        sections[i].big = false;
+      }
     });
 
-    return SingleChildScrollView(
-        child: Column(
-      children: sections
-          .map((SectionItem e) => Section(
-                e: e,
-              ))
-          .toList(),
-    ));
+    return sections.isEmpty
+        ? const SizedBox(
+            height: 235,
+          )
+        : SizedBox(
+            height: 235 * (sections.length - 2) * 1.0,
+            child: OdinCarousel(
+              key: const Key("home"),
+              itemBuilder: (context, itemIndex, realIndex, controller) {
+                return SizedBox(
+                    height: 100, child: Section(e: sections[itemIndex]));
+              },
+              extent: 255,
+              onIndexChanged: (index) => {print(index)},
+              count: sections.length,
+              axis: Axis.vertical,
+              keys: const [
+                PhysicalKeyboardKey.arrowDown,
+                PhysicalKeyboardKey.arrowUp
+              ],
+            ),
+          );
   }
 }

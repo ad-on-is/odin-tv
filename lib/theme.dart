@@ -6,7 +6,10 @@ class AppThemes {
 
   static ThemeData defaultTheme = ThemeData(
       // primarySwatch: Colors.orange,
-      appBarTheme: AppBarTheme(color: AppColors.darkGray, elevation: 0),
+      appBarTheme: AppBarTheme(
+        color: AppColors.darkGray,
+        elevation: 0,
+      ),
       primaryColor: AppColors.primary,
 
       // accentColor: AppColors.primary,
@@ -16,16 +19,17 @@ class AppThemes {
         style: ButtonStyle(
             elevation: const WidgetStatePropertyAll(0),
             padding: const WidgetStatePropertyAll(
-                EdgeInsets.symmetric(horizontal: 20, vertical: 7)),
+                EdgeInsets.symmetric(horizontal: 15, vertical: 2)),
             backgroundColor: WidgetStatePropertyAll(Colors.white.withAlpha(0)),
-            foregroundColor: const WidgetStatePropertyAll(Colors.white),
-            overlayColor: WidgetStatePropertyAll(Colors.white.withAlpha(70)),
+            foregroundColor: WidgetStatePropertyAll(AppColors.purple),
+            overlayColor:
+                WidgetStatePropertyAll(AppColors.purple.withAlpha(30)),
             textStyle:
-                const WidgetStatePropertyAll(TextStyle(color: Colors.black)),
+                WidgetStatePropertyAll(TextStyle(color: AppColors.purple)),
             shape: WidgetStatePropertyAll(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(50),
-                side: BorderSide(color: Colors.white.withAlpha(70), width: 2),
+                side: BorderSide(color: Colors.white.withAlpha(0), width: 1),
               ),
             )
             // shape: MaterialStateProperty.all(Border.cir)
@@ -36,6 +40,7 @@ class AppThemes {
           highlightColor: Colors.transparent,
           splashColor: Colors.transparent,
           buttonColor: Colors.white,
+          textTheme: ButtonTextTheme.primary,
           // textTheme: TextTheme,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(50),
@@ -101,7 +106,7 @@ class AppThemes {
 
 class AppColors {
   static Color primary = blue;
-  static Color darkGray = const Color.fromRGBO(26, 27, 38, 1);
+  static Color darkGray = const Color.fromRGBO(17, 17, 27, 1);
   static Color lightGray = gray2;
   static Color turquoise = const Color.fromRGBO(42, 195, 222, 1);
   static Color red = const Color.fromRGBO(247, 118, 142, 1);

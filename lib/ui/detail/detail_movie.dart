@@ -64,38 +64,41 @@ class Buttons extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final controller = ref.read(detailController.notifier);
-    return Row(
-      children: [
-        ButtonWithIcon('Play',
-            icon: const Icon(FontAwesomeIcons.play, size: 15),
-            node: controller.playButtonNode, onPress: () async {
-          showDialog(
-              context: context,
-              builder: (context) => Dialog(
-                    backgroundColor: AppColors.darkGray,
-                    child: StreamsDialog(item: item),
-                  ));
-        }),
-        const SizedBox(width: 20),
-        ButtonWithIcon(
-          'Trailer',
-          icon: const Icon(FontAwesomeIcons.youtube,
-              size: 15, color: Colors.white),
-          onPress: () {
-            controller.playTrailer();
-          },
-        ),
-        const SizedBox(width: 20),
-        ButtonWithIcon(
-          'Trakt',
-          icon: Image.asset(
-            'assets/images/trakt.png',
-            width: 15,
-            color: Colors.white,
+    return SizedBox(
+      height: 30,
+      child: Row(
+        children: [
+          ButtonWithIcon('Play',
+              icon: const Icon(FontAwesomeIcons.play, size: 15),
+              node: controller.playButtonNode, onPress: () async {
+            showDialog(
+                context: context,
+                builder: (context) => Dialog(
+                      backgroundColor: AppColors.darkGray,
+                      child: StreamsDialog(item: item),
+                    ));
+          }),
+          const SizedBox(width: 20),
+          ButtonWithIcon(
+            'Trailer',
+            icon: const Icon(FontAwesomeIcons.youtube,
+                size: 15, color: Colors.white),
+            onPress: () {
+              controller.playTrailer();
+            },
           ),
-          onPress: () {},
-        )
-      ],
+          const SizedBox(width: 20),
+          ButtonWithIcon(
+            'Trakt',
+            icon: Image.asset(
+              'assets/images/trakt.png',
+              width: 15,
+              color: Colors.white,
+            ),
+            onPress: () {},
+          )
+        ],
+      ),
     );
   }
 }

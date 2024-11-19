@@ -50,7 +50,7 @@ class OdinLogo extends StatelessWidget {
     return Row(
       // mainAxisSize: MainAxisSize.max,
       children: [
-        SvgPicture.asset("assets/images/logo.svg", height: 45),
+        SvgPicture.asset("assets/images/logo.svg", height: 25),
       ],
     );
   }

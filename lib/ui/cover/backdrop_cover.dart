@@ -53,8 +53,7 @@ class BackdropCoverState extends ConsumerState<BackdropCover>
       if (widget.onFocus != null) {
         widget.onFocus!();
       }
-      ref.read(pageBackgroundProvider.notifier).state =
-          widget.item.tmdb!.backdropBig;
+      ref.read(selectedItemProvider.notifier).state = widget.item;
       setState(() {
         _focusColor = Colors.transparent;
       });
@@ -79,140 +78,114 @@ class BackdropCoverState extends ConsumerState<BackdropCover>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return RawMaterialButton(
-      focusNode: _node,
-      elevation: 0,
-      focusElevation: 0,
-      splashColor: Colors.transparent,
-      focusColor: Colors.transparent,
-      onPressed: () {
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => Detail(
-                  item: widget.item.show != null
-                      ? widget.item.show!
-                      : widget.item,
-                )));
-      },
-      child: ScaleTransition(
-        scale: _animation!,
-        child: AspectRatio(
-            aspectRatio: 1.3,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Flexible(
-                  flex: 3,
-                  child: Center(
-                    child: Container(
-                      padding: const EdgeInsets.only(top: 5),
-                      height: MediaQuery.of(context).size.height,
-                      child: CachedNetworkImage(
-                        imageUrl: widget.item.tmdb!.backdropSmall,
-                        errorWidget: (_, __, ___) => Container(
-                          decoration: BoxDecoration(
-                              color: Colors.black,
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Center(
-                              child: Icon(
-                            FontAwesomeIcons.image,
-                            color: AppColors.primary,
-                            size: 30,
-                          )),
-                        ),
-                        imageBuilder: (context, imageProvider) => ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Container(
-                              // padding: const EdgeInsets.all(2),
-                              color: _focusColor,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Image(
-                                  image: imageProvider,
-                                ),
-                              ),
-                            )),
-                        placeholder: (_, __) => Container(
-                          decoration: BoxDecoration(
-                              color: Colors.black,
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Center(
-                              child: Icon(
-                            FontAwesomeIcons.image,
-                            color: AppColors.darkGray,
-                            size: 30,
-                          )),
-                        ),
-                        fit: BoxFit.fill,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Flexible(
+          flex: 3,
+          child: Container(
+            child: CachedNetworkImage(
+              imageUrl: widget.item.tmdb!.backdropSmall,
+              errorWidget: (_, __, ___) => Container(
+                decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(5)),
+                child: Center(
+                    child: Icon(
+                  FontAwesomeIcons.image,
+                  color: AppColors.primary,
+                  size: 30,
+                )),
+              ),
+              imageBuilder: (context, imageProvider) => ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Container(
+                    // padding: const EdgeInsets.all(2),
+                    color: _focusColor,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image(
+                        image: imageProvider,
                       ),
                     ),
-                  ),
+                  )),
+              placeholder: (_, __) => Container(
+                decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(5)),
+                child: Center(
+                    child: Icon(
+                  FontAwesomeIcons.image,
+                  color: AppColors.darkGray,
+                  size: 30,
+                )),
+              ),
+              fit: BoxFit.fill,
+            ),
+          ),
+        ),
+        Flexible(
+          flex: 1,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 5),
+                Headline4(
+                  widget.item.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                Flexible(
-                  flex: 1,
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 5, vertical: 0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 5),
-                        Headline4(
-                          widget.item.title,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 5),
-                        widget.item.episode != null
-                            ? CaptionText(
-                                'S${widget.item.episode!.season}E${widget.item.episode!.number} - ${widget.item.episode!.title}',
+                const SizedBox(height: 5),
+                widget.item.episode != null
+                    ? CaptionText(
+                        'S${widget.item.episode!.season}E${widget.item.episode!.number} - ${widget.item.episode!.title}',
+                        style: TextStyle(
+                            color: AppColors.gray1,
+                            overflow: TextOverflow.ellipsis),
+                      )
+                    : Row(
+                        children: [
+                          Subtitle1(widget.item.year.toString(),
+                              style: TextStyle(
+                                  color: AppColors.gray1,
+                                  fontWeight: FontWeight.w600)),
+                          const SizedBox(width: 12),
+                          Row(
+                            children: [
+                              Icon(
+                                FontAwesomeIcons.solidStar,
+                                size: 10,
+                                color: AppColors.primary,
+                              ),
+                              const SizedBox(width: 7),
+                              Subtitle1(
+                                widget.item.roundedRating.toString(),
                                 style: TextStyle(
-                                    color: AppColors.gray1,
-                                    overflow: TextOverflow.ellipsis),
-                              )
-                            : Row(
-                                children: [
-                                  Subtitle1(widget.item.year.toString(),
-                                      style: TextStyle(
-                                          color: AppColors.gray1,
-                                          fontWeight: FontWeight.w600)),
-                                  const SizedBox(width: 12),
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        FontAwesomeIcons.solidStar,
-                                        size: 10,
-                                        color: AppColors.primary,
-                                      ),
-                                      const SizedBox(width: 7),
-                                      Subtitle1(
-                                        widget.item.roundedRating.toString(),
-                                        style: TextStyle(
-                                            color: AppColors.primary,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                      const SizedBox(width: 12),
-                                      ref
-                                                  .watch(
-                                                      watchedProvider.notifier)
-                                                  .items
-                                                  .contains(BaseHelper.hiveKey(
-                                                      widget.item.type,
-                                                      widget.item.ids.trakt)) ||
-                                              widget.item.watched
-                                          ? const Watched()
-                                          : const SizedBox()
-                                    ],
-                                  ),
-                                ],
-                              )
-                      ],
-                    ),
-                  ),
-                ),
+                                    color: AppColors.primary,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              const SizedBox(width: 12),
+                              ref
+                                          .watch(watchedProvider.notifier)
+                                          .items
+                                          .contains(BaseHelper.hiveKey(
+                                              widget.item.type,
+                                              widget.item.ids.trakt)) ||
+                                      widget.item.watched
+                                  ? const Watched()
+                                  : const SizedBox()
+                            ],
+                          ),
+                        ],
+                      )
               ],
-            )),
-      ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

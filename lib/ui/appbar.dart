@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:helpers/helpers.dart';
+import 'package:odin/theme.dart';
+import 'package:odin/ui/focusnodes.dart';
 import 'package:odin/ui/widgets/ensure_visible.dart';
 import 'package:odin/ui/widgets/widgets.dart';
 
@@ -16,16 +18,14 @@ class OdinAppBar extends ConsumerWidget {
         backgroundColor: Colors.transparent,
         actions: [
           Builder(
-            builder: (context) => EnsureVisible(
-                paddingTop: 0,
-                isLast: true,
-                child: IconButton(
-                  padding: const EdgeInsets.all(5),
-                  focusColor: Colors.white.withAlpha(40),
-                  splashRadius: 20,
-                  icon: const Icon(FontAwesomeIcons.gear, size: 16),
-                  onPressed: () => Scaffold.of(context).openEndDrawer(),
-                )),
+            builder: (context) => IconButton(
+              padding: const EdgeInsets.all(5),
+              focusColor: Colors.white.withAlpha(40),
+              splashRadius: 20,
+              focusNode: menufocus[0],
+              icon: const Icon(FontAwesomeIcons.gear, size: 16),
+              onPressed: () => Scaffold.of(context).openEndDrawer(),
+            ),
           ),
         ],
         elevation: 0,
@@ -34,42 +34,46 @@ class OdinAppBar extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             const OdinLogo(),
-            const SizedBox(width: 100),
+            const SizedBox(width: 20),
             Flexible(
-                child: Row(
-              children: [
-                EnsureVisible(
-                  isFirst: true,
-                  paddingTop: 0,
-                  child: TextButton(
-                    child: const Headline4('Home'),
+                child: SizedBox(
+              height: 20,
+              child: Row(
+                children: [
+                  TextButton(
+                    focusNode: menufocus[1],
+                    child: BodyText1(
+                      'Home',
+                      style: TextStyle(fontSize: 10, color: AppColors.purple),
+                    ),
                     onPressed: () {
                       ref.read(appPageProvider.notifier).state = 0;
                     },
                   ),
-                ),
-                const SizedBox(width: 15),
-                EnsureVisible(
-                  isFirst: false,
-                  paddingTop: 0,
-                  child: TextButton(
-                    child: const Headline4('Movies'),
+                  const SizedBox(width: 5),
+                  TextButton(
+                    focusNode: menufocus[2],
+                    child: BodyText1(
+                      'Movies',
+                      style: TextStyle(fontSize: 10, color: AppColors.purple),
+                    ),
                     onPressed: () {
                       ref.read(appPageProvider.notifier).state = 1;
                     },
                   ),
-                ),
-                const SizedBox(width: 15),
-                EnsureVisible(
-                  paddingTop: 0,
-                  child: TextButton(
-                    child: const Headline4('TV Shows'),
+                  const SizedBox(width: 5),
+                  TextButton(
+                    focusNode: menufocus[3],
+                    child: BodyText1(
+                      'TV Shows',
+                      style: TextStyle(fontSize: 10, color: AppColors.purple),
+                    ),
                     onPressed: () {
                       ref.read(appPageProvider.notifier).state = 2;
                     },
                   ),
-                ),
-              ],
+                ],
+              ),
             )),
             const Expanded(child: SizedBox())
           ],
