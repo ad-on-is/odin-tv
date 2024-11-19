@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:helpers/helpers/widgets/text.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:odin/controllers/app_controller.dart';
 import 'package:odin/data/entities/trakt.dart';
 import 'package:odin/data/services/trakt_service.dart';
@@ -10,73 +12,14 @@ import 'package:odin/helpers.dart';
 import 'package:odin/theme.dart';
 import 'package:odin/ui/widgets/widgets.dart';
 
-class PosterCover extends ConsumerStatefulWidget {
+class PosterCover extends HookConsumerWidget {
   final Trakt item;
-  final Function? onFocus;
-  final bool autoFocus;
-  final bool requestFocus;
-  const PosterCover(this.item,
-      {Key? key,
-      this.autoFocus = false,
-      this.onFocus,
-      this.requestFocus = false})
-      : super(key: key);
+  const PosterCover(this.item, {Key? key}) : super(key: key);
 
   @override
-  PosterCoverState createState() => PosterCoverState();
-}
-
-class PosterCoverState extends ConsumerState<PosterCover>
-    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
-  AnimationController? _controller;
-  Animation<double>? _animation;
-  FocusNode? _node;
-  Color _focusColor = Colors.transparent;
-  @override
-  void initState() {
-    _node = FocusNode();
-    _node?.addListener(_onFocusChange);
-
-    _controller = AnimationController(
-        duration: const Duration(milliseconds: 100),
-        vsync: this,
-        lowerBound: 0.9,
-        upperBound: 1);
-    _animation = CurvedAnimation(parent: _controller!, curve: Curves.easeIn);
-    super.initState();
-  }
-
-  void _onFocusChange() async {
-    if (_node!.hasFocus) {
-      _controller?.forward();
-      if (widget.onFocus != null) {
-        widget.onFocus!();
-      }
-      ref.read(selectedItemProvider.notifier).state = widget.item;
-      setState(() {
-        _focusColor = Colors.transparent;
-      });
-    } else {
-      _controller?.reverse();
-      setState(() {
-        _focusColor = Colors.transparent;
-      });
-    }
-  }
-
-  @override
-  bool get wantKeepAlive => true;
-
-  @override
-  void dispose() {
-    _controller?.dispose();
-    _node?.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    super.build(context);
+  Widget build(BuildContext context, ref) {
+    useAutomaticKeepAlive();
+    useSingleTickerProvider();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
@@ -85,7 +28,7 @@ class PosterCoverState extends ConsumerState<PosterCover>
           flex: 3,
           child: Center(
             child: CachedNetworkImage(
-              imageUrl: widget.item.tmdb!.posterSmall,
+              imageUrl: item.tmdb!.posterSmall,
               errorWidget: (_, str, d) => Container(
                 decoration: BoxDecoration(
                     color: Colors.black,
@@ -100,7 +43,6 @@ class PosterCoverState extends ConsumerState<PosterCover>
               imageBuilder: (context, imageProvider) => ClipRRect(
                   borderRadius: BorderRadius.circular(7),
                   child: Container(
-                    color: _focusColor,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(5),
                       child: Image(
@@ -132,7 +74,7 @@ class PosterCoverState extends ConsumerState<PosterCover>
               children: [
                 const SizedBox(height: 5),
                 CaptionText(
-                  widget.item.title,
+                  item.title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -141,13 +83,13 @@ class PosterCoverState extends ConsumerState<PosterCover>
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Subtitle1(
-                      widget.item.year.toString(),
+                      item.year.toString(),
                       style: TextStyle(color: AppColors.gray1, fontSize: 8),
                     ),
                     ref.watch(watchedProvider.notifier).items.contains(
                                 BaseHelper.hiveKey(
-                                    widget.item.type, widget.item.ids.trakt)) ||
-                            widget.item.watched
+                                    item.type, item.ids.trakt)) ||
+                            item.watched
                         ? const Watched(
                             iconOnly: true,
                           )
@@ -161,7 +103,7 @@ class PosterCoverState extends ConsumerState<PosterCover>
                         ),
                         const SizedBox(width: 5),
                         Subtitle2(
-                          widget.item.roundedRating.toString(),
+                          item.roundedRating.toString(),
                           style:
                               TextStyle(color: AppColors.primary, fontSize: 8),
                         ),

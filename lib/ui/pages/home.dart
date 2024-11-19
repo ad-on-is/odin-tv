@@ -26,9 +26,6 @@ class HomePage extends HookConsumerWidget {
     List<SectionItem> sections = [];
     provider.whenData((value) {
       sections = value;
-      for (var i = 0; i < sections.length; i++) {
-        sections[i].big = false;
-      }
     });
 
     return sections.isEmpty
@@ -41,9 +38,9 @@ class HomePage extends HookConsumerWidget {
               key: const Key("home"),
               itemBuilder: (context, itemIndex, realIndex, controller) {
                 return SizedBox(
-                    height: 100, child: Section(e: sections[itemIndex]));
+                    height: 235, child: Section(e: sections[itemIndex]));
               },
-              extent: 255,
+              extent: 235,
               onIndexChanged: (index) => {print(index)},
               count: sections.length,
               axis: Axis.vertical,

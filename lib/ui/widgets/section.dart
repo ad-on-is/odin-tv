@@ -31,7 +31,7 @@ class Section extends HookConsumerWidget {
     if (e.filterWatched) {
       items = items.where((element) => element.watched == false).toList();
     }
-    double extent = e.big ? 220 : 90;
+    double extent = e.big ? 180 : 90;
 
     return Column(
       children: [
@@ -96,10 +96,12 @@ class Section extends HookConsumerWidget {
                               // .flipH(end: 1.5 - (1.5 * s))
                               .scaleXY(end: s, curve: Curves.easeInOutExpo);
                         },
-                        child: PosterCover(items[itemIndex]),
+                        child: e.big
+                            ? BackdropCover(items[itemIndex])
+                            : PosterCover(items[itemIndex]),
                       );
                     },
-                    extent: 90,
+                    extent: extent,
                     onIndexChanged: (index) {
                       // ref.read(selectedItemProvider.notifier).state =
                       //     items[index];
