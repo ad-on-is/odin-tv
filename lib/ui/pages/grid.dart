@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:helpers/helpers/widgets/text.dart';
+import 'package:odin/controllers/app_controller.dart';
 import 'package:odin/controllers/grid_controller.dart';
 import 'package:odin/data/models/item_model.dart';
 import 'package:odin/ui/widgets/carousel.dart';
@@ -18,6 +19,11 @@ class Grid extends ConsumerWidget {
     List<SectionItem> sections = [];
     provider.whenData((value) {
       sections = value;
+      if (value.isNotEmpty) {
+        Future.delayed(const Duration(milliseconds: 50), () {
+          ref.read(selectedSectionProvider.notifier).state = value[0].title;
+        });
+      }
     });
 
     double extent = 235;
@@ -33,7 +39,12 @@ class Grid extends ConsumerWidget {
                 },
                 extent: extent,
                 onIndexChanged: (index) {
-                  print(index);
+                  Future.delayed(const Duration(milliseconds: 100), () {
+                    ref.read(selectedSectionProvider.notifier).state =
+                        sections[index].title;
+                    ref.read(selectedItemProvider.notifier).state = ref.read(
+                        selectedItemOfSectionProvider(sections[index].title));
+                  });
                 },
                 keys: const [
                   PhysicalKeyboardKey.arrowUp,

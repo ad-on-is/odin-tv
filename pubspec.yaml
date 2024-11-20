@@ -52,7 +52,7 @@ dependencies:
   localstorage: 
   logging:
   flutter_riverpod:
-  flutter_hooks: 
+  flutter_hooks: 0.20.5
   hooks_riverpod: 
   uuid: 
   web_socket_channel:

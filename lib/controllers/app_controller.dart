@@ -13,5 +13,8 @@ final List<Widget> pages = [
 final appPageProvider = StateProvider<int>((ref) => 0);
 final selectedItemProvider = StateProvider<Trakt>((ref) => Trakt());
 final selectedSectionProvider = StateProvider<String>((ref) => "");
+final selectedItemOfSectionProvider = StateProviderFamily<Trakt, String>(
+  (ref, section) => Trakt(),
+);
 final bgBusyProvider = StateProvider<bool>((ref) => false);
 final appBusyProvider = StateProvider<bool>((ref) => false);

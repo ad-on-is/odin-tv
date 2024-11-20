@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:odin/controllers/app_controller.dart';
 import 'package:odin/controllers/home_controller.dart';
 import 'package:odin/data/models/item_model.dart';
 import 'package:odin/ui/focusnodes.dart';
@@ -25,6 +26,11 @@ class HomePage extends HookConsumerWidget {
     List<SectionItem> sections = [];
     provider.whenData((value) {
       sections = value;
+      if (value.isNotEmpty) {
+        Future.delayed(const Duration(milliseconds: 50), () {
+          ref.read(selectedSectionProvider.notifier).state = value[0].title;
+        });
+      }
     });
 
     double extent = 275;
@@ -45,7 +51,13 @@ class HomePage extends HookConsumerWidget {
                   PhysicalKeyboardKey.arrowDown
                 ],
                 onIndexChanged: (index) {
-                  print(index);
+                  Future.delayed(const Duration(milliseconds: 100), () {
+                    ref.read(selectedSectionProvider.notifier).state =
+                        sections[index].title;
+
+                    ref.read(selectedItemProvider.notifier).state = ref.read(
+                        selectedItemOfSectionProvider(sections[index].title));
+                  });
                 },
                 count: sections.length,
                 axis: Axis.vertical));

@@ -11,7 +11,7 @@ class OdinCarousel extends HookConsumerWidget {
   const OdinCarousel(
       {Key? key,
       required this.itemBuilder,
-      this.onIndexChanged,
+      required this.onIndexChanged,
       this.onEnter,
       required this.extent,
       required this.keys,
@@ -20,7 +20,7 @@ class OdinCarousel extends HookConsumerWidget {
       : super(key: key);
   final Widget Function(BuildContext context, int itemIndex, int realIndex,
       InfiniteScrollController controller) itemBuilder;
-  final void Function(int)? onIndexChanged;
+  final void Function(int) onIndexChanged;
   final void Function()? onEnter;
   final double extent;
   final int count;
@@ -37,7 +37,19 @@ class OdinCarousel extends HookConsumerWidget {
   Widget build(BuildContext context, ref) {
     final dur = useState(300);
     final dir = useState("");
+
     final controller = useMemoized(() => InfiniteScrollController(), [key]);
+
+    useEffect(() {
+      void listener() {
+        final index = (controller.offset / extent);
+        onIndexChanged(index.round());
+      }
+
+      controller.addListener(listener);
+      return () => controller.removeListener(listener);
+    }, [controller]);
+
     final fn = useFocusNode();
     bool holding = false;
 
@@ -117,9 +129,10 @@ class OdinCarousel extends HookConsumerWidget {
           velocityFactor: 0.2,
           onIndexChanged: (index) {
             // print(controller.hashCode);
-            if (onIndexChanged != null) {
-              onIndexChanged!(index);
-            }
+
+            // if (onIndexChanged != null) {
+            //   onIndexChanged!(index);
+            // }
           },
           controller: controller,
           axisDirection: axis,

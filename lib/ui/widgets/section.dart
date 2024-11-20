@@ -32,7 +32,17 @@ class Section extends HookConsumerWidget {
     if (e.filterWatched) {
       items = items.where((element) => element.watched == false).toList();
     }
+
+    if (items.isNotEmpty) {
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (ref.read(selectedItemOfSectionProvider(e.title)).title == "") {
+          ref.read(selectedItemOfSectionProvider(e.title).notifier).state =
+              items[0];
+        }
+      });
+    }
     double extent = e.big ? 220 : 90;
+    final sec = ref.watch(selectedSectionProvider);
 
     return Column(
       children: [
@@ -61,7 +71,7 @@ class Section extends HookConsumerWidget {
                 height: e.big ? 170 : 180,
                 // width: double.infinity,
                 child: OdinCarousel(
-                    key: Key("section ${e.title}"),
+                    key: Key("section-${e.title}"),
                     itemBuilder: (context, itemIndex, realIndex, controller) {
                       final currentOffset = extent * realIndex;
                       const maxScale = 1;
@@ -93,10 +103,16 @@ class Section extends HookConsumerWidget {
                           return child!
                               .animate()
                               .blurXY(end: 0, begin: 5)
-                              .fade(end: f)
-                              .blurXY(end: 1.3 - (1.3 * b))
-                              // .flipH(end: 1.5 - (1.5 * s))
-                              .scaleXY(end: s, curve: Curves.easeInOutExpo);
+                              .animate(target: sec == e.title ? 1 : 0)
+                              .scaleXY(
+                                  end: s,
+                                  begin: minScale,
+                                  curve: Curves.easeInOutExpo)
+                              .fade(end: f, begin: 0.3)
+                              .blurXY(
+                                  end: 1.3 - (1.3 * b),
+                                  begin: 1.3 - (1.3 * 0.02));
+                          // .flipH(end: 1.5 - (1.5 * s))
                         },
                         child: e.big
                             ? BackdropCover(items[itemIndex])
@@ -105,8 +121,15 @@ class Section extends HookConsumerWidget {
                     },
                     extent: extent,
                     onIndexChanged: (index) {
-                      ref.read(selectedItemProvider.notifier).state =
-                          items[index];
+                      // print("Section ${index}");
+                      Future.delayed(const Duration(milliseconds: 100), () {
+                        ref.read(selectedItemProvider.notifier).state =
+                            items[index];
+                        ref
+                            .read(
+                                selectedItemOfSectionProvider(e.title).notifier)
+                            .state = items[index];
+                      });
                     },
                     onEnter: () {
                       final item = ref.read(selectedItemProvider);
