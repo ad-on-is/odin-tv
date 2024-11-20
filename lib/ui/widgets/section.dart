@@ -46,7 +46,6 @@ class Section extends HookConsumerWidget {
 
     return Column(
       children: [
-        const SizedBox(height: 20),
         Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
             // margin: const EdgeInsets.only(bottom: 40),

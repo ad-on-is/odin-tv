@@ -21,6 +21,7 @@ class Grid extends ConsumerWidget {
       sections = value;
       if (value.isNotEmpty) {
         Future.delayed(const Duration(milliseconds: 50), () {
+          ref.read(bgAlpha.notifier).state = 230;
           ref.read(selectedSectionProvider.notifier).state = value[0].title;
         });
       }
@@ -30,8 +31,8 @@ class Grid extends ConsumerWidget {
 
     return sections.isEmpty
         ? const SizedBox()
-        : SizedBox(
-            height: extent * sections.length,
+        : Container(
+            padding: const EdgeInsets.only(top: 150),
             child: OdinCarousel(
                 itemBuilder: (context, itemIndex, realIndex, controller) {
                   return SizedBox(

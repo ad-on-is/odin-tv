@@ -29,21 +29,20 @@ class HomePage extends HookConsumerWidget {
       if (value.isNotEmpty) {
         Future.delayed(const Duration(milliseconds: 50), () {
           ref.read(selectedSectionProvider.notifier).state = value[0].title;
+          ref.read(bgAlpha.notifier).state = 50;
         });
       }
     });
 
     double extent = 280;
-
     return sections.isEmpty
-        ? const SizedBox()
-        : SizedBox(
+        ? SizedBox(height: extent)
+        : Container(
+            padding: const EdgeInsets.only(top: 200),
             height: extent * sections.length,
             child: OdinCarousel(
-                key: const Key("home"),
                 itemBuilder: (context, itemIndex, realIndex, controller) {
-                  return SizedBox(
-                      height: 100, child: Section(e: sections[itemIndex]));
+                  return Section(e: sections[itemIndex]);
                 },
                 extent: extent,
                 keys: const [
@@ -59,6 +58,7 @@ class HomePage extends HookConsumerWidget {
                         selectedItemOfSectionProvider(sections[index].title));
                   });
                 },
+                anchor: 0.0,
                 count: sections.length,
                 axis: Axis.vertical));
   }

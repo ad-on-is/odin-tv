@@ -14,6 +14,7 @@ class OdinCarousel extends HookConsumerWidget with BaseHelper {
       required this.itemBuilder,
       required this.onIndexChanged,
       this.onEnter,
+      this.anchor,
       required this.extent,
       required this.keys,
       required this.count,
@@ -24,6 +25,7 @@ class OdinCarousel extends HookConsumerWidget with BaseHelper {
   final void Function(int) onIndexChanged;
   final void Function()? onEnter;
   final double extent;
+  final double? anchor;
   final int count;
   final Axis axis;
   final List<PhysicalKeyboardKey> keys;
@@ -39,7 +41,7 @@ class OdinCarousel extends HookConsumerWidget with BaseHelper {
     final dur = useState(300);
     final dir = useState("");
     final idx = useState(0);
-    final didx = useDebounced(idx.value, const Duration(milliseconds: 200));
+    final didx = useDebounced(idx.value, const Duration(milliseconds: 50));
     // print("REBUILDING ${count}");
 
     final controller = useMemoized(() => InfiniteScrollController(), [key]);
@@ -64,7 +66,6 @@ class OdinCarousel extends HookConsumerWidget with BaseHelper {
         index = 0;
       }
       onIndexChanged(index);
-      logInfo(didx ?? 0);
       return;
     }, [didx]);
 
@@ -143,7 +144,7 @@ class OdinCarousel extends HookConsumerWidget with BaseHelper {
           itemCount: count,
           itemExtent: extent,
           center: false,
-          anchor: 0.02,
+          anchor: anchor ?? 0.02,
           velocityFactor: 0.2,
           onIndexChanged: (index) {
             // print(controller.hashCode);

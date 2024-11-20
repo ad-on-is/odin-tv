@@ -45,8 +45,7 @@ class App extends HookConsumerWidget {
                         focusNode: menufocus[1],
                         child: BodyText1(
                           'Home',
-                          style:
-                              TextStyle(fontSize: 10, color: AppColors.purple),
+                          style: TextStyle(fontSize: 10),
                         ),
                         onPressed: () {
                           ref.read(appPageProvider.notifier).state = 0;
@@ -57,8 +56,9 @@ class App extends HookConsumerWidget {
                         focusNode: menufocus[2],
                         child: BodyText1(
                           'Movies',
-                          style:
-                              TextStyle(fontSize: 10, color: AppColors.purple),
+                          style: TextStyle(
+                            fontSize: 10,
+                          ),
                         ),
                         onPressed: () {
                           ref.read(appPageProvider.notifier).state = 1;
@@ -69,8 +69,7 @@ class App extends HookConsumerWidget {
                         focusNode: menufocus[3],
                         child: BodyText1(
                           'TV Shows',
-                          style:
-                              TextStyle(fontSize: 10, color: AppColors.purple),
+                          style: TextStyle(fontSize: 10),
                         ),
                         onPressed: () {
                           ref.read(appPageProvider.notifier).state = 2;
@@ -83,7 +82,7 @@ class App extends HookConsumerWidget {
                         splashRadius: 20,
                         focusNode: menufocus[0],
                         icon: Icon(FontAwesomeIcons.gear,
-                            size: 10, color: AppColors.purple),
+                            size: 10, color: Colors.white),
                         onPressed: () => Scaffold.of(context).openEndDrawer(),
                       ),
                     ],
@@ -107,28 +106,22 @@ class App extends HookConsumerWidget {
                   )
                 : Stack(
                     children: [
-                      SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            PageTransitionSwitcher(
-                                transitionBuilder: (
-                                  Widget child,
-                                  Animation<double> animation,
-                                  Animation<double> secondaryAnimation,
-                                ) {
-                                  return SharedAxisTransition(
-                                    transitionType:
-                                        SharedAxisTransitionType.horizontal,
-                                    animation: animation,
-                                    fillColor: Colors.transparent,
-                                    secondaryAnimation: secondaryAnimation,
-                                    child: child,
-                                  );
-                                },
-                                child: pages[pageState])
-                          ],
-                        ),
-                      ),
+                      PageTransitionSwitcher(
+                          transitionBuilder: (
+                            Widget child,
+                            Animation<double> animation,
+                            Animation<double> secondaryAnimation,
+                          ) {
+                            return SharedAxisTransition(
+                              transitionType:
+                                  SharedAxisTransitionType.horizontal,
+                              animation: animation,
+                              fillColor: Colors.transparent,
+                              secondaryAnimation: secondaryAnimation,
+                              child: child,
+                            );
+                          },
+                          child: pages[pageState]),
                       const RefreshNotification(),
                     ],
                   ),
@@ -145,7 +138,6 @@ class AppBackground extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final background = ref.watch(selectedItemProvider).tmdb?.backdropBig ?? "";
-
     return Stack(children: <Widget>[
       background.isEmpty
           ? Container()
@@ -154,7 +146,7 @@ class AppBackground extends ConsumerWidget {
               height: double.infinity,
               child: CachedNetworkImage(
                 imageUrl: background,
-                fit: BoxFit.fill,
+                fit: BoxFit.fitWidth,
                 errorWidget: (_, __, ___) =>
                     Container(color: AppColors.darkGray),
                 placeholder: (_, __) => Container(color: AppColors.darkGray),
@@ -166,8 +158,13 @@ class AppBackground extends ConsumerWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-              AppColors.darkGray.withAlpha(230),
               AppColors.darkGray,
+              AppColors.darkGray.withAlpha(50),
+              // AppColors.darkGray.withAlpha((alpha / 2).round()),
+              AppColors.darkGray.withAlpha(150),
+              AppColors.darkGray,
+              AppColors.darkGray,
+
               // AppColors.darkGray.withAlpha(250),
             ])),
       ),

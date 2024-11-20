@@ -18,3 +18,4 @@ final selectedItemOfSectionProvider = StateProviderFamily<Trakt, String>(
 );
 final bgBusyProvider = StateProvider<bool>((ref) => false);
 final appBusyProvider = StateProvider<bool>((ref) => false);
+final bgAlpha = StateProvider<int>((ref) => 230);
