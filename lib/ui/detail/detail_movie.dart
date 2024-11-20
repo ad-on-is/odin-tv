@@ -33,9 +33,8 @@ class DetailMovie extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const SizedBox(height: 50),
+                    ItemDetails(item: item),
                     EnsureVisible(child: Buttons(item: item)),
-                    ItemDetails(item: item)
                   ],
                 ),
               ),

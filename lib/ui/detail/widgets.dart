@@ -83,22 +83,27 @@ class ItemDetails extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 10),
-        CaptionText(
-          item.network != ''
-              ? item.network
-              : item.tmdb!.productionCompanies.isNotEmpty
-                  ? item.tmdb!.productionCompanies.first.name
-                  : '',
-          style: TextStyle(fontSize: 8),
-        ),
+        const SizedBox(height: 20),
+
         // CachedNetworkImage(
         //     height: 30,
         //     errorWidget: (_, __, ___) => const SizedBox(height: 50),
         //     placeholder: (_, __) => const SizedBox(height: 50),
         //     imageUrl: item.tmdb!.smallPath +
         //         item.tmdb!.productionCompanies.first.logoPath),
-        Headline3(item.title),
+
+        SizedBox(
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: CachedNetworkImage(
+                height: 150,
+                fit: BoxFit.contain,
+                errorWidget: (_, __, ___) => const SizedBox(height: 30),
+                placeholder: (_, __) => const SizedBox(height: 30),
+                imageUrl: item.tmdb!.logoBig),
+          ),
+        ),
+        const SizedBox(height: 10),
         Row(
           children: [
             CaptionText(preTitle),
@@ -114,6 +119,20 @@ class ItemDetails extends ConsumerWidget {
             CaptionText(item.language.toUpperCase()),
           ],
         ),
+        const SizedBox(
+          height: 5,
+        ),
+        Headline4(
+          item.network != ''
+              ? item.network
+              : item.tmdb!.productionCompanies.isNotEmpty
+                  ? item.tmdb!.productionCompanies.first.name
+                  : '',
+          style: TextStyle(fontSize: 7),
+        ),
+
+        // Headline3(item.title),
+
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 0),
           child: ref.watch(watchedProvider.notifier).items.contains(
@@ -122,9 +141,7 @@ class ItemDetails extends ConsumerWidget {
               ? const Watched()
               : const SizedBox(),
         ),
-        const SizedBox(
-          height: 20,
-        ),
+
         Column(
           children: [
             ItemRating(item: item),
@@ -338,13 +355,8 @@ class SeasonsAndEpisodes extends ConsumerWidget {
         ? const SizedBox()
         : Column(
             children: [
-              const Align(
-                alignment: Alignment.topLeft,
-                child: Headline4("SEASONS & EPISODES"),
-              ),
-              const SizedBox(height: 20),
               SizedBox(
-                height: 50,
+                height: 40,
                 child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: seasons.length,
@@ -354,6 +366,9 @@ class SeasonsAndEpisodes extends ConsumerWidget {
                         child: Padding(
                           padding: const EdgeInsets.only(right: 10),
                           child: TextButton(
+                            style: TextButton.styleFrom(
+                              backgroundColor: AppColors.primary.withAlpha(20),
+                            ),
                             child: Row(children: [
                               CaptionText('Season ${seasons[index].number}'),
                               ref.watch(watchedProvider.notifier).items.contains(

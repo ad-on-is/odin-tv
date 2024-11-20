@@ -34,7 +34,7 @@ class HomePage extends HookConsumerWidget {
       }
     });
 
-    double extent = 200;
+    double extent = 183;
     return sections.isEmpty
         ? SizedBox(height: extent)
         : Container(

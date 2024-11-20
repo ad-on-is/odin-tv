@@ -35,8 +35,8 @@ class _EnsureVisibleState extends State<EnsureVisible> {
             Scrollable.ensureVisible(
               context,
               alignment: widget.alignment,
-              duration: const Duration(milliseconds: 100),
-              curve: Curves.linearToEaseOut,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
             );
             if (widget.onFocus != null) {
               widget.onFocus!();

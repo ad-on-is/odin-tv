@@ -23,6 +23,8 @@ class PosterCover extends HookConsumerWidget {
         CachedNetworkImage(
           imageUrl: item.tmdb!.posterSmall,
           errorWidget: (_, str, d) => Container(
+            width: 100,
+            height: 135,
             decoration: BoxDecoration(
               color: Colors.black,
               borderRadius: BorderRadius.circular(5),

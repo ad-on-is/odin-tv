@@ -46,6 +46,7 @@ Map<String, dynamic> _$TmdbProductionCompanyToJson(
 
 Tmdb _$TmdbFromJson(Map<String, dynamic> json) => Tmdb(
       posterPath: json['poster_path'] as String? ?? '',
+      logoPath: json['logo_path'] as String? ?? '',
       id: json['id'] as int? ?? 0,
       backdropPath: json['backdrop_path'] as String? ?? '',
       stillPath: json['stillPath'] as String? ?? '',
@@ -70,6 +71,7 @@ Tmdb _$TmdbFromJson(Map<String, dynamic> json) => Tmdb(
 Map<String, dynamic> _$TmdbToJson(Tmdb instance) => <String, dynamic>{
       'id': instance.id,
       'poster_path': instance.posterPath,
+      'logo_path': instance.logoPath,
       'backdrop_path': instance.backdropPath,
       'original_title': instance.originalTitle,
       'stillPath': instance.stillPath,

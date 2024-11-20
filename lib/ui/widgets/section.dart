@@ -58,7 +58,6 @@ class Section extends HookConsumerWidget {
         children: [
           Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-              // margin: const EdgeInsets.only(bottom: 40),
               alignment: Alignment.topLeft,
               child: Headline4(
                 e.title.toCapitalize(),

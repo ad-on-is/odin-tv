@@ -82,12 +82,18 @@ class BackdropCover extends HookConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 95),
-              Headline4(
-                item.title,
-                maxLines: 1,
-                style: const TextStyle(fontSize: 8),
-                overflow: TextOverflow.ellipsis,
+              const SizedBox(height: 55),
+              CachedNetworkImage(
+                imageUrl: item.tmdb!.logoSmall,
+                errorWidget: (_, __, ___) => const SizedBox(height: 50),
+                imageBuilder: (context, imageProvider) => Image(
+                  image: imageProvider,
+                  fit: BoxFit.contain,
+                  width: 100,
+                  height: 50,
+                ),
+                placeholder: (_, __) => const SizedBox(height: 50),
+                fit: BoxFit.fill,
               ),
               const SizedBox(height: 5),
               item.episode != null

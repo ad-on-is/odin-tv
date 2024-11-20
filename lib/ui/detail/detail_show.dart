@@ -21,8 +21,8 @@ class DetailShow extends ConsumerWidget {
         item.tmdb!.backdropBig,
         child: SingleChildScrollView(
           child: Padding(
-              padding: const EdgeInsets.only(
-                  left: 50, right: 0, bottom: 10, top: 50),
+              padding:
+                  const EdgeInsets.only(left: 50, right: 0, bottom: 10, top: 0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -30,8 +30,8 @@ class DetailShow extends ConsumerWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const SizedBox(height: 50),
                         EnsureVisible(child: Buttons(item: item)),
+                        // const SizedBox(height: 10),
                         ItemDetails(item: item),
                       ],
                     ),
@@ -62,37 +62,40 @@ class Buttons extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    return Row(
-      children: [
-        ButtonWithIcon('Seasons',
-            icon: const Icon(FontAwesomeIcons.film,
+    return SizedBox(
+      height: 25,
+      child: Row(
+        children: [
+          ButtonWithIcon('Seasons',
+              icon: const Icon(FontAwesomeIcons.film,
+                  size: 15, color: Colors.white),
+              node: ref.read(detailController.notifier).seasonButtonNode,
+              onPress: () {
+            // model.showEpisodes();
+          }),
+          const SizedBox(width: 20),
+          ButtonWithIcon(
+            'Trailer',
+            icon: const Icon(FontAwesomeIcons.youtube,
                 size: 15, color: Colors.white),
-            node: ref.read(detailController.notifier).seasonButtonNode,
             onPress: () {
-          // model.showEpisodes();
-        }),
-        const SizedBox(width: 20),
-        ButtonWithIcon(
-          'Trailer',
-          icon: const Icon(FontAwesomeIcons.youtube,
-              size: 15, color: Colors.white),
-          onPress: () {
-            // model.playTrailer();
-          },
-        ),
-        const SizedBox(width: 20),
-        ButtonWithIcon(
-          'Trakt',
-          icon: Image.asset(
-            'assets/images/trakt.png',
-            width: 15,
-            color: Colors.white,
+              // model.playTrailer();
+            },
           ),
-          onPress: () {
-            // show trakt Dialog
-          },
-        )
-      ],
+          const SizedBox(width: 20),
+          ButtonWithIcon(
+            'Trakt',
+            icon: Image.asset(
+              'assets/images/trakt.png',
+              width: 15,
+              color: Colors.white,
+            ),
+            onPress: () {
+              // show trakt Dialog
+            },
+          )
+        ],
+      ),
     );
   }
 }

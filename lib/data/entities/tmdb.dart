@@ -46,6 +46,9 @@ class Tmdb {
   @JsonKey(name: 'backdrop_path')
   String backdropPath;
 
+  @JsonKey(name: 'logo_path')
+  String logoPath;
+
   @JsonKey(name: 'original_title')
   String originalTitle;
 
@@ -73,6 +76,8 @@ class Tmdb {
   String get smallPath => 'https://image.tmdb.org/t/p/w342';
   String get posterBig => 'https://image.tmdb.org/t/p/w780$posterPath';
   String get posterSmall => 'https://image.tmdb.org/t/p/w342$posterPath';
+  String get logoBig => 'https://image.tmdb.org/t/p/w780$logoPath';
+  String get logoSmall => 'https://image.tmdb.org/t/p/w342$logoPath';
   String get stillBig => 'https://image.tmdb.org/t/p/w300$stillPath';
   String get stillSmall => 'https://image.tmdb.org/t/p/w185$stillPath';
   String get backdropBig => 'https://image.tmdb.org/t/p/w1280$backdropPath';
@@ -82,6 +87,7 @@ class Tmdb {
       {this.posterPath = '',
       this.id = 0,
       this.backdropPath = '',
+      this.logoPath = '',
       this.stillPath = '',
       this.episodeNumber = 0,
       this.voteCount = 0,
