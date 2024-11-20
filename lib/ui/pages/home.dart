@@ -33,7 +33,7 @@ class HomePage extends HookConsumerWidget {
       }
     });
 
-    double extent = 275;
+    double extent = 280;
 
     return sections.isEmpty
         ? const SizedBox()

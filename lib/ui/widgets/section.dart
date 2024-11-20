@@ -41,7 +41,7 @@ class Section extends HookConsumerWidget {
         }
       });
     }
-    double extent = e.big ? 220 : 90;
+    double extent = e.big ? 225 : 90;
     final sec = ref.watch(selectedSectionProvider);
 
     return Column(
@@ -71,7 +71,6 @@ class Section extends HookConsumerWidget {
                 height: e.big ? 170 : 180,
                 // width: double.infinity,
                 child: OdinCarousel(
-                    key: Key("section-${e.title}"),
                     itemBuilder: (context, itemIndex, realIndex, controller) {
                       final currentOffset = extent * realIndex;
                       const maxScale = 1;
@@ -121,14 +120,16 @@ class Section extends HookConsumerWidget {
                     },
                     extent: extent,
                     onIndexChanged: (index) {
-                      // print("Section ${index}");
-                      Future.delayed(const Duration(milliseconds: 100), () {
+                      Future.delayed(const Duration(milliseconds: 10), () {
                         ref.read(selectedItemProvider.notifier).state =
                             items[index];
                         ref
                             .read(
                                 selectedItemOfSectionProvider(e.title).notifier)
                             .state = items[index];
+                        if (index == items.length - 1 && e.paginate) {
+                          ref.read(itemsProvider(e.url).notifier).next(e.url);
+                        }
                       });
                     },
                     onEnter: () {

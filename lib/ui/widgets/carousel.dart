@@ -5,9 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_carousel/infinite_carousel.dart';
+import 'package:odin/helpers.dart';
 import 'package:odin/ui/focusnodes.dart';
 
-class OdinCarousel extends HookConsumerWidget {
+class OdinCarousel extends HookConsumerWidget with BaseHelper {
   const OdinCarousel(
       {Key? key,
       required this.itemBuilder,
@@ -37,18 +38,35 @@ class OdinCarousel extends HookConsumerWidget {
   Widget build(BuildContext context, ref) {
     final dur = useState(300);
     final dir = useState("");
+    final idx = useState(0);
+    final didx = useDebounced(idx.value, const Duration(milliseconds: 200));
+    // print("REBUILDING ${count}");
 
     final controller = useMemoized(() => InfiniteScrollController(), [key]);
 
-    useEffect(() {
-      void listener() {
-        final index = (controller.offset / extent);
-        onIndexChanged(index.round());
-      }
+    useEffect(
+      () {
+        void listener() {
+          idx.value = (controller.offset / extent).round();
+        }
 
-      controller.addListener(listener);
-      return () => controller.removeListener(listener);
-    }, [controller]);
+        controller.addListener(listener);
+        return () => controller.removeListener(listener);
+      },
+    );
+
+    useEffect(() {
+      int index = didx ?? 0;
+      if (index > count) {
+        index = count;
+      }
+      if (index < 0) {
+        index = 0;
+      }
+      onIndexChanged(index);
+      logInfo(didx ?? 0);
+      return;
+    }, [didx]);
 
     final fn = useFocusNode();
     bool holding = false;
