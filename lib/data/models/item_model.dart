@@ -40,6 +40,8 @@ class ListData {
 class SectionItem {
   String title;
   String url;
+  String? type;
+  bool? isGenre;
   bool big;
   bool filterWatched;
   bool isTodayTomorrowEpisodes;
@@ -49,6 +51,8 @@ class SectionItem {
   SectionItem({
     this.title = '',
     this.url = '',
+    this.type,
+    this.isGenre,
     this.big = false,
     this.filterWatched = false,
     this.isTodayTomorrowEpisodes = false,

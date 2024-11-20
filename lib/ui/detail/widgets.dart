@@ -84,31 +84,34 @@ class ItemDetails extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 10),
-        CaptionText(item.network != ''
-            ? item.network
-            : item.tmdb!.productionCompanies.isNotEmpty
-                ? item.tmdb!.productionCompanies.first.name
-                : ''),
+        CaptionText(
+          item.network != ''
+              ? item.network
+              : item.tmdb!.productionCompanies.isNotEmpty
+                  ? item.tmdb!.productionCompanies.first.name
+                  : '',
+          style: TextStyle(fontSize: 8),
+        ),
         // CachedNetworkImage(
         //     height: 30,
         //     errorWidget: (_, __, ___) => const SizedBox(height: 50),
         //     placeholder: (_, __) => const SizedBox(height: 50),
         //     imageUrl: item.tmdb!.smallPath +
         //         item.tmdb!.productionCompanies.first.logoPath),
-        Headline1(item.title),
+        Headline3(item.title),
         Row(
           children: [
-            Headline3(preTitle),
-            const Headline3('  |  '),
-            Headline4(
+            CaptionText(preTitle),
+            const CaptionText('  |  '),
+            CaptionText(
               runtimeReadable(item.runtime),
             ),
-            const Headline3('  |  '),
-            Headline4(
+            const CaptionText('  |  '),
+            CaptionText(
               item.genres.map((e) => e.toCapitalize()).join(', '),
             ),
-            const Headline3('  |  '),
-            Headline4(item.language.toUpperCase()),
+            const CaptionText('  |  '),
+            CaptionText(item.language.toUpperCase()),
           ],
         ),
         Padding(
@@ -130,14 +133,14 @@ class ItemDetails extends ConsumerWidget {
             ),
             Align(
                 alignment: Alignment.topLeft,
-                child: Headline3(item.tagline != '' ? item.tagline : '-')),
+                child: Headline4(item.tagline != '' ? item.tagline : '-')),
             const SizedBox(height: 5),
             Container(
               height: 60,
               padding: const EdgeInsets.only(right: 350),
               child: Align(
                 alignment: Alignment.topLeft,
-                child: BodyText1(
+                child: CaptionText(
                   overview,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,

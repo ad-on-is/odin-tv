@@ -12,7 +12,6 @@ import 'package:odin/ui/dialogs/streams.dart';
 import 'package:odin/ui/widgets/ensure_visible.dart';
 import 'package:odin/ui/widgets/widgets.dart';
 
-
 class Episodes extends ConsumerWidget {
   final Trakt season;
   final Trakt show;
@@ -127,13 +126,13 @@ class Episodes extends ConsumerWidget {
                       ],
                     ),
                     const SizedBox(height: 7),
-                    Headline3(
+                    Headline4(
                         'S${season.number}E${ref.watch(detailController.notifier).episode + 1} - ${season.episodes[ref.watch(detailController.notifier).episode].title}'),
                     const SizedBox(height: 5),
                     const SizedBox(height: 15),
                     SizedBox(
                         width: MediaQuery.of(context).size.width / 2,
-                        child: BodyText1(
+                        child: CaptionText(
                           season
                               .episodes[
                                   ref.watch(detailController.notifier).episode]

@@ -27,20 +27,20 @@ class Grid extends ConsumerWidget {
       }
     });
 
-    double extent = 235;
+    double extent = 190;
+    // double extent = 290;
 
     return sections.isEmpty
         ? const SizedBox()
-        : Container(
+        : Padding(
             padding: const EdgeInsets.only(top: 150),
             child: OdinCarousel(
                 itemBuilder: (context, itemIndex, realIndex, controller) {
-                  return SizedBox(
-                      height: 100, child: Section(e: sections[itemIndex]));
+                  return Section(e: sections[itemIndex]);
                 },
                 extent: extent,
                 onIndexChanged: (index) {
-                  Future.delayed(const Duration(milliseconds: 100), () {
+                  Future.delayed(const Duration(milliseconds: 50), () {
                     ref.read(selectedSectionProvider.notifier).state =
                         sections[index].title;
                     ref.read(selectedItemProvider.notifier).state = ref.read(
@@ -51,51 +51,9 @@ class Grid extends ConsumerWidget {
                   PhysicalKeyboardKey.arrowUp,
                   PhysicalKeyboardKey.arrowDown
                 ],
+                anchor: 0.0,
                 count: sections.length,
                 axis: Axis.vertical));
-
-    // return SingleChildScrollView(
-    //   child: Column(
-    //     children: [
-    //       Column(
-    //           children: sections
-    //               .map((SectionItem e) => Section(
-    //                     e: e,
-    //                     lastItemReached: () {
-    //                       // controller.nextPage(e.url);
-    //                     },
-    //                   ))
-    //               .toList()),
-    //       // SizedBox(
-    //       //   height: 50,
-    //       //   child: ListView.builder(
-    //       //       scrollDirection: Axis.horizontal,
-    //       //       itemCount: genres.length,
-    //       //       itemBuilder: (ctx, index) => EnsureVisible(
-    //       //           isFirst: index == 0,
-    //       //           isLast: index == genres.length - 1,
-    //       //           child: Padding(
-    //       //             padding: const EdgeInsets.only(right: 10),
-    //       //             child: TextButton(
-    //       //               child: CaptionText(genres[index]["name"]!),
-    //       //               onPressed: () {
-    //       //                 ref.read(genreProvider(type).notifier).state = index;
-    //       //               },
-    //       //             ),
-    //       //           ))),
-    //       // ),
-    //       const SizedBox(height: 20),
-    //       // Consumer(builder: (ctx, ref, _) {
-    //       //   final genre = ref.watch(genreProvider(type));
-    //       //   return Section(
-    //       //       e: SectionItem(
-    //       //           title: 'GENRE: ${genres[genre]["name"]!.toUpperCase()}',
-    //       //           url:
-    //       //               '/$type/watched/monthly?genres=${genres[genre]["slug"]}'));
-    //       // })
-    //     ],
-    //   ),
-    // );
   }
 }
 

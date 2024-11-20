@@ -1,6 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:helpers/helpers.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -37,56 +38,75 @@ class App extends HookConsumerWidget {
               shadowColor: Colors.transparent,
               surfaceTintColor: Colors.transparent,
               actions: [
-                SizedBox(
-                  height: 20,
-                  child: Row(
-                    children: [
-                      TextButton(
-                        focusNode: menufocus[1],
-                        child: BodyText1(
-                          'Home',
-                          style: TextStyle(fontSize: 10),
-                        ),
-                        onPressed: () {
-                          ref.read(appPageProvider.notifier).state = 0;
-                        },
-                      ),
-                      const SizedBox(width: 5),
-                      TextButton(
-                        focusNode: menufocus[2],
-                        child: BodyText1(
-                          'Movies',
-                          style: TextStyle(
-                            fontSize: 10,
+                Consumer(
+                  builder: (context, ref, child) {
+                    final page = ref.watch(appPageProvider);
+                    return SizedBox(
+                      height: 20,
+                      child: Row(
+                        children: [
+                          TextButton(
+                            focusNode: menufocus[1],
+                            // style: ButtonStyle(
+                            //     backgroundColor: WidgetStatePropertyAll(
+                            //         AppColors.purple
+                            //             .withAlpha(page == 0 ? 80 : 0))),
+                            child: const BodyText1(
+                              'Home',
+                              style: TextStyle(fontSize: 10),
+                            ),
+                            onPressed: () {
+                              ref.read(appPageProvider.notifier).state = 0;
+                            },
                           ),
-                        ),
-                        onPressed: () {
-                          ref.read(appPageProvider.notifier).state = 1;
-                        },
+                          const SizedBox(width: 5),
+                          TextButton(
+                            focusNode: menufocus[2],
+                            style: ButtonStyle(
+                                backgroundColor: WidgetStatePropertyAll(
+                                    AppColors.purple
+                                        .withAlpha(page == 1 ? 80 : 0))),
+                            child: const BodyText1(
+                              'Movies',
+                              style: TextStyle(
+                                fontSize: 10,
+                              ),
+                            ),
+                            onPressed: () {
+                              ref.read(appPageProvider.notifier).state = 1;
+                            },
+                          ),
+                          const SizedBox(width: 5),
+                          TextButton(
+                            focusNode: menufocus[3],
+                            style: ButtonStyle(
+                                backgroundColor: WidgetStatePropertyAll(
+                                    AppColors.purple
+                                        .withAlpha(page == 2 ? 80 : 0))),
+                            child: const BodyText1(
+                              'TV Shows',
+                              style: TextStyle(fontSize: 10),
+                            ),
+                            onPressed: () {
+                              ref.read(appPageProvider.notifier).state = 2;
+                            },
+                          ),
+                          IconButton(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 0, vertical: 5),
+                            focusColor: Colors.white.withAlpha(40),
+                            splashRadius: 20,
+                            focusNode: menufocus[0],
+                            icon: const Icon(FontAwesomeIcons.gear,
+                                size: 10, color: Colors.white),
+                            onPressed: () =>
+                                Scaffold.of(context).openEndDrawer(),
+                          ),
+                          const SizedBox(width: 20)
+                        ],
                       ),
-                      const SizedBox(width: 5),
-                      TextButton(
-                        focusNode: menufocus[3],
-                        child: BodyText1(
-                          'TV Shows',
-                          style: TextStyle(fontSize: 10),
-                        ),
-                        onPressed: () {
-                          ref.read(appPageProvider.notifier).state = 2;
-                        },
-                      ),
-                      IconButton(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 0, vertical: 5),
-                        focusColor: Colors.white.withAlpha(40),
-                        splashRadius: 20,
-                        focusNode: menufocus[0],
-                        icon: Icon(FontAwesomeIcons.gear,
-                            size: 10, color: Colors.white),
-                        onPressed: () => Scaffold.of(context).openEndDrawer(),
-                      ),
-                    ],
-                  ),
+                    );
+                  },
                 )
               ],
             ),
@@ -137,38 +157,66 @@ class AppBackground extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final background = ref.watch(selectedItemProvider).tmdb?.backdropBig ?? "";
-    return Stack(children: <Widget>[
-      background.isEmpty
-          ? Container()
-          : SizedBox(
-              width: double.infinity,
+    final item = ref.watch(selectedItemProvider);
+    final background = item.tmdb?.backdropBig ?? "";
+    return Animate(
+      autoPlay: true,
+      effects: const [
+        BlurEffect(
+            duration: Duration(milliseconds: 300),
+            end: Offset(0, 0),
+            begin: Offset(10, 10))
+      ],
+      child: background.isEmpty
+          ? Container(
               height: double.infinity,
-              child: CachedNetworkImage(
-                imageUrl: background,
-                fit: BoxFit.fitWidth,
-                errorWidget: (_, __, ___) =>
-                    Container(color: AppColors.darkGray),
-                placeholder: (_, __) => Container(color: AppColors.darkGray),
+              width: double.infinity,
+              color: AppColors.darkGray,
+            )
+          : Stack(children: <Widget>[
+              SizedBox(
+                width: double.infinity,
+                height: double.infinity,
+                child: CachedNetworkImage(
+                  imageUrl: background,
+                  fit: BoxFit.fitWidth,
+                  errorWidget: (_, __, ___) =>
+                      Container(color: AppColors.darkGray),
+                  placeholder: (_, __) => Container(color: AppColors.darkGray),
+                ),
               ),
-            ),
-      Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-              AppColors.darkGray,
-              AppColors.darkGray.withAlpha(50),
-              // AppColors.darkGray.withAlpha((alpha / 2).round()),
-              AppColors.darkGray.withAlpha(150),
-              AppColors.darkGray,
-              AppColors.darkGray,
+              Container(
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                      AppColors.darkGray,
+                      AppColors.darkGray.withAlpha(50),
+                      AppColors.darkGray.withAlpha(150),
+                      AppColors.darkGray,
+                      AppColors.darkGray,
 
-              // AppColors.darkGray.withAlpha(250),
-            ])),
-      ),
-    ]);
+                      // AppColors.darkGray.withAlpha(250),
+                    ])),
+              ),
+              // Padding(
+              //   padding: const EdgeInsets.only(top: 70.0, left: 20),
+              //   child: Column(
+              //       crossAxisAlignment: CrossAxisAlignment.start,
+              //       children: [
+              //         Headline3(
+              //           item.title,
+              //           textAlign: TextAlign.start,
+              //         ),
+              //         BodyText1(
+              //           item.tagline,
+              //           textAlign: TextAlign.start,
+              //         ),
+              //       ]),
+              // )
+            ]),
+    );
   }
 }
 

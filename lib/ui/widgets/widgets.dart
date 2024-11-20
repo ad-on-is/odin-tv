@@ -68,8 +68,8 @@ class Watched extends StatelessWidget {
       children: [
         Icon(
           FontAwesomeIcons.solidCircleCheck,
-          color: AppColors.green,
-          size: 11,
+          color: AppColors.green.withAlpha(100),
+          size: 9,
         ),
         SizedBox(width: iconOnly ? 0 : 5),
         iconOnly

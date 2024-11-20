@@ -7,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_carousel/infinite_carousel.dart';
 import 'package:odin/helpers.dart';
 import 'package:odin/ui/focusnodes.dart';
+import 'package:odin/ui/widgets/ensure_visible.dart';
 
 class OdinCarousel extends HookConsumerWidget with BaseHelper {
   const OdinCarousel(
@@ -15,6 +16,7 @@ class OdinCarousel extends HookConsumerWidget with BaseHelper {
       required this.onIndexChanged,
       this.onEnter,
       this.anchor,
+      this.autofocus,
       required this.extent,
       required this.keys,
       required this.count,
@@ -26,6 +28,7 @@ class OdinCarousel extends HookConsumerWidget with BaseHelper {
   final void Function()? onEnter;
   final double extent;
   final double? anchor;
+  final bool? autofocus;
   final int count;
   final Axis axis;
   final List<PhysicalKeyboardKey> keys;
@@ -70,12 +73,13 @@ class OdinCarousel extends HookConsumerWidget with BaseHelper {
     }, [didx]);
 
     final fn = useFocusNode();
+
     bool holding = false;
 
     return KeyboardListener(
         key: key,
         focusNode: fn,
-        includeSemantics: true,
+        autofocus: autofocus ?? false,
         onKeyEvent: (KeyEvent keyEvent) {
           if (keyEvent is KeyUpEvent) {
             dur.value = 300;
@@ -96,8 +100,10 @@ class OdinCarousel extends HookConsumerWidget with BaseHelper {
 
           if (controller.offset <= extent) {
             toggleMenuFocus(true);
+            fn.skipTraversal = false;
           } else {
             toggleMenuFocus(false);
+            fn.skipTraversal = true;
           }
 
           holding = true;

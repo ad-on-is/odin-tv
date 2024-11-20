@@ -27,29 +27,16 @@ class EnsureVisible extends StatefulWidget {
 }
 
 class _EnsureVisibleState extends State<EnsureVisible> {
-  KeyEventResult _handleKey(BuildContext context, KeyEvent rawKeyEvent) {
-    if (rawKeyEvent.logicalKey == LogicalKeyboardKey.arrowRight &&
-        widget.isLast) {
-      return KeyEventResult.handled;
-    }
-    if (rawKeyEvent.logicalKey == LogicalKeyboardKey.arrowLeft &&
-        widget.isFirst) {
-      return KeyEventResult.handled;
-    }
-    return KeyEventResult.ignored;
-  }
-
   @override
   Widget build(BuildContext context) => Focus(
-        onKeyEvent: (_, rawKeyEvent) => _handleKey(context, rawKeyEvent),
         canRequestFocus: false,
         onFocusChange: (focused) {
           if (focused) {
             Scrollable.ensureVisible(
               context,
               alignment: widget.alignment,
-              duration: const Duration(milliseconds: 500),
-              curve: Curves.easeInOut,
+              duration: const Duration(milliseconds: 100),
+              curve: Curves.linearToEaseOut,
             );
             if (widget.onFocus != null) {
               widget.onFocus!();

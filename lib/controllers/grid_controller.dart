@@ -20,7 +20,9 @@ final gridSectionProvider = FutureProvider.family
           url: e["url"],
           paginate: e["paginate"] ?? false,
           big: e["big"] ?? false))
-      .toList();
+      .toList()
+    ..add(SectionItem(title: 'GENRE', url: '', type: type, isGenre: true))
+    ..toList();
 
   // var year = DateTime.now().year;
   // final sections = [
