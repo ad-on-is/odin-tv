@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:odin/data/entities/tmdb.dart';
 import 'package:odin/data/entities/trakt.dart';
 import 'package:odin/data/entities/user.dart';
 import 'package:odin/data/services/api.dart';
 import 'package:odin/data/services/db.dart';
+import 'package:odin/data/services/tmdb_service.dart';
 import 'package:odin/helpers.dart';
 
 Map<String, dynamic> _parseAndDecodeList(String response) {
@@ -138,3 +140,21 @@ class WatchedItems extends StateNotifier<bool> {
 }
 
 final watchedProvider = StateNotifierProvider((ref) => WatchedItems());
+final seasonsProvider =
+    FutureProviderFamily<List<Trakt>, TraktIds>((ref, ids) async {
+  final seasons = await ref.watch(traktProvider).getSeasons(ids.trakt);
+  final episodeImages = await ref
+      .watch(tmdbProvider)
+      .getEpisodeImages(ids.tmdb, seasons.map((s) => s.number).toList());
+  const String url = 'https://image.tmdb.org/t/p/w185';
+  for (int i = 0; i < seasons.length; i++) {
+    final sn = seasons[i].number;
+    for (int e = 0; e < seasons[i].episodes.length; e++) {
+      final en = seasons[i].episodes[e].number;
+      if (episodeImages[sn] != null && episodeImages[sn]![en] != null) {
+        seasons[i].episodes[e].tmdb = Tmdb(stillPath: episodeImages[sn]![en]!);
+      }
+    }
+  }
+  return seasons;
+});

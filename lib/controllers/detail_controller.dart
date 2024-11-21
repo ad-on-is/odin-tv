@@ -98,3 +98,5 @@ class DetailController extends StateNotifier<bool> with BaseHelper {
 final detailController = StateNotifierProvider.autoDispose((ref) =>
     DetailController(ref, ref.watch(traktProvider), ref.watch(tmdbProvider),
         ref.watch(authProvider.notifier)));
+
+final selectedSeasonProvider = StateProvider<int>((ref) => 0);

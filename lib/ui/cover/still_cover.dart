@@ -1,88 +1,149 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:helpers/helpers.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:odin/data/entities/trakt.dart';
 import 'package:odin/theme.dart';
 
-class StillCover extends StatefulWidget {
-  final String? imagePath;
+class StillCover extends HookConsumerWidget {
+  final Trakt? item;
+  final Trakt? season;
   final Function? onPressed;
   final Function? onFocus;
   final bool? focus;
   const StillCover(
-      {Key? key, this.imagePath, this.onPressed, this.onFocus, this.focus})
+      {Key? key,
+      this.item,
+      this.season,
+      this.onPressed,
+      this.onFocus,
+      this.focus})
       : super(key: key);
 
-  @override
-  StillCoverState createState() => StillCoverState();
-}
-
-class StillCoverState extends State<StillCover> with TickerProviderStateMixin {
-  AnimationController? _controller;
-  Animation<double>? _animation;
-  FocusNode? _node;
-  // Color _focusColor = Colors.black.withAlpha(200);
-  @override
-  void initState() {
-    _node = FocusNode();
-    // if (widget.focus) {
-    //   if (this.mounted) _node.requestFocus();
-    // }
-    _node!.addListener(_onFocusChange);
-    _controller = AnimationController(
-        duration: const Duration(milliseconds: 100),
-        vsync: this,
-        lowerBound: 0.9,
-        upperBound: 1);
-    _animation = CurvedAnimation(parent: _controller!, curve: Curves.easeIn);
-
-    super.initState();
-  }
-
-  void _onFocusChange() {
-    if (_node!.hasFocus) {
-      _controller!.forward();
-      setState(() {
-        // _focusColor = Colors.transparent;
-      });
-      widget.onFocus!();
-    } else {
-      // _focusColor = Colors.black.withAlpha(200);
-      _controller!.reverse();
-      setState(() {});
-    }
+  String airDate(DateTime date) {
+    return "${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year}";
   }
 
   @override
-  void dispose() {
-    _controller!.dispose();
-    _node!.dispose();
-    super.dispose();
-  }
+  Widget build(BuildContext context, ref) {
+    final node = useFocusNode();
 
-  @override
-  Widget build(BuildContext context) {
-    return RawMaterialButton(
-      focusNode: _node,
-      elevation: 0,
-      focusElevation: 0,
-      fillColor: Colors.transparent,
-      splashColor: Colors.transparent,
-      focusColor: Colors.transparent,
-      onPressed: () {
-        widget.onPressed!();
-      },
-      child: AspectRatio(
-        aspectRatio: 1.78,
-        child: ScaleTransition(
-          scale: _animation!,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(5),
-            child: CachedNetworkImage(
-              imageUrl: widget.imagePath!,
-              errorWidget: (_, __, ___) => Container(color: AppColors.darkGray),
-              placeholder: (_, __) => Container(color: AppColors.darkGray),
+    return Focus(
+      focusNode: node,
+      child: GestureDetector(
+        onTap: () {
+          onPressed!();
+        },
+        child: Stack(
+          children: [
+            CachedNetworkImage(
+              imageBuilder: (context, imageProvider) => Container(
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.black.withAlpha(180),
+                          blurRadius: 10,
+                          spreadRadius: -10,
+                          offset: const Offset(5, 15))
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(7),
+                    child: Image(
+                      image: imageProvider,
+                    ),
+                  )),
+              imageUrl: item?.tmdb?.stillSmall ?? '',
+              errorWidget: (_, __, ___) => Container(
+                height: 105,
+                width: 185,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(7),
+                  color: AppColors.darkGray,
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.black.withAlpha(180),
+                        blurRadius: 10,
+                        spreadRadius: -10,
+                        offset: const Offset(5, 15))
+                  ],
+                ),
+                child: Icon(
+                  FontAwesomeIcons.image,
+                  color: AppColors.darkGray,
+                  size: 30,
+                ),
+              ),
+              placeholder: (_, __) => Container(
+                height: 105,
+                width: 185,
+                decoration: BoxDecoration(
+                  color: AppColors.darkGray,
+                  borderRadius: BorderRadius.circular(7),
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.black.withAlpha(180),
+                        blurRadius: 10,
+                        spreadRadius: -10,
+                        offset: const Offset(5, 15))
+                  ],
+                ),
+                child: Icon(
+                  FontAwesomeIcons.image,
+                  color: AppColors.darkGray,
+                  size: 30,
+                ),
+              ),
               fit: BoxFit.fill,
             ),
-          ),
+            Container(
+              height: 105,
+              width: 185,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(7),
+                  gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.transparent,
+                        AppColors.darkGray.withAlpha(50),
+                        AppColors.darkGray.withAlpha(230),
+
+                        // AppColors.darkGray.withAlpha(250),
+                      ])),
+            ),
+            Container(
+              height: 105,
+              width: 185,
+              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Headline4('S${season?.number}E${item?.number}',
+                          style: const TextStyle(fontSize: 8)),
+                      CaptionText(
+                        item!.firstAired.isAfter(DateTime.now())
+                            ? 'in ${item!.firstAired.difference(DateTime.now()).inDays} days'
+                            : airDate(item!.firstAired),
+                        style: const TextStyle(fontSize: 8),
+                      ),
+                    ],
+                  ),
+                  CaptionText(
+                    item?.title ?? '',
+                    style: const TextStyle(fontSize: 8),
+                  )
+                ],
+              ),
+            )
+          ],
         ),
       ),
     );

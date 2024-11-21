@@ -9,6 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:odin/controllers/app_controller.dart';
 import 'package:odin/data/models/item_model.dart';
 import 'package:odin/theme.dart';
+import 'package:odin/ui/cover/animated.dart';
 import 'package:odin/ui/cover/backdrop_cover.dart';
 import 'package:odin/ui/cover/poster_cover.dart';
 import 'package:odin/ui/detail/detail.dart';
@@ -75,53 +76,16 @@ class Section extends HookConsumerWidget {
                     style: TextStyle(color: AppColors.gray2),
                   ),
                 )
-              : Container(
+              : SizedBox(
                   height: e.big ? 145 : 150,
                   // width: double.infinity,
                   child: OdinCarousel(
                       itemBuilder: (context, itemIndex, realIndex, controller) {
-                        final currentOffset = extent * realIndex;
-                        const maxScale = 1;
-                        const fallOff = 0.2;
-                        const minScale = 0.85;
-                        return AnimatedBuilder(
-                          animation: controller,
-                          builder: (context, child) {
-                            final diff = (controller.offset - currentOffset);
-
-                            final carouselRatio = extent / fallOff;
-                            // double r = (maxScale - (diff / carouselRatio));
-                            double s =
-                                (maxScale - (diff / carouselRatio).abs());
-
-                            double f = s;
-                            double b = s;
-                            if (s < minScale) {
-                              s = minScale;
-                            }
-
-                            if (f < 0.3) {
-                              f = 0.3;
-                            }
-
-                            if (b < 0.2) {
-                              b = 0.2;
-                            }
-
-                            return child!
-                                .animate()
-                                .blurXY(end: 0, begin: 5)
-                                .animate(target: sec == e.title ? 1 : 0)
-                                .scaleXY(
-                                    end: s,
-                                    begin: minScale,
-                                    curve: Curves.easeInOutExpo)
-                                .fade(end: f, begin: 0.3)
-                                .blurXY(
-                                    end: 1.3 - (1.3 * b),
-                                    begin: 1.3 - (1.3 * 0.02));
-                            // .flipH(end: 1.5 - (1.5 * s))
-                          },
+                        return AnimatedCover(
+                          controller: controller,
+                          extent: extent,
+                          realIndex: realIndex,
+                          target: sec == e.title,
                           child: e.big
                               ? BackdropCover(items[itemIndex])
                               : PosterCover(items[itemIndex]),

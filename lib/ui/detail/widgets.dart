@@ -11,6 +11,7 @@ import 'package:odin/data/services/trakt_service.dart';
 import 'package:odin/helpers.dart';
 import 'package:odin/theme.dart';
 import 'package:odin/data/entities/trakt.dart';
+import 'package:odin/ui/app.dart';
 import 'package:odin/ui/detail/episodes.dart';
 import 'package:odin/ui/widgets/ensure_visible.dart';
 import 'package:odin/ui/widgets/widgets.dart';
@@ -49,27 +50,7 @@ class Background extends StatelessWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Stack(children: <Widget>[
-      CachedNetworkImage(
-        imageUrl: background,
-        fit: BoxFit.fill,
-        errorWidget: (_, __, ___) => Container(color: AppColors.darkGray),
-        placeholder: (_, __) => Container(color: AppColors.darkGray),
-      ),
-      Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.bottomLeft,
-                end: Alignment.topRight,
-                colors: [
-              AppColors.darkGray,
-              AppColors.darkGray.withAlpha(200),
-              AppColors.darkGray.withAlpha(100),
-              AppColors.darkGray.withAlpha(0),
-            ])),
-      ),
-      child
-    ]);
+    return Stack(children: <Widget>[const AppBackground(), child]);
   }
 }
 
@@ -80,95 +61,76 @@ class ItemDetails extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final String preTitle = item.year.toString();
     final String overview = item.overview;
-    return Column(
+    return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const SizedBox(height: 20),
-
-        // CachedNetworkImage(
-        //     height: 30,
-        //     errorWidget: (_, __, ___) => const SizedBox(height: 50),
-        //     placeholder: (_, __) => const SizedBox(height: 50),
-        //     imageUrl: item.tmdb!.smallPath +
-        //         item.tmdb!.productionCompanies.first.logoPath),
-
-        SizedBox(
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: CachedNetworkImage(
-                height: 150,
-                fit: BoxFit.contain,
-                errorWidget: (_, __, ___) => const SizedBox(height: 30),
-                placeholder: (_, __) => const SizedBox(height: 30),
-                imageUrl: item.tmdb!.logoBig),
-          ),
-        ),
-        const SizedBox(height: 10),
-        Row(
-          children: [
-            CaptionText(preTitle),
-            const CaptionText('  |  '),
-            CaptionText(
-              runtimeReadable(item.runtime),
-            ),
-            const CaptionText('  |  '),
-            CaptionText(
-              item.genres.map((e) => e.toCapitalize()).join(', '),
-            ),
-            const CaptionText('  |  '),
-            CaptionText(item.language.toUpperCase()),
-          ],
-        ),
-        const SizedBox(
-          height: 5,
-        ),
-        Headline4(
-          item.network != ''
-              ? item.network
-              : item.tmdb!.productionCompanies.isNotEmpty
-                  ? item.tmdb!.productionCompanies.first.name
-                  : '',
-          style: TextStyle(fontSize: 7),
-        ),
-
-        // Headline3(item.title),
-
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 0),
-          child: ref.watch(watchedProvider.notifier).items.contains(
-                      BaseHelper.hiveKey(item.type, item.ids.trakt)) ||
-                  item.watched
-              ? const Watched()
-              : const SizedBox(),
-        ),
-
         Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 200),
             ItemRating(item: item),
             const SizedBox(
-              height: 20,
+              height: 10,
+            ),
+            Row(
+              children: [
+                CaptionText(preTitle),
+                const CaptionText('  |  '),
+                CaptionText(
+                  runtimeReadable(item.runtime),
+                ),
+                const CaptionText('  |  '),
+                CaptionText(
+                  item.genres.map((e) => e.toCapitalize()).join(', '),
+                ),
+                const CaptionText('  |  '),
+                CaptionText(item.language.toUpperCase()),
+              ],
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            Headline4(
+              item.network != ''
+                  ? item.network
+                  : item.tmdb!.productionCompanies.isNotEmpty
+                      ? item.tmdb!.productionCompanies.first.name
+                      : '',
+              style: const TextStyle(fontSize: 7),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 0),
+              child: ref.watch(watchedProvider.notifier).items.contains(
+                          BaseHelper.hiveKey(item.type, item.ids.trakt)) ||
+                      item.watched
+                  ? const Watched()
+                  : const SizedBox(height: 15),
             ),
             Align(
                 alignment: Alignment.topLeft,
                 child: Headline4(item.tagline != '' ? item.tagline : '-')),
             const SizedBox(height: 5),
-            Container(
-              height: 60,
-              padding: const EdgeInsets.only(right: 350),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: CaptionText(
-                  overview,
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                ),
+            SizedBox(
+              width: 400,
+              child: CaptionText(
+                overview,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
               ),
+            ),
+            const SizedBox(
+              height: 15,
             ),
           ],
         ),
-        const SizedBox(
-          height: 15,
-        ),
+        CachedNetworkImage(
+            height: 150,
+            width: 400,
+            fit: BoxFit.contain,
+            errorWidget: (_, __, ___) => const SizedBox(height: 30),
+            placeholder: (_, __) => const SizedBox(height: 30),
+            imageUrl: item.tmdb!.logoBig),
       ],
     );
   }
@@ -283,7 +245,14 @@ class ImdbReview extends ConsumerWidget {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-        )
+        ),
+        EnsureVisible(
+          child: RawMaterialButton(
+              onPressed: () {
+                print("Just here for focus");
+              },
+              child: const Icon(FontAwesomeIcons.heart)),
+        ),
       ],
     );
   }
@@ -304,20 +273,16 @@ class ItemCast extends ConsumerWidget {
         ),
         const SizedBox(height: 20),
         SizedBox(
-          height: 200,
-          child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: cast.length,
-              itemBuilder: (ctx, index) => EnsureVisible(
-                    isFirst: index == 0,
-                    isLast: index == cast.length - 1,
-                    child: Focus(
-                      child: Padding(
+            height: 200,
+            child: Row(
+              children: cast
+                  .getRange(0, cast.length > 6 ? 6 : cast.length)
+                  .map((c) => Padding(
                         padding: const EdgeInsets.only(right: 20),
                         child: Column(
                           children: [
                             CachedNetworkImage(
-                                imageUrl: cast[index].profileSmall,
+                                imageUrl: c.profileSmall,
                                 imageBuilder: (ctx, img) => CircleAvatar(
                                     radius: 50, backgroundImage: img),
                                 errorWidget: (_, __, ___) => CircleAvatar(
@@ -327,17 +292,49 @@ class ItemCast extends ConsumerWidget {
                                     radius: 50,
                                     backgroundColor: AppColors.darkGray)),
                             const SizedBox(height: 10),
-                            Headline4(cast[index].name),
+                            Headline4(c.name),
                             CaptionText(
-                              cast[index].character,
+                              c.character,
                               // style: TextStyle(color: AppColors.gray1),
                             )
                           ],
                         ),
-                      ),
-                    ),
-                  )),
-        ),
+                      ))
+                  .toList(),
+            )
+            // child: ListView.builder(
+            //     scrollDirection: Axis.horizontal,
+            //     itemCount: cast.length,
+            //     itemBuilder: (ctx, index) => EnsureVisible(
+            //           isFirst: index == 0,
+            //           isLast: index == cast.length - 1,
+            //           child: Focus(
+            //             child: Padding(
+            //               padding: const EdgeInsets.only(right: 20),
+            //               child: Column(
+            //                 children: [
+            //                   CachedNetworkImage(
+            //                       imageUrl: cast[index].profileSmall,
+            //                       imageBuilder: (ctx, img) => CircleAvatar(
+            //                           radius: 50, backgroundImage: img),
+            //                       errorWidget: (_, __, ___) => CircleAvatar(
+            //                           radius: 50,
+            //                           backgroundColor: AppColors.darkGray),
+            //                       placeholder: (_, __) => CircleAvatar(
+            //                           radius: 50,
+            //                           backgroundColor: AppColors.darkGray)),
+            //                   const SizedBox(height: 10),
+            //                   Headline4(cast[index].name),
+            //                   CaptionText(
+            //                     cast[index].character,
+            //                     // style: TextStyle(color: AppColors.gray1),
+            //                   )
+            //                 ],
+            //               ),
+            //             ),
+            //           ),
+            //         )),
+            ),
       ],
     );
   }
@@ -347,12 +344,23 @@ class SeasonsAndEpisodes extends ConsumerWidget {
   final Trakt item;
   const SeasonsAndEpisodes({Key? key, required this.item}) : super(key: key);
 
+  bool isWatched(ref, List<Trakt> seasons, index) {
+    return ref.watch(watchedProvider.notifier).items.contains(
+            '${BaseHelper.hiveKey(item.type, item.ids.trakt, seasons[index].number)}full') ||
+        seasons[index].episodeCount > 0 &&
+            seasons[index].episodeCount ==
+                seasons[index].episodes.where((e) => e.watched).length;
+  }
+
   @override
   Widget build(BuildContext context, ref) {
-    ref.watch(detailController);
-    List<Trakt> seasons = ref.read(detailController.notifier).seasons;
+    List<Trakt> seasons = [];
+    ref.watch(seasonsProvider(item.ids)).whenData((value) {
+      seasons.addAll(value);
+    });
+
     return seasons.isEmpty
-        ? const SizedBox()
+        ? const SizedBox(height: 100)
         : Column(
             children: [
               SizedBox(
@@ -367,33 +375,22 @@ class SeasonsAndEpisodes extends ConsumerWidget {
                           padding: const EdgeInsets.only(right: 10),
                           child: TextButton(
                             style: TextButton.styleFrom(
-                              backgroundColor: AppColors.primary.withAlpha(20),
+                              backgroundColor: isWatched(ref, seasons, index)
+                                  ? AppColors.green.withAlpha(100)
+                                  : AppColors.primary.withAlpha(20),
                             ),
-                            child: Row(children: [
-                              CaptionText('Season ${seasons[index].number}'),
-                              ref.watch(watchedProvider.notifier).items.contains(
-                                          '${BaseHelper.hiveKey(item.type, item.ids.trakt, seasons[index].number)}full') ||
-                                      seasons[index].episodeCount > 0 &&
-                                          seasons[index].episodeCount ==
-                                              seasons[index]
-                                                  .episodes
-                                                  .where((e) => e.watched)
-                                                  .length
-                                  ? const Padding(
-                                      padding: EdgeInsets.only(left: 5),
-                                      child: Watched(iconOnly: true))
-                                  : const SizedBox()
-                            ]),
+                            child: seasons[index].number == 0
+                                ? CaptionText(seasons[index].title)
+                                : CaptionText('S${seasons[index].number}'),
                             onPressed: () {
-                              ref
-                                  .read(detailController.notifier)
-                                  .setSeason(index);
+                              ref.read(selectedSeasonProvider.notifier).state =
+                                  index;
                             },
                           ),
                         ))),
               ),
               Episodes(
-                  season: seasons[ref.watch(detailController.notifier).season],
+                  season: seasons[ref.watch(selectedSeasonProvider)],
                   show: item)
             ],
           );

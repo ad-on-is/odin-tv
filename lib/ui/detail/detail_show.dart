@@ -21,8 +21,8 @@ class DetailShow extends ConsumerWidget {
         item.tmdb!.backdropBig,
         child: SingleChildScrollView(
           child: Padding(
-              padding:
-                  const EdgeInsets.only(left: 50, right: 0, bottom: 10, top: 0),
+              padding: const EdgeInsets.only(
+                  left: 50, right: 50, bottom: 10, top: 0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -36,14 +36,13 @@ class DetailShow extends ConsumerWidget {
                       ],
                     ),
                   ),
-                  SizedBox(
-                    child: SeasonsAndEpisodes(item: item),
-                  ),
+                  const SizedBox(height: 100),
+                  SeasonsAndEpisodes(item: item),
                   SizedBox(
                     child: Column(
                       children: [
                         ItemCast(item: item),
-                        const ImdbReview(),
+                        const EnsureVisible(child: const ImdbReview()),
                       ],
                     ),
                   ),
