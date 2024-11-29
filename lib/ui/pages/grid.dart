@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:helpers/helpers/widgets/text.dart';
 import 'package:odin/controllers/app_controller.dart';
 import 'package:odin/controllers/grid_controller.dart';
 import 'package:odin/data/models/item_model.dart';

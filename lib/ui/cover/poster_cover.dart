@@ -93,13 +93,13 @@ class PosterCover extends HookConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               mainAxisSize: MainAxisSize.min,
               children: [
-                const SizedBox(height: 113),
-                Headline4(
-                  item.title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 6),
-                ),
+                const SizedBox(height: 123),
+                // Headline4(
+                //   item.title,
+                //   maxLines: 1,
+                //   overflow: TextOverflow.ellipsis,
+                //   style: const TextStyle(fontSize: 6),
+                // ),
                 const SizedBox(height: 0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

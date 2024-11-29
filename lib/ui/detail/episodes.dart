@@ -5,15 +5,11 @@ import 'package:helpers/helpers.dart';
 import 'package:odin/controllers/detail_controller.dart';
 
 import 'package:odin/data/entities/trakt.dart';
-import 'package:odin/data/services/trakt_service.dart';
-import 'package:odin/helpers.dart';
 import 'package:odin/theme.dart';
 import 'package:odin/ui/cover/animated.dart';
 import 'package:odin/ui/cover/still_cover.dart';
 import 'package:odin/ui/dialogs/streams.dart';
 import 'package:odin/ui/widgets/carousel.dart';
-import 'package:odin/ui/widgets/ensure_visible.dart';
-import 'package:odin/ui/widgets/widgets.dart';
 
 class Episodes extends ConsumerWidget {
   final Trakt season;
@@ -58,6 +54,7 @@ class Episodes extends ConsumerWidget {
                     child: StillCover(
                         item: season.episodes[itemIndex],
                         season: season,
+                        show: show,
                         onPressed: () {
                           showDialog(
                               context: context,

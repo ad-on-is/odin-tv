@@ -146,7 +146,6 @@ final seasonsProvider =
   final episodeImages = await ref
       .watch(tmdbProvider)
       .getEpisodeImages(ids.tmdb, seasons.map((s) => s.number).toList());
-  const String url = 'https://image.tmdb.org/t/p/w185';
   for (int i = 0; i < seasons.length; i++) {
     final sn = seasons[i].number;
     for (int e = 0; e < seasons[i].episodes.length; e++) {

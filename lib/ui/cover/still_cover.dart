@@ -5,11 +5,15 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:helpers/helpers.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:odin/data/entities/trakt.dart';
+import 'package:odin/data/services/trakt_service.dart';
+import 'package:odin/helpers.dart';
 import 'package:odin/theme.dart';
+import 'package:odin/ui/widgets/widgets.dart';
 
 class StillCover extends HookConsumerWidget {
   final Trakt? item;
   final Trakt? season;
+  final Trakt? show;
   final Function? onPressed;
   final Function? onFocus;
   final bool? focus;
@@ -18,6 +22,7 @@ class StillCover extends HookConsumerWidget {
       this.item,
       this.season,
       this.onPressed,
+      this.show,
       this.onFocus,
       this.focus})
       : super(key: key);
@@ -26,13 +31,19 @@ class StillCover extends HookConsumerWidget {
     return "${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year}";
   }
 
+  bool isWatched(ref, Trakt item, Trakt season, Trakt show) {
+    return item.watched ||
+        ref.watch(watchedProvider.notifier).items.contains(BaseHelper.hiveKey(
+            'show', show.ids.trakt, season.number, item.number));
+  }
+
   @override
   Widget build(BuildContext context, ref) {
     final node = useFocusNode();
 
     return Focus(
       focusNode: node,
-      child: GestureDetector(
+      child: InkWell(
         onTap: () {
           onPressed!();
         },
@@ -117,29 +128,34 @@ class StillCover extends HookConsumerWidget {
             Container(
               height: 105,
               width: 185,
-              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
+                  CaptionText(
+                    item?.title ?? '',
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: TextStyle(fontSize: 8, color: AppColors.gray1),
+                  ),
                   Row(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Headline4('S${season?.number}E${item?.number}',
                           style: const TextStyle(fontSize: 8)),
+                      isWatched(ref, item!, season!, show!)
+                          ? const Watched(iconOnly: true)
+                          : const SizedBox(),
                       CaptionText(
                         item!.firstAired.isAfter(DateTime.now())
                             ? 'in ${item!.firstAired.difference(DateTime.now()).inDays} days'
                             : airDate(item!.firstAired),
-                        style: const TextStyle(fontSize: 8),
+                        style: TextStyle(fontSize: 6, color: AppColors.gray1),
                       ),
                     ],
                   ),
-                  CaptionText(
-                    item?.title ?? '',
-                    style: const TextStyle(fontSize: 8),
-                  )
                 ],
               ),
             )

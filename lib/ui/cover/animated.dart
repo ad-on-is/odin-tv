@@ -38,8 +38,8 @@ class AnimatedCover extends StatelessWidget {
           s = minScale;
         }
 
-        if (f < 0.3) {
-          f = 0.3;
+        if (f < 0.5) {
+          f = 0.5;
         }
 
         if (b < 0.2) {
@@ -48,11 +48,11 @@ class AnimatedCover extends StatelessWidget {
 
         return child!
             .animate()
-            .blurXY(end: 0, begin: 5)
+            // .blurXY(end: 0, begin: 5)
             .animate(target: target! ? 1 : 0)
             .scaleXY(end: s, begin: minScale, curve: Curves.easeInOutExpo)
-            .fade(end: f, begin: 0.3)
-            .blurXY(end: 1.3 - (1.3 * b), begin: 1.3 - (1.3 * 0.02));
+            .fade(end: f, begin: 0.1);
+        // .blurXY(end: 1.3 - (1.3 * b), begin: 1.3 - (1.3 * 0.02));
         // .flipH(end: 1.5 - (1.5 * s))
       },
       child: child!,

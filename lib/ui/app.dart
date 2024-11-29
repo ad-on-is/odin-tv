@@ -2,12 +2,12 @@ import 'package:animations/animations.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:helpers/helpers.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:odin/controllers/app_controller.dart';
 import 'package:odin/theme.dart';
-import 'package:odin/ui/appbar.dart';
 import 'package:odin/ui/focusnodes.dart';
 import 'package:odin/ui/settings.dart';
 import 'package:odin/ui/widgets/widgets.dart';
@@ -152,21 +152,22 @@ class App extends HookConsumerWidget {
   }
 }
 
-class AppBackground extends ConsumerWidget {
+class AppBackground extends HookConsumerWidget {
   const AppBackground({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, ref) {
     final item = ref.watch(selectedItemProvider);
     final background = item.tmdb?.backdropBig ?? "";
-    return Animate(
-      autoPlay: true,
-      effects: const [
-        BlurEffect(
-            duration: Duration(milliseconds: 300),
-            end: Offset(0, 0),
-            begin: Offset(10, 10))
-      ],
+    final controller =
+        useAnimationController(duration: const Duration(milliseconds: 300));
+    controller.animateTo(1);
+    final animation = useAnimation(controller);
+    return AnimatedBuilder(
+      animation: controller,
+      builder: (context, child) {
+        return child!.animate().blurXY(begin: animation, end: 0);
+      },
       child: background.isEmpty
           ? Container(
               height: double.infinity,
