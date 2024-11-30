@@ -102,10 +102,12 @@ class Section extends HookConsumerWidget {
                           }
                         });
                       },
-                      onEnter: () {
-                        final item = ref.read(selectedItemProvider);
+                      onEnter: (idx) {
                         Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => Detail(item: item),
+                          builder: (context) => Detail(
+                              item: items[idx].number > 0
+                                  ? items[idx].show!
+                                  : items[idx]),
                         ));
                       },
                       keys: const [

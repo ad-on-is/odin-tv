@@ -112,7 +112,7 @@ class BackdropCover extends HookConsumerWidget {
                         fit: BoxFit.fill,
                       ),
                 const SizedBox(height: 15),
-                item.season != null
+                item.number > 0
                     ? CaptionText(
                         'S${item.season}E${item.number} - ${item.title}',
                         style: TextStyle(

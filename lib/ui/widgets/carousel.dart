@@ -27,7 +27,7 @@ class OdinCarousel extends HookConsumerWidget with BaseHelper {
   final Widget Function(BuildContext context, int itemIndex, int realIndex,
       InfiniteScrollController controller) itemBuilder;
   final void Function(int) onIndexChanged;
-  final void Function()? onEnter;
+  final void Function(int)? onEnter;
   final double extent;
   final double? anchor;
   final bool? autofocus;
@@ -114,12 +114,10 @@ class OdinCarousel extends HookConsumerWidget with BaseHelper {
             if (keyEvent.physicalKey == PhysicalKeyboardKey.enter ||
                 isSelect(keyEvent.physicalKey)) {
               if (onEnter != null) {
-                onEnter!();
+                onEnter!(didx ?? 0);
               }
               return;
             }
-
-            print(controller.offset);
 
             if (controller.offset <= extent) {
               toggleBeforeFocus(true, ref);
@@ -128,15 +126,6 @@ class OdinCarousel extends HookConsumerWidget with BaseHelper {
               toggleBeforeFocus(false, ref);
               fn.skipTraversal = true;
             }
-
-            //if (controller.offset >= (extent * count / 2)) {
-            //  toggleBeforeFocus(false, ref);
-            //  toggleAfterFocus(true, ref);
-            //  fn.skipTraversal = false;
-            //} else {
-            //  toggleAfterFocus(false, ref);
-            //  fn.skipTraversal = true;
-            //}
 
             if (keyEvent.physicalKey == keys[0]) {
               if (dir.value != "prev") {

@@ -19,41 +19,26 @@ class DetailShow extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final controller = useScrollController();
-    ref.watch(beforeFocusProvider);
-    controller.addListener(() {
-      controller.jumpTo(0);
-    });
     return Container(
       color: AppColors.darkGray,
       child: Background(
         item.tmdb!.backdropBig,
-        child: SingleChildScrollView(
-          controller: controller,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              SizedBox(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    EnsureVisible(child: Buttons(item: item)),
-                    // const SizedBox(height: 10),
-                    ItemDetails(item: item),
-                  ],
-                ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            SizedBox(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  EnsureVisible(child: Buttons(item: item)),
+                  // const SizedBox(height: 10),
+                  ItemDetails(item: item),
+                ],
               ),
-              const SizedBox(height: 20),
-              SeasonsAndEpisodes(item: item),
-              //Column(
-              //  children: [
-              //    ItemCast(item: item),
-              //    const ImdbReview(),
-              //  ],
-              //),
-              //const SizedBox(height: 20),
-            ],
-          ),
+            ),
+            const SizedBox(height: 20),
+            ItemSlides(item: item),
+          ],
         ),
       ),
     );

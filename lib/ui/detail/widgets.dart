@@ -329,9 +329,9 @@ class ItemCast extends ConsumerWidget {
   }
 }
 
-class SeasonsAndEpisodes extends ConsumerWidget {
+class ItemSlides extends ConsumerWidget {
   final Trakt item;
-  const SeasonsAndEpisodes({Key? key, required this.item}) : super(key: key);
+  const ItemSlides({Key? key, required this.item}) : super(key: key);
 
   bool isWatched(ref, List<Trakt> seasons, index) {
     return ref.watch(watchedProvider.notifier).items.contains(
@@ -343,28 +343,28 @@ class SeasonsAndEpisodes extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    List<Trakt> seasons = [];
+    List<Trakt> slides = [];
     ref.watch(seasonsProvider(item.ids)).whenData((value) {
-      seasons.addAll(value);
+      slides.addAll(value);
       //seasons = seasons.reversed.toList();
-      seasons.addAll([Trakt(title: "OdinCast"), Trakt(title: "OdinReviews")]);
     });
+    slides.addAll([Trakt(title: "OdinCast"), Trakt(title: "OdinImdbReview")]);
 
-    return seasons.isEmpty
+    return slides.isEmpty
         ? const SizedBox(height: 200)
-        : Container(
-            height: 250.0,
+        : SizedBox(
+            height: 155.0,
             child: OdinCarousel(
                 itemBuilder: (context, itemIndex, realIndex, controller) {
-                  if (seasons[realIndex].title == "OdinCast") {
+                  if (slides[realIndex].title == "OdinCast") {
                     return ItemCast(item: item);
                   }
 
-                  if (seasons[realIndex].title == "OdinReviews") {
-                    return ImdbReview();
+                  if (slides[realIndex].title == "OdinImdbReview") {
+                    return const ImdbReview();
                   }
 
-                  return Episodes(season: seasons[realIndex], show: item);
+                  return Episodes(season: slides[realIndex], show: item);
                 },
                 extent: 250,
                 keys: const [
@@ -381,7 +381,7 @@ class SeasonsAndEpisodes extends ConsumerWidget {
                   //});
                 },
                 anchor: 0.0,
-                count: seasons.length,
+                count: slides.length,
                 center: false,
                 axis: Axis.vertical),
           );

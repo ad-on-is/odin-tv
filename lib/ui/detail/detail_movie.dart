@@ -24,36 +24,21 @@ class DetailMovie extends StatelessWidget {
   Widget build(BuildContext context) {
     return Background(
       item.tmdb!.backdropBig,
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            SizedBox(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  EnsureVisible(child: Buttons(item: item)),
-                  ItemDetails(item: item),
-                ],
-              ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          SizedBox(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                EnsureVisible(child: Buttons(item: item)),
+                ItemDetails(item: item),
+              ],
             ),
-            EnsureVisible(
-              child: SizedBox(
-                child: Column(
-                  children: [
-                    ItemCast(item: item),
-                    const ImdbReview(),
-                    RawMaterialButton(
-                      //just for the focus
-                      child: const BodyText1(""),
-                      onPressed: () {},
-                    )
-                  ],
-                ),
-              ),
-            )
-          ],
-        ),
+          ),
+          const SizedBox(height: 20),
+          ItemSlides(item: item),
+        ],
       ),
     );
   }

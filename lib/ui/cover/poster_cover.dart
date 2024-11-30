@@ -93,20 +93,20 @@ class PosterCover extends HookConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               mainAxisSize: MainAxisSize.min,
               children: [
-                const SizedBox(height: 123),
+                const SizedBox(height: 118),
                 // Headline4(
                 //   item.title,
                 //   maxLines: 1,
                 //   overflow: TextOverflow.ellipsis,
                 //   style: const TextStyle(fontSize: 6),
                 // ),
-                const SizedBox(height: 0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Subtitle1(
                       item.year.toString(),
-                      style: TextStyle(color: AppColors.gray1, fontSize: 6),
+                      style: TextStyle(color: AppColors.gray1, fontSize: 8),
                     ),
                     ref.watch(watchedProvider.notifier).items.contains(
                                 BaseHelper.hiveKey(
@@ -120,14 +120,13 @@ class PosterCover extends HookConsumerWidget {
                       children: [
                         Icon(
                           FontAwesomeIcons.solidStar,
-                          size: 5,
+                          size: 7,
                           color: AppColors.primary,
                         ),
                         const SizedBox(width: 5),
                         Subtitle2(
                           item.roundedRating.toString(),
-                          style:
-                              TextStyle(color: AppColors.primary, fontSize: 6),
+                          style: TextStyle(fontSize: 8),
                         ),
                       ],
                     ),
