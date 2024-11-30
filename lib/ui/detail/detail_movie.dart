@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:helpers/helpers/widgets/text.dart';
 import 'package:odin/controllers/detail_controller.dart';
 import 'package:odin/ui/dialogs/streams.dart';
 // import 'package:odin/ui/dialogs/streams.dart';
@@ -24,32 +25,34 @@ class DetailMovie extends StatelessWidget {
     return Background(
       item.tmdb!.backdropBig,
       child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 50, right: 50, bottom: 20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              SizedBox(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            SizedBox(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  EnsureVisible(child: Buttons(item: item)),
+                  ItemDetails(item: item),
+                ],
+              ),
+            ),
+            EnsureVisible(
+              child: SizedBox(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    EnsureVisible(child: Buttons(item: item)),
-                    ItemDetails(item: item),
+                    ItemCast(item: item),
+                    const ImdbReview(),
+                    RawMaterialButton(
+                      //just for the focus
+                      child: const BodyText1(""),
+                      onPressed: () {},
+                    )
                   ],
                 ),
               ),
-              EnsureVisible(
-                child: SizedBox(
-                  child: Column(
-                    children: [
-                      ItemCast(item: item),
-                      const ImdbReview(),
-                    ],
-                  ),
-                ),
-              )
-            ],
-          ),
+            )
+          ],
         ),
       ),
     );

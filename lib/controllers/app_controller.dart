@@ -19,3 +19,7 @@ final selectedItemOfSectionProvider = StateProviderFamily<Trakt, String>(
 final bgBusyProvider = StateProvider<bool>((ref) => false);
 final appBusyProvider = StateProvider<bool>((ref) => false);
 final bgAlpha = StateProvider<int>((ref) => 230);
+final debugProvider = StateProvider<String>((ref) => "test");
+
+final beforeFocusProvider = StateProvider<bool>((ref) => false);
+final afterFocusProvider = StateProvider<bool>((ref) => false);

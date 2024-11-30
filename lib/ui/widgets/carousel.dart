@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_carousel/infinite_carousel.dart';
+import 'package:odin/controllers/app_controller.dart';
 import 'package:odin/helpers.dart';
 import 'package:odin/ui/focusnodes.dart';
 
@@ -17,6 +18,7 @@ class OdinCarousel extends HookConsumerWidget with BaseHelper {
       this.onEnter,
       this.anchor,
       this.autofocus,
+      this.center,
       required this.extent,
       required this.keys,
       required this.count,
@@ -29,14 +31,17 @@ class OdinCarousel extends HookConsumerWidget with BaseHelper {
   final double extent;
   final double? anchor;
   final bool? autofocus;
+  final bool? center;
   final int count;
   final Axis axis;
   final List<PhysicalKeyboardKey> keys;
 
-  toggleMenuFocus(bool focus) {
-    for (var i = 0; i < menufocus.length; i++) {
-      menufocus[i].canRequestFocus = focus;
-    }
+  toggleBeforeFocus(bool focus, ref) {
+    ref.read(beforeFocusProvider.notifier).state = focus;
+  }
+
+  toggleAfterFocus(bool focus, ref) {
+    ref.read(afterFocusProvider.notifier).state = focus;
   }
 
   @override
@@ -85,7 +90,7 @@ class OdinCarousel extends HookConsumerWidget with BaseHelper {
     final fn = useFocusNode();
 
     bool isSelect(PhysicalKeyboardKey key) {
-      return key.usbHidUsage == 73014444264;
+      return [73014444264, 458840].contains(key.usbHidUsage);
     }
 
     return FocusTraversalGroup(
@@ -114,13 +119,24 @@ class OdinCarousel extends HookConsumerWidget with BaseHelper {
               return;
             }
 
+            print(controller.offset);
+
             if (controller.offset <= extent) {
-              toggleMenuFocus(true);
+              toggleBeforeFocus(true, ref);
               fn.skipTraversal = false;
             } else {
-              toggleMenuFocus(false);
+              toggleBeforeFocus(false, ref);
               fn.skipTraversal = true;
             }
+
+            //if (controller.offset >= (extent * count / 2)) {
+            //  toggleBeforeFocus(false, ref);
+            //  toggleAfterFocus(true, ref);
+            //  fn.skipTraversal = false;
+            //} else {
+            //  toggleAfterFocus(false, ref);
+            //  fn.skipTraversal = true;
+            //}
 
             if (keyEvent.physicalKey == keys[0]) {
               if (dir.value != "prev") {
@@ -157,7 +173,7 @@ class OdinCarousel extends HookConsumerWidget with BaseHelper {
             key: key,
             itemCount: count,
             itemExtent: extent,
-            center: false,
+            center: center ?? false,
             anchor: anchor ?? 0.02,
             velocityFactor: 0.2,
             onIndexChanged: (index) {

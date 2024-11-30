@@ -46,7 +46,8 @@ class Section extends HookConsumerWidget {
     }
     double extent = e.big ? 225 : 90;
     final sec = ref.watch(selectedSectionProvider);
-
+    final af = ref.watch(afterFocusProvider);
+    final bf = ref.watch(beforeFocusProvider);
     return EnsureVisible(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -91,7 +92,7 @@ class Section extends HookConsumerWidget {
                       onIndexChanged: (index) {
                         Future.delayed(const Duration(milliseconds: 10), () {
                           ref.read(selectedItemProvider.notifier).state =
-                              items[index];
+                              items[index].show ?? items[index];
                           ref
                               .read(selectedItemOfSectionProvider(e.title)
                                   .notifier)

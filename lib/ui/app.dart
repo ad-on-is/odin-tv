@@ -21,6 +21,7 @@ class App extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final pageState = ref.watch(appPageProvider);
     final appBusy = ref.watch(appBusyProvider);
+    final mf = ref.watch(beforeFocusProvider);
     return Stack(
       children: [
         const AppBackground(),
@@ -46,7 +47,8 @@ class App extends HookConsumerWidget {
                       child: Row(
                         children: [
                           TextButton(
-                            focusNode: menufocus[1],
+                            focusNode: FocusNode(
+                                canRequestFocus: mf, skipTraversal: !mf),
                             // style: ButtonStyle(
                             //     backgroundColor: WidgetStatePropertyAll(
                             //         AppColors.purple
@@ -61,7 +63,8 @@ class App extends HookConsumerWidget {
                           ),
                           const SizedBox(width: 5),
                           TextButton(
-                            focusNode: menufocus[2],
+                            focusNode: FocusNode(
+                                canRequestFocus: mf, skipTraversal: !mf),
                             style: ButtonStyle(
                                 backgroundColor: WidgetStatePropertyAll(
                                     AppColors.purple
@@ -78,7 +81,8 @@ class App extends HookConsumerWidget {
                           ),
                           const SizedBox(width: 5),
                           TextButton(
-                            focusNode: menufocus[3],
+                            focusNode: FocusNode(
+                                canRequestFocus: mf, skipTraversal: !mf),
                             style: ButtonStyle(
                                 backgroundColor: WidgetStatePropertyAll(
                                     AppColors.purple
@@ -96,7 +100,8 @@ class App extends HookConsumerWidget {
                                 horizontal: 0, vertical: 5),
                             focusColor: Colors.white.withAlpha(40),
                             splashRadius: 20,
-                            focusNode: menufocus[0],
+                            focusNode: FocusNode(
+                                canRequestFocus: mf, skipTraversal: !mf),
                             icon: const Icon(FontAwesomeIcons.gear,
                                 size: 10, color: Colors.white),
                             onPressed: () =>

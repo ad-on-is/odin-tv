@@ -29,18 +29,14 @@ class Episodes extends ConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 20),
-        Headline4(
-          season.number == 0 ? season.title : 'Season ${season.number}',
-        ),
-        SizedBox(
-          width: MediaQuery.of(context).size.width / 2,
-          height: 20,
-          child: BodyText1(
-            season.overview,
-            maxLines: 3,
-            overflow: TextOverflow.ellipsis,
-          ),
+        Padding(
+          padding: const EdgeInsets.only(left: 50),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Headline4(
+              season.number == 0 ? season.title : 'Season ${season.number}',
+            ),
+          ]),
         ),
         SizedBox(
             height: 120,
@@ -71,7 +67,7 @@ class Episodes extends ConsumerWidget {
                 },
                 onIndexChanged: (index) {},
                 extent: extent,
-                anchor: 0.0,
+                anchor: 0.05,
                 keys: const [
                   PhysicalKeyboardKey.arrowLeft,
                   PhysicalKeyboardKey.arrowRight

@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:helpers/helpers.dart';
 import 'package:helpers/helpers/widgets/text.dart';
@@ -92,22 +93,28 @@ class BackdropCover extends HookConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 55),
-                CachedNetworkImage(
-                  imageUrl: item.tmdb!.logoSmall,
-                  errorWidget: (_, __, ___) => const SizedBox(height: 50),
-                  imageBuilder: (context, imageProvider) => Image(
-                    image: imageProvider,
-                    fit: BoxFit.contain,
-                    width: 100,
-                    height: 50,
-                  ),
-                  placeholder: (_, __) => const SizedBox(height: 50),
-                  fit: BoxFit.fill,
-                ),
-                const SizedBox(height: 5),
-                item.episode != null
+                item.tmdb!.logoSmall.endsWith('.svg')
+                    ? SvgPicture.network(item.tmdb!.logoSmall,
+                        width: 80,
+                        height: 40,
+                        fit: BoxFit.contain,
+                        color: Colors.white)
+                    : CachedNetworkImage(
+                        imageUrl: item.tmdb!.logoSmall,
+                        errorWidget: (_, __, ___) => const SizedBox(height: 50),
+                        imageBuilder: (context, imageProvider) => Image(
+                          image: imageProvider,
+                          fit: BoxFit.contain,
+                          width: 80,
+                          height: 40,
+                        ),
+                        placeholder: (_, __) => const SizedBox(height: 50),
+                        fit: BoxFit.fill,
+                      ),
+                const SizedBox(height: 15),
+                item.season != null
                     ? CaptionText(
-                        'S${item.episode!.season}E${item.episode!.number} - ${item.episode!.title}',
+                        'S${item.season}E${item.number} - ${item.title}',
                         style: TextStyle(
                             color: AppColors.gray1,
                             overflow: TextOverflow.ellipsis),

@@ -22,7 +22,7 @@ class AnimatedCover extends StatelessWidget {
     final currentOffset = extent! * realIndex!;
     const maxScale = 1;
     const fallOff = 0.2;
-    const minScale = 0.85;
+    const minScale = 0.90;
     return AnimatedBuilder(
       animation: controller!,
       builder: (context, child) {
@@ -34,12 +34,13 @@ class AnimatedCover extends StatelessWidget {
 
         double f = s;
         double b = s;
+        double o = s;
         if (s < minScale) {
           s = minScale;
         }
 
-        if (f < 0.5) {
-          f = 0.5;
+        if (f < 0.4) {
+          f = 0.4;
         }
 
         if (b < 0.2) {
@@ -51,8 +52,10 @@ class AnimatedCover extends StatelessWidget {
             // .blurXY(end: 0, begin: 5)
             .animate(target: target! ? 1 : 0)
             .scaleXY(end: s, begin: minScale, curve: Curves.easeInOutExpo)
-            .fade(end: f, begin: 0.1);
-        // .blurXY(end: 1.3 - (1.3 * b), begin: 1.3 - (1.3 * 0.02));
+            .tint(end: 1 - f, begin: 1 - f)
+
+            //.blurXY(end: 1.3 - (1.3 * b), begin: 1.3 - (1.3 * b))
+            .fade(end: f, begin: f);
         // .flipH(end: 1.5 - (1.5 * s))
       },
       child: child!,
