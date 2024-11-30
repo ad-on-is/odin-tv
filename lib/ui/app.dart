@@ -8,7 +8,6 @@ import 'package:helpers/helpers.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:odin/controllers/app_controller.dart';
 import 'package:odin/theme.dart';
-import 'package:odin/ui/focusnodes.dart';
 import 'package:odin/ui/settings.dart';
 import 'package:odin/ui/widgets/widgets.dart';
 
@@ -30,10 +29,10 @@ class App extends HookConsumerWidget {
           child: Scaffold(
             backgroundColor: Colors.transparent,
             appBar: AppBar(
-              toolbarHeight: 35,
+              toolbarHeight: 60,
               leading: const Padding(
-                padding: EdgeInsets.only(left: 20),
-                child: OdinLogo(),
+                padding: const EdgeInsets.only(left: 20, top: 10),
+                child: const OdinLogo(),
               ),
               backgroundColor: Colors.transparent,
               shadowColor: Colors.transparent,
@@ -42,73 +41,76 @@ class App extends HookConsumerWidget {
                 Consumer(
                   builder: (context, ref, child) {
                     final page = ref.watch(appPageProvider);
-                    return SizedBox(
-                      height: 20,
-                      child: Row(
-                        children: [
-                          TextButton(
-                            focusNode: FocusNode(
-                                canRequestFocus: mf, skipTraversal: !mf),
-                            // style: ButtonStyle(
-                            //     backgroundColor: WidgetStatePropertyAll(
-                            //         AppColors.purple
-                            //             .withAlpha(page == 0 ? 80 : 0))),
-                            child: const BodyText1(
-                              'Home',
-                              style: TextStyle(fontSize: 10),
-                            ),
-                            onPressed: () {
-                              ref.read(appPageProvider.notifier).state = 0;
-                            },
-                          ),
-                          const SizedBox(width: 5),
-                          TextButton(
-                            focusNode: FocusNode(
-                                canRequestFocus: mf, skipTraversal: !mf),
-                            style: ButtonStyle(
-                                backgroundColor: WidgetStatePropertyAll(
-                                    AppColors.purple
-                                        .withAlpha(page == 1 ? 80 : 0))),
-                            child: const BodyText1(
-                              'Movies',
-                              style: TextStyle(
-                                fontSize: 10,
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 0.0),
+                      child: SizedBox(
+                        height: 25,
+                        child: Row(
+                          children: [
+                            TextButton(
+                              focusNode: FocusNode(
+                                  canRequestFocus: mf, skipTraversal: !mf),
+                              // style: ButtonStyle(
+                              //     backgroundColor: WidgetStatePropertyAll(
+                              //         AppColors.purple
+                              //             .withAlpha(page == 0 ? 80 : 0))),
+                              child: const BodyText1(
+                                'Home',
+                                style: TextStyle(fontSize: 10),
                               ),
+                              onPressed: () {
+                                ref.read(appPageProvider.notifier).state = 0;
+                              },
                             ),
-                            onPressed: () {
-                              ref.read(appPageProvider.notifier).state = 1;
-                            },
-                          ),
-                          const SizedBox(width: 5),
-                          TextButton(
-                            focusNode: FocusNode(
-                                canRequestFocus: mf, skipTraversal: !mf),
-                            style: ButtonStyle(
-                                backgroundColor: WidgetStatePropertyAll(
-                                    AppColors.purple
-                                        .withAlpha(page == 2 ? 80 : 0))),
-                            child: const BodyText1(
-                              'TV Shows',
-                              style: TextStyle(fontSize: 10),
+                            const SizedBox(width: 5),
+                            TextButton(
+                              focusNode: FocusNode(
+                                  canRequestFocus: mf, skipTraversal: !mf),
+                              style: ButtonStyle(
+                                  backgroundColor: WidgetStatePropertyAll(
+                                      AppColors.purple
+                                          .withAlpha(page == 1 ? 80 : 0))),
+                              child: const BodyText1(
+                                'Movies',
+                                style: TextStyle(
+                                  fontSize: 10,
+                                ),
+                              ),
+                              onPressed: () {
+                                ref.read(appPageProvider.notifier).state = 1;
+                              },
                             ),
-                            onPressed: () {
-                              ref.read(appPageProvider.notifier).state = 2;
-                            },
-                          ),
-                          IconButton(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 0, vertical: 5),
-                            focusColor: Colors.white.withAlpha(40),
-                            splashRadius: 20,
-                            focusNode: FocusNode(
-                                canRequestFocus: mf, skipTraversal: !mf),
-                            icon: const Icon(FontAwesomeIcons.gear,
-                                size: 10, color: Colors.white),
-                            onPressed: () =>
-                                Scaffold.of(context).openEndDrawer(),
-                          ),
-                          const SizedBox(width: 20)
-                        ],
+                            const SizedBox(width: 5),
+                            TextButton(
+                              focusNode: FocusNode(
+                                  canRequestFocus: mf, skipTraversal: !mf),
+                              style: ButtonStyle(
+                                  backgroundColor: WidgetStatePropertyAll(
+                                      AppColors.purple
+                                          .withAlpha(page == 2 ? 80 : 0))),
+                              child: const BodyText1(
+                                'TV Shows',
+                                style: TextStyle(fontSize: 10),
+                              ),
+                              onPressed: () {
+                                ref.read(appPageProvider.notifier).state = 2;
+                              },
+                            ),
+                            IconButton(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 0, vertical: 5),
+                              focusColor: Colors.white.withAlpha(40),
+                              splashRadius: 20,
+                              focusNode: FocusNode(
+                                  canRequestFocus: mf, skipTraversal: !mf),
+                              icon: const Icon(FontAwesomeIcons.gear,
+                                  size: 10, color: Colors.white),
+                              onPressed: () =>
+                                  Scaffold.of(context).openEndDrawer(),
+                            ),
+                            const SizedBox(width: 20)
+                          ],
+                        ),
                       ),
                     );
                   },
@@ -236,14 +238,14 @@ class RefreshNotification extends ConsumerWidget {
     return refresh == false
         ? const SizedBox()
         : Container(
-            alignment: Alignment.bottomRight,
+            alignment: Alignment.topCenter,
             child: Container(
               margin: const EdgeInsets.all(10),
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  color: AppColors.green),
-              child: const Row(
+                  color: AppColors.gray1.withAlpha(50)),
+              child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   SizedBox(
@@ -251,12 +253,12 @@ class RefreshNotification extends ConsumerWidget {
                       width: 10,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        color: Colors.black,
+                        color: Colors.white,
                       )),
                   SizedBox(width: 10),
                   CaptionText(
                     'Refreshing',
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(color: AppColors.gray1),
                   ),
                 ],
               ),

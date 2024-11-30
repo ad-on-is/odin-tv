@@ -48,9 +48,11 @@ class OdinLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      // mainAxisSize: MainAxisSize.max,
+      mainAxisSize: MainAxisSize.min,
       children: [
         SvgPicture.asset("assets/images/logo.svg", height: 25),
+        SizedBox(width: 5),
+        const Headline4("ODIN")
       ],
     );
   }
