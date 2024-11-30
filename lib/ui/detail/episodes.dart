@@ -66,6 +66,17 @@ class Episodes extends ConsumerWidget {
                   );
                 },
                 onIndexChanged: (index) {},
+                onEnter: (idx) {
+                  showDialog(
+                      context: context,
+                      builder: (context) => Dialog(
+                            backgroundColor: AppColors.darkGray,
+                            child: StreamsDialog(
+                                item: season.episodes[idx],
+                                season: season,
+                                show: show),
+                          ));
+                },
                 extent: extent,
                 anchor: 0.05,
                 keys: const [
