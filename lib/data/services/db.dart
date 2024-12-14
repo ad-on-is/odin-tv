@@ -41,5 +41,3 @@ class HiveBox {
 }
 
 final hiveProvider = Provider((ref) => HiveBox(ref));
-
-final dbProvider = Provider((ref) => DB(ref, ref.watch(hiveProvider)));

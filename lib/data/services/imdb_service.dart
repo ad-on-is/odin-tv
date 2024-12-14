@@ -9,11 +9,10 @@ import 'db.dart';
 class ImdbService extends StateNotifier<bool> with BaseHelper {
   String url = 'https://www.imdb.com/title/';
   final Ref ref;
-  final DB db;
   final dio = Dio();
   Imdb? imdb;
 
-  ImdbService(this.ref, this.db) : super(false) {
+  ImdbService(this.ref) : super(false) {
     dio.options.baseUrl = url;
   }
 
@@ -27,5 +26,5 @@ class ImdbService extends StateNotifier<bool> with BaseHelper {
   }
 }
 
-final imdbProvider = StateNotifierProvider.autoDispose(
-    (ref) => ImdbService(ref, ref.watch(dbProvider)));
+final imdbProvider =
+    StateNotifierProvider.autoDispose((ref) => ImdbService(ref));

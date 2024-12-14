@@ -178,10 +178,9 @@ class StreamsController extends StateNotifier<bool> with BaseHelper {
 
     scrapes.forEach((q, values) {
       for (var s in values) {
-        for (var rd in s.realdebrid) {
-          if (rd?["filename"] == null) continue;
+        for (var link in s.links) {
           var su = StreamUrl(
-              rd["filename"], rd["filesize"], rd["download"], s.info, q);
+              link["filename"], link["filesize"], link["download"], s.info, q);
           all.add(su);
         }
       }

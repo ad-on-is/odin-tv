@@ -48,7 +48,7 @@ class AuthModel extends StateNotifier<bool> with BaseHelper {
     await channel.ready;
     var url = "";
     var id = "";
-    channel.stream.listen((event) {
+    final listen = channel.stream.listen((event) {
       try {
         var data = json.decode(event as String);
         if (data["message"] != null) {
@@ -66,9 +66,12 @@ class AuthModel extends StateNotifier<bool> with BaseHelper {
       await Future.delayed(const Duration(seconds: 1));
     }
 
-    ref.read(urlProvider.notifier).state = url;
     logInfo(url);
     logInfo(id);
+
+    listen.cancel();
+
+    ref.read(urlProvider.notifier).state = url;
 
     try {
       await Dio().get('$url/device/verify/$id');
@@ -76,6 +79,7 @@ class AuthModel extends StateNotifier<bool> with BaseHelper {
       await hive.hive?.put("apiDevice", id);
     } catch (e) {
       logError(e, null);
+      login();
     }
 
     state = !state;
@@ -91,5 +95,6 @@ final authProvider =
 
 final codeProvider = StateProvider<String>((ref) {
   String c = const UuidV4().generate().split("-").first.toString();
+  print(c);
   return c;
 });

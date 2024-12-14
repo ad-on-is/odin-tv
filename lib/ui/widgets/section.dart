@@ -45,6 +45,7 @@ class Section extends HookConsumerWidget {
       });
     }
     double extent = e.big ? 225 : 90;
+    //ref.watch(selectedItemProvider);
     final sec = ref.watch(selectedSectionProvider);
     final af = ref.watch(afterFocusProvider);
     final bf = ref.watch(beforeFocusProvider);

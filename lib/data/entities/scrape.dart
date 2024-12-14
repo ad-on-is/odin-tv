@@ -13,7 +13,7 @@ class Scrape {
   int size;
   String quality;
   List<String> info;
-  List<dynamic> realdebrid;
+  List<dynamic> links;
 
   Scrape(
       {this.url = '',
@@ -22,7 +22,7 @@ class Scrape {
       this.scraper = '',
       this.size = 0,
       this.quality = '',
-      this.realdebrid = const [],
+      this.links = const [],
       this.info = const []});
 
   factory Scrape.fromJson(Map<String, dynamic> json) => _$ScrapeFromJson(json);

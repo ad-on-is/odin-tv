@@ -13,7 +13,7 @@ Scrape _$ScrapeFromJson(Map<String, dynamic> json) => Scrape(
       scraper: json['scraper'] as String? ?? '',
       size: json['size'] as int? ?? 0,
       quality: json['quality'] as String? ?? '',
-      realdebrid: json['realdebrid'] as List<dynamic>? ?? const [],
+      links: json['links'] as List<dynamic>? ?? const [],
       info:
           (json['info'] as List<dynamic>?)?.map((e) => e as String).toList() ??
               const [],
@@ -27,5 +27,5 @@ Map<String, dynamic> _$ScrapeToJson(Scrape instance) => <String, dynamic>{
       'size': instance.size,
       'quality': instance.quality,
       'info': instance.info,
-      'realdebrid': instance.realdebrid,
+      'links': instance.links,
     };

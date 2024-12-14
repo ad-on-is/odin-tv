@@ -40,7 +40,6 @@ final initProvider = StreamProvider<bool>((ref) async* {
   await Hive.initFlutter();
   final hive = ref.read(hiveProvider);
   hive.hive = await Hive.openLazyBox('odin');
-  hive.cached = await Hive.openLazyBox('odin-cache');
 
   ref.read(settingsProvider).init();
   if (!await ref.read(authProvider.notifier).check()) {

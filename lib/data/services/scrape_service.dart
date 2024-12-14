@@ -1,14 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:odin/data/entities/trakt.dart';
 import 'package:odin/data/services/api.dart';
-import 'package:odin/data/services/db.dart';
 import 'package:odin/helpers.dart';
 
 class ScrapeService extends StateNotifier<bool> with BaseHelper {
-  final DB db;
   final ApiService api;
   final Ref ref;
-  ScrapeService(this.ref, this.db, this.api) : super(false);
+  ScrapeService(this.ref, this.api) : super(false);
 
   Future<void> scrape(
       {required Trakt item,
@@ -49,5 +47,5 @@ class ScrapeService extends StateNotifier<bool> with BaseHelper {
   }
 }
 
-final scrapeProvider = Provider(
-    (ref) => ScrapeService(ref, ref.watch(dbProvider), ref.watch(apiProvider)));
+final scrapeProvider =
+    Provider((ref) => ScrapeService(ref, ref.watch(apiProvider)));

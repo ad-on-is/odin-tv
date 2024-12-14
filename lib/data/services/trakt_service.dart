@@ -20,13 +20,12 @@ Future<Map<String, dynamic>> parseJsonList(String text) {
 
 class TraktService with BaseHelper {
   final Ref ref;
-  DB db;
   HiveBox hive;
   final ApiService api;
 
   WatchedItems watchedItems;
 
-  TraktService(this.ref, this.db, this.hive, this.watchedItems, this.api);
+  TraktService(this.ref, this.hive, this.watchedItems, this.api);
 
   Future<void> setWatched(
       {required Trakt item, Trakt? show, Trakt? season}) async {
@@ -124,7 +123,6 @@ class TraktService with BaseHelper {
 
 final traktProvider = Provider((ref) => TraktService(
     ref,
-    ref.watch(dbProvider),
     ref.watch(hiveProvider),
     ref.watch(watchedProvider.notifier),
     ref.watch(apiProvider)));

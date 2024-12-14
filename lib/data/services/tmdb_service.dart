@@ -1,18 +1,16 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:odin/data/models/auth_model.dart';
-import 'package:odin/data/services/db.dart';
 import 'package:odin/helpers.dart';
 
 class TmdbService with BaseHelper {
   String url = 'https://api.themoviedb.org/3';
   String imageURL = 'https://image.tmdb.org/t/p/w500';
-  final DB db;
   final AuthModel auth;
   final Ref ref;
   Dio dio = Dio();
 
-  TmdbService(this.ref, this.db, this.auth) {
+  TmdbService(this.ref, this.auth) {
     dio.options.baseUrl = url;
     dio.interceptors.add(InterceptorsWrapper(onError: (e, handler) {
       logWarning(e.requestOptions.uri);
@@ -55,5 +53,5 @@ class TmdbService with BaseHelper {
   }
 }
 
-final tmdbProvider = Provider((ref) =>
-    TmdbService(ref, ref.watch(dbProvider), ref.watch(authProvider.notifier)));
+final tmdbProvider =
+    Provider((ref) => TmdbService(ref, ref.watch(authProvider.notifier)));
