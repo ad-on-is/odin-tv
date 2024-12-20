@@ -24,7 +24,7 @@ class PosterCover extends HookConsumerWidget {
       onTap: () {
         ref.read(selectedItemProvider.notifier).state = item;
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => Detail(item: item),
+          builder: (context) => Detail(item: item.show ?? item),
         ));
       },
       child: Stack(

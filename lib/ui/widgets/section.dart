@@ -106,7 +106,7 @@ class Section extends HookConsumerWidget {
                       onEnter: (idx) {
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => Detail(
-                              item: items[idx].number > 0
+                              item: items[idx].type == "episode"
                                   ? items[idx].show!
                                   : items[idx]),
                         ));

@@ -36,7 +36,7 @@ class MQTTService with BaseHelper {
       ..onConnected = onConnected;
 
     final connMess = MqttConnectMessage()
-        .withClientIdentifier('taylanyildz')
+        .withClientIdentifier('odin-movieshows-app')
         .withWillTopic('willTopic')
         .withWillMessage('willMessage')
         .startClean()

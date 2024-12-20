@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:helpers/helpers.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:odin/controllers/app_controller.dart';
+import 'package:odin/data/entities/trakt.dart';
 import 'package:odin/theme.dart';
 import 'package:odin/ui/settings.dart';
 import 'package:odin/ui/widgets/widgets.dart';
@@ -23,7 +24,7 @@ class App extends HookConsumerWidget {
     final mf = ref.watch(beforeFocusProvider);
     return Stack(
       children: [
-        const AppBackground(),
+        const AppBackground(key: Key("app")),
         DefaultTabController(
           length: pages.length,
           child: Scaffold(
@@ -160,12 +161,18 @@ class App extends HookConsumerWidget {
 }
 
 class AppBackground extends HookConsumerWidget {
-  const AppBackground({Key? key}) : super(key: key);
+  final Trakt? item;
+  const AppBackground({Key? key, this.item}) : super(key: key);
 
   @override
   Widget build(BuildContext context, ref) {
-    final item = ref.watch(selectedItemProvider);
-    final background = item.tmdb?.backdropBig ?? "";
+    final selectedItem = ref.watch(selectedItemProvider);
+    String background = "";
+    if (item != null) {
+      background = item?.tmdb?.backdropBig ?? "";
+    } else {
+      background = selectedItem.tmdb?.backdropBig ?? "";
+    }
     final controller =
         useAnimationController(duration: const Duration(milliseconds: 300));
     controller.animateTo(1);

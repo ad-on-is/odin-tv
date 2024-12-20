@@ -23,7 +23,7 @@ class DetailMovie extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Background(
-      item.tmdb!.backdropBig,
+      item,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [

@@ -6,8 +6,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:helpers/helpers.dart';
 import 'package:html_unescape/html_unescape_small.dart';
-import 'package:odin/controllers/app_controller.dart';
-import 'package:odin/controllers/detail_controller.dart';
 import 'package:odin/data/entities/tmdb.dart';
 import 'package:odin/data/services/imdb_service.dart';
 import 'package:odin/data/services/trakt_service.dart';
@@ -17,7 +15,6 @@ import 'package:odin/data/entities/trakt.dart';
 import 'package:odin/ui/app.dart';
 import 'package:odin/ui/detail/episodes.dart';
 import 'package:odin/ui/widgets/carousel.dart';
-import 'package:odin/ui/widgets/ensure_visible.dart';
 import 'package:odin/ui/widgets/widgets.dart';
 // import 'package:odintv/data/entities/entities.dart';
 // import 'package:odintv/ui/themes/default.dart';
@@ -46,15 +43,21 @@ String ratingCountToReadable(int count) {
 }
 
 class Background extends StatelessWidget {
-  final String background;
+  final Trakt item;
   final Widget child;
   final bool hideDetails;
-  const Background(this.background,
+  const Background(this.item,
       {Key? key, required this.child, this.hideDetails = false})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Stack(children: <Widget>[const AppBackground(), child]);
+    return Stack(children: <Widget>[
+      AppBackground(
+        key: const Key("detail"),
+        item: item,
+      ),
+      child
+    ]);
   }
 }
 
@@ -344,11 +347,11 @@ class ItemSlides extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     List<Trakt> slides = [];
+    slides.addAll([Trakt(title: "OdinCast"), Trakt(title: "OdinImdbReview")]);
     ref.watch(seasonsProvider(item.ids)).whenData((value) {
       slides.addAll(value);
       //seasons = seasons.reversed.toList();
     });
-    slides.addAll([Trakt(title: "OdinCast"), Trakt(title: "OdinImdbReview")]);
 
     return slides.isEmpty
         ? const SizedBox(height: 200)

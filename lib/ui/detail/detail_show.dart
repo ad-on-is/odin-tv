@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:odin/controllers/app_controller.dart';
-import 'package:odin/controllers/detail_controller.dart';
 import 'package:odin/theme.dart';
 import 'package:odin/data/entities/trakt.dart';
-import 'package:odin/ui/focusnodes.dart';
 import 'package:odin/ui/widgets/buttons.dart';
 import 'package:odin/ui/widgets/ensure_visible.dart';
 
@@ -22,7 +18,7 @@ class DetailShow extends HookConsumerWidget {
     return Container(
       color: AppColors.darkGray,
       child: Background(
-        item.tmdb!.backdropBig,
+        item,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [

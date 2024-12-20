@@ -212,10 +212,14 @@ class StreamsController extends StateNotifier<bool> with BaseHelper {
 }
 
 final streamsController = StateNotifierProvider.autoDispose((ref) {
+  final mqtt = ref.watch(mqttProvider);
+  ref.onDispose(() {
+    mqtt.client.disconnect();
+  });
   return StreamsController(
       ref,
       ref.watch(apiProvider),
-      ref.watch(mqttProvider),
+      mqtt,
       ref.watch(scrapeProvider),
       ref.watch(traktProvider),
       ref.watch(settingsProvider),
