@@ -9,6 +9,68 @@ import 'package:odin/helpers.dart';
 import 'package:odin/theme.dart';
 import 'package:odin/ui/detail/widgets.dart';
 
+class QualityBadge extends StatelessWidget {
+  final String quality;
+  const QualityBadge(this.quality, {Key? key}) : super(key: key);
+
+  Color qualityToColor() {
+    switch (quality) {
+      case 'HDR':
+        return AppColors.blue;
+      case '4K':
+        return AppColors.purple;
+      case '1080p':
+        return AppColors.yellow;
+      case '720p':
+        return AppColors.blue;
+    }
+    return Colors.white;
+  }
+
+  String qualityText() {
+    switch (quality) {
+      case 'HDR':
+        return '[HDR]';
+      case '4K':
+        return 'ULTRA';
+      case '1080p':
+        return 'FULL[HD]';
+      case '720p':
+        return 'HD';
+    }
+    return "SD";
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.black,
+      width: 45,
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 0),
+            child: Headline4(quality == 'HDR' ? '4K' : quality,
+                style: const TextStyle(fontSize: 10)),
+          ),
+          Container(
+              width: double.infinity,
+              color: qualityToColor(),
+              child: CaptionText(
+                qualityText(),
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 7,
+                  color: Colors.black,
+                ),
+              )),
+        ],
+      ),
+    );
+  }
+}
+
 class StreamsDialog extends ConsumerStatefulWidget {
   final Trakt item;
   final Trakt? show;
@@ -75,19 +137,7 @@ class StreamsDialogState extends ConsumerState<StreamsDialog>
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              BodyText2(controller.playerTitle),
-              const SizedBox(width: 20),
-              Icon(FontAwesomeIcons.clock, size: 12, color: AppColors.gray1),
-              const SizedBox(width: 5),
-              BodyText2(runtimeReadable(controller.item?.runtime ?? 0)),
-              const SizedBox(width: 20),
-              controller.status == "Done"
-                  ? Icon(FontAwesomeIcons.circleCheck,
-                      size: 15, color: AppColors.blue)
-                  : Icon(FontAwesomeIcons.hourglassHalf,
-                      size: 15, color: AppColors.gray3),
-              const SizedBox(width: 5),
-              CaptionText(controller.status),
+              Headline4(controller.playerTitle),
             ],
           ),
         ),
@@ -99,6 +149,7 @@ class StreamsDialogState extends ConsumerState<StreamsDialog>
                 : ListView.builder(
                     itemCount: controller.allUrls().length,
                     itemBuilder: (context, index) => RawMaterialButton(
+                      focusColor: AppColors.gray4,
                       onPressed: () {
                         controller
                             .openPlayer(controller.allUrls()[index].download);
@@ -110,15 +161,16 @@ class StreamsDialogState extends ConsumerState<StreamsDialog>
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            SizedBox(
-                              width: 50,
-                              child: Headline4(
-                                controller.allUrls()[index].quality,
-                                style: TextStyle(
-                                    color: qualityToColor(
-                                        controller.allUrls()[index].quality)),
-                              ),
-                            ),
+                            QualityBadge(controller.allUrls()[index].quality),
+                            // SizedBox(
+                            //   width: 50,
+                            //   child: Headline4(
+                            //     controller.allUrls()[index].quality,
+                            //     style: TextStyle(
+                            //         color: qualityToColor(
+                            //             controller.allUrls()[index].quality)),
+                            //   ),
+                            // ),
                             const SizedBox(
                               width: 10,
                             ),
@@ -145,6 +197,26 @@ class StreamsDialogState extends ConsumerState<StreamsDialog>
                       ),
                     ),
                   )),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(FontAwesomeIcons.clock, size: 12, color: AppColors.gray1),
+              const SizedBox(width: 5),
+              BodyText2(
+                  "Runtime: ${runtimeReadable(controller.item?.runtime ?? 0)}"),
+              const SizedBox(width: 20),
+              controller.status == "Done"
+                  ? Icon(FontAwesomeIcons.circleCheck,
+                      size: 15, color: AppColors.blue)
+                  : Icon(FontAwesomeIcons.hourglassHalf,
+                      size: 15, color: AppColors.gray3),
+              const SizedBox(width: 5),
+              CaptionText(controller.status),
+            ],
+          ),
+        ),
       ],
     );
   }

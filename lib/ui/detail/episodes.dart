@@ -56,6 +56,9 @@ class Episodes extends ConsumerWidget {
                               context: context,
                               builder: (context) => Dialog(
                                     backgroundColor: AppColors.darkGray,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
                                     child: StreamsDialog(
                                         item: season.episodes[itemIndex],
                                         season: season,
@@ -71,6 +74,8 @@ class Episodes extends ConsumerWidget {
                       context: context,
                       builder: (context) => Dialog(
                             backgroundColor: AppColors.darkGray,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
                             child: StreamsDialog(
                                 item: season.episodes[idx],
                                 season: season,

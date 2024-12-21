@@ -64,6 +64,8 @@ class Buttons extends ConsumerWidget {
                   context: context,
                   builder: (context) => Dialog(
                         backgroundColor: AppColors.darkGray,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
                         child: StreamsDialog(item: item),
                       ));
             }),

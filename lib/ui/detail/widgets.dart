@@ -374,53 +374,11 @@ class ItemSlides extends ConsumerWidget {
                   PhysicalKeyboardKey.arrowUp,
                   PhysicalKeyboardKey.arrowDown
                 ],
-                onIndexChanged: (index) {
-                  //Future.delayed(const Duration(milliseconds: 100), () {
-                  //  ref.read(selectedSectionProvider.notifier).state =
-                  //      sections[index].title;
-                  //
-                  //  ref.read(selectedItemProvider.notifier).state = ref
-                  //      .read(selectedItemOfSectionProvider(sections[index].title));
-                  //});
-                },
+                onIndexChanged: (index) {},
                 anchor: 0.0,
                 count: slides.length,
                 center: false,
                 axis: Axis.vertical),
           );
-
-    //Column(
-    //    children: [
-    //      SizedBox(
-    //        height: 40,
-    //        child: ListView.builder(
-    //            scrollDirection: Axis.horizontal,
-    //            itemCount: seasons.length,
-    //            itemBuilder: (ctx, index) => EnsureVisible(
-    //                isFirst: index == 0,
-    //                isLast: index == seasons.length - 1,
-    //                child: Padding(
-    //                  padding: const EdgeInsets.only(right: 10),
-    //                  child: TextButton(
-    //                    style: TextButton.styleFrom(
-    //                      backgroundColor: isWatched(ref, seasons, index)
-    //                          ? AppColors.green.withAlpha(100)
-    //                          : AppColors.primary.withAlpha(20),
-    //                    ),
-    //                    child: seasons[index].number == 0
-    //                        ? CaptionText(seasons[index].title)
-    //                        : CaptionText('S${seasons[index].number}'),
-    //                    onPressed: () {
-    //                      ref.read(selectedSeasonProvider.notifier).state =
-    //                          index;
-    //                    },
-    //                  ),
-    //                ))),
-    //      ),
-    //      Episodes(
-    //          season: seasons[ref.watch(selectedSeasonProvider)],
-    //          show: item)
-    //    ],
-    //  );
   }
 }
