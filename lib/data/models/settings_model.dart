@@ -14,7 +14,7 @@ List<Map<String, String>> players = [
 
 class SettingsModel with BaseHelper {
   final Ref ref;
-  HiveBox hive;
+  DB hive;
 
   SettingsModel(this.ref, this.hive) {
     init();
@@ -58,4 +58,4 @@ class SettingsModel with BaseHelper {
 }
 
 final settingsProvider =
-    Provider((ref) => SettingsModel(ref, ref.watch(hiveProvider)));
+    Provider((ref) => SettingsModel(ref, ref.watch(dbProvider)));

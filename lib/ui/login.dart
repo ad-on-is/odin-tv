@@ -11,18 +11,34 @@ class Login extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final code = ref.watch(codeProvider);
     final url = ref.watch(urlProvider);
+    final error = ref.watch(errorProvider);
     return Scaffold(
       body: Center(
           child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const OdinLogo(),
-          const BodyText2(
-              'Go to your devices settings and enter the code below:'),
+          const OdinLogo(height: 50),
+          const SizedBox(height: 20),
+          error != "" ? BodyText1(error) : const SizedBox(),
+          url != ""
+              ? BodyText1("Connecting to: $url")
+              : const Opacity(
+                  opacity: 0.5,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Headline4('In the ODIN frontend:'),
+                      BodyText1("- Login as a regular user"),
+                      BodyText1("- Go to Devices"),
+                      BodyText1("- Click on 'Link Device'"),
+                      BodyText1("- Enter the code below"),
+                      BodyText1("- Click on 'Connect'"),
+                    ],
+                  ),
+                ),
           const SizedBox(height: 20),
           BodyText1(code, style: const TextStyle(fontSize: 50)),
-          const SizedBox(height: 20),
-          url != "" ? BodyText1("Connecting to: $url") : const SizedBox(),
         ],
       )),
     );

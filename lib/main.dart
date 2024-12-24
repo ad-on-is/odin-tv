@@ -38,8 +38,8 @@ class PVLogger extends ProviderObserver with BaseHelper {
 
 final initProvider = StreamProvider<bool>((ref) async* {
   await Hive.initFlutter();
-  final hive = ref.read(hiveProvider);
-  hive.hive = await Hive.openLazyBox('odin');
+  final db = ref.read(dbProvider);
+  db.hive = await Hive.openLazyBox('odin');
 
   ref.read(settingsProvider).init();
   if (!await ref.read(authProvider.notifier).check()) {
@@ -82,8 +82,10 @@ class MyApp extends ConsumerWidget {
                       child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const OdinLogo(),
-                      const BodyText1('Enjoy movies and tv shows'),
+                      const OdinLogo(height: 50),
+                      const SizedBox(height: 15),
+                      const BodyText1(
+                          'Enjoy your favorite movies and tv shows'),
                       const SizedBox(height: 50),
                       SizedBox(
                         width: 20,

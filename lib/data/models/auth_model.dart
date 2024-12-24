@@ -10,30 +10,29 @@ import 'package:uuid/v4.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class AuthModel extends StateNotifier<bool> with BaseHelper {
-  HiveBox hive;
+  DB db;
   final Ref ref;
   String code = "...";
-  AuthModel(this.ref, this.hive) : super(false);
+  AuthModel(this.ref, this.db) : super(false);
 
   Future<bool> check() async {
     var creds = await getCredentials();
     var apiUrl = creds["url"];
     var device = creds["device"];
-
     return apiUrl != null && device != null;
   }
 
   Future<dynamic> getCredentials() async {
     if (kDebugMode) {
       return {
-        "url": "https://local-8090.add.dnmc.in",
+        "url": "http://adonis-PC.dnmc.lan:8090",
         "device": "ucof4e5affm2jq0"
       };
     }
 
     return {
-      "url": await hive.hive?.get("apiUrl"),
-      "device": await hive.hive?.get("apiDevice")
+      "url": await db.hive?.get("apiUrl"),
+      "device": await db.hive?.get("apiDevice")
     };
   }
 
@@ -42,7 +41,7 @@ class AuthModel extends StateNotifier<bool> with BaseHelper {
     logInfo(code);
     bool result = false;
 
-    final wsUrl = Uri.parse('wss://ntfy.sh/odinmovieshows-$code/ws');
+    final wsUrl = Uri.parse('wss://ntfy.sh/odinmovieshow-$code/ws');
     final channel = WebSocketChannel.connect(wsUrl);
 
     await channel.ready;
@@ -72,17 +71,24 @@ class AuthModel extends StateNotifier<bool> with BaseHelper {
     listen.cancel();
 
     ref.read(urlProvider.notifier).state = url;
+    await Future.delayed(const Duration(seconds: 5));
 
     try {
-      await Dio().get('$url/device/verify/$id');
-      await hive.hive?.put("apiUrl", url);
-      await hive.hive?.put("apiDevice", id);
+      final res = await Dio().get('$url/device/verify/$id');
+      logInfo(res.statusCode);
+      if ((res.statusCode ?? 400) >= 300) {
+        ref.read(errorProvider.notifier).state = "Connection error.";
+        return await login();
+      } else {
+        await db.hive?.put("apiUrl", url);
+        await db.hive?.put("apiDevice", id);
+        state = !state;
+      }
     } catch (e) {
+      ref.read(errorProvider.notifier).state = "Connection error.";
       logError(e, null);
-      login();
+      return await login();
     }
-
-    state = !state;
   }
 }
 
@@ -90,8 +96,12 @@ final urlProvider = StateProvider<String>((ref) {
   return "";
 });
 
+final errorProvider = StateProvider<String>((ref) {
+  return "";
+});
+
 final authProvider =
-    StateNotifierProvider((ref) => AuthModel(ref, ref.watch(hiveProvider)));
+    StateNotifierProvider((ref) => AuthModel(ref, ref.watch(dbProvider)));
 
 final codeProvider = StateProvider<String>((ref) {
   String c = const UuidV4().generate().split("-").first.toString();

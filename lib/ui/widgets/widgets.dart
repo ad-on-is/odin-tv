@@ -43,16 +43,20 @@ class TextChipBig extends StatelessWidget {
 }
 
 class OdinLogo extends StatelessWidget {
-  const OdinLogo({Key? key}) : super(key: key);
+  final double height;
+  const OdinLogo({Key? key, this.height = 25}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        SvgPicture.asset("assets/images/logo.svg", height: 25),
-        SizedBox(width: 5),
-        const Headline4("ODIN")
+        SvgPicture.asset("assets/images/logo.svg", height: height),
+        SizedBox(width: height / 5),
+        Headline4(
+          "ODIN",
+          style: TextStyle(fontSize: height / 1.5),
+        ),
       ],
     );
   }

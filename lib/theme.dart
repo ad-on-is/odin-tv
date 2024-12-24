@@ -21,11 +21,11 @@ class AppThemes {
             padding: const WidgetStatePropertyAll(
                 EdgeInsets.symmetric(horizontal: 15, vertical: 2)),
             backgroundColor: WidgetStatePropertyAll(Colors.white.withAlpha(0)),
-            foregroundColor: WidgetStatePropertyAll(AppColors.purple),
+            foregroundColor: WidgetStatePropertyAll(AppColors.primary),
             overlayColor:
-                WidgetStatePropertyAll(AppColors.purple.withAlpha(30)),
+                WidgetStatePropertyAll(AppColors.primary.withAlpha(30)),
             textStyle:
-                WidgetStatePropertyAll(TextStyle(color: AppColors.purple)),
+                WidgetStatePropertyAll(TextStyle(color: AppColors.primary)),
             shape: WidgetStatePropertyAll(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(50),
@@ -105,7 +105,7 @@ class AppThemes {
 }
 
 class AppColors {
-  static Color primary = blue;
+  static Color primary = orange;
   static Color darkGray = const Color.fromRGBO(17, 17, 27, 1);
   static Color lightGray = gray2;
   static Color turquoise = const Color.fromRGBO(42, 195, 222, 1);
