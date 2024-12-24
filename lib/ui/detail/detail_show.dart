@@ -54,36 +54,36 @@ class Buttons extends ConsumerWidget {
         height: 25,
         child: Row(
           children: [
-            ButtonWithIcon('Seasons',
-                icon: const Icon(FontAwesomeIcons.film,
-                    size: 15, color: Colors.white),
-                node: FocusNode(canRequestFocus: mf, skipTraversal: !mf),
-                onPress: () {
-              // model.showEpisodes();
-            }),
-            const SizedBox(width: 20),
-            ButtonWithIcon(
-              'Trailer',
-              node: FocusNode(canRequestFocus: mf, skipTraversal: !mf),
-              icon: const Icon(FontAwesomeIcons.youtube,
-                  size: 15, color: Colors.white),
-              onPress: () {
-                // model.playTrailer();
-              },
-            ),
-            const SizedBox(width: 20),
-            ButtonWithIcon(
-              'Trakt',
-              node: FocusNode(canRequestFocus: mf, skipTraversal: !mf),
-              icon: Image.asset(
-                'assets/images/trakt.png',
-                width: 15,
-                color: Colors.white,
-              ),
-              onPress: () {
-                // show trakt Dialog
-              },
-            )
+            // ButtonWithIcon('Seasons',
+            //     icon: const Icon(FontAwesomeIcons.film,
+            //         size: 15, color: Colors.white),
+            //     node: FocusNode(canRequestFocus: mf, skipTraversal: !mf),
+            //     onPress: () {
+            //   // model.showEpisodes();
+            // }),
+            // const SizedBox(width: 20),
+            // ButtonWithIcon(
+            //   'Trailer',
+            //   node: FocusNode(canRequestFocus: mf, skipTraversal: !mf),
+            //   icon: const Icon(FontAwesomeIcons.youtube,
+            //       size: 15, color: Colors.white),
+            //   onPress: () {
+            //     // model.playTrailer();
+            //   },
+            // ),
+            // const SizedBox(width: 20),
+            // ButtonWithIcon(
+            //   'Trakt',
+            //   node: FocusNode(canRequestFocus: mf, skipTraversal: !mf),
+            //   icon: Image.asset(
+            //     'assets/images/trakt.png',
+            //     width: 15,
+            //     color: Colors.white,
+            //   ),
+            //   onPress: () {
+            //     // show trakt Dialog
+            //   },
+            // )
           ],
         ),
       ),

@@ -32,7 +32,7 @@ class App extends HookConsumerWidget {
             appBar: AppBar(
               toolbarHeight: 60,
               leading: const Padding(
-                padding: EdgeInsets.only(left: 20, top: 0),
+                padding: EdgeInsets.only(left: 60, top: 0),
                 child: OdinLogo(),
               ),
               backgroundColor: Colors.transparent,

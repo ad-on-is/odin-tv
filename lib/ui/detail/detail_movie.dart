@@ -70,24 +70,24 @@ class Buttons extends ConsumerWidget {
                       ));
             }),
             const SizedBox(width: 20),
-            ButtonWithIcon(
-              'Trailer',
-              icon: const Icon(FontAwesomeIcons.youtube,
-                  size: 15, color: Colors.white),
-              onPress: () {
-                controller.playTrailer();
-              },
-            ),
-            const SizedBox(width: 20),
-            ButtonWithIcon(
-              'Trakt',
-              icon: Image.asset(
-                'assets/images/trakt.png',
-                width: 15,
-                color: Colors.white,
-              ),
-              onPress: () {},
-            )
+            // ButtonWithIcon(
+            //   'Trailer',
+            //   icon: const Icon(FontAwesomeIcons.youtube,
+            //       size: 15, color: Colors.white),
+            //   onPress: () {
+            //     controller.playTrailer();
+            //   },
+            // ),
+            // const SizedBox(width: 20),
+            // ButtonWithIcon(
+            //   'Trakt',
+            //   icon: Image.asset(
+            //     'assets/images/trakt.png',
+            //     width: 15,
+            //     color: Colors.white,
+            //   ),
+            //   onPress: () {},
+            // )
           ],
         ),
       ),
