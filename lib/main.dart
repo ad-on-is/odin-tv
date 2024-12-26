@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -39,14 +41,15 @@ class PVLogger extends ProviderObserver with BaseHelper {
 final initProvider = StreamProvider<bool>((ref) async* {
   await Hive.initFlutter();
   final db = ref.read(dbProvider);
+  final auth = ref.read(authProvider.notifier);
   db.hive = await Hive.openLazyBox('odin');
 
   ref.read(settingsProvider).init();
-  if (!await ref.read(authProvider.notifier).check()) {
+  if (!await auth.check()) {
+    await auth.clear();
     yield false;
-    await ref.read(authProvider.notifier).login();
+    await auth.login();
   }
-
   yield true;
 });
 

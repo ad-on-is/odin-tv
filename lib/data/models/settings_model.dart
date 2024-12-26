@@ -5,18 +5,18 @@ import 'package:odin/helpers.dart';
 import '../services/db.dart';
 
 List<Map<String, String>> players = [
+  {'title': 'Just', 'id': 'com.brouken.player'},
   {'title': 'MX Player', 'id': 'com.mxtech.videoplayer.pro'},
+  {'title': 'Nova', 'id': 'org.courville.nova'},
   {'title': 'Kodi', 'id': 'org.xbmc.kodi'},
   {'title': 'VLC', 'id': 'org.videolan.vlc'},
-  {'title': 'Nova', 'id': 'org.courville.nova'},
-  {'title': 'Just', 'id': 'com.brouken.player'},
 ];
 
 class SettingsModel with BaseHelper {
   final Ref ref;
-  DB hive;
+  DB db;
 
-  SettingsModel(this.ref, this.hive) {
+  SettingsModel(this.ref, this.db) {
     init();
   }
 
@@ -26,34 +26,14 @@ class SettingsModel with BaseHelper {
       players.firstWhere((element) => element['title'] == config.player);
 
   void init() async {
-    var saved = await hive.hive?.get('config');
+    var saved = await db.hive?.get('config');
     if (saved != null) {
       config = Config(player: saved['player']);
     }
-
-    // Random r = new Random();
-    // String key = base64.encode(List<int>.generate(8, (_) => r.nextInt(255)));
-
-    // HttpClient client = HttpClient();
-    // HttpClientRequest request =
-    //     await client.getUrl(Uri.parse('https://ntfy.sh/odinmovieshows-2222'));
-    // request.headers.add('connection', 'Upgrade');
-    // request.headers.add('upgrade', 'websocket');
-    // request.headers.add('Sec-WebSocket-Version', '13');
-    // request.headers.add('Sec-WebSocket-Key', key);
-    // HttpClientResponse response = await request.close();
-
-    // Socket socket = await response.detachSocket();
-
-    // WebSocket ws = WebSocket.fromUpgradedSocket(socket, serverSide: false);
-    // logInfo("Listening");
-    // ws.listen((event) {
-    //   print(event);
-    // });
   }
 
   void save() {
-    hive.hive?.put('config', {'player': config.player});
+    db.hive?.put('config', {'player': config.player});
   }
 }
 

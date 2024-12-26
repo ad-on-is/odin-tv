@@ -2,9 +2,11 @@ export 'buttons.dart';
 export 'loaders.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:helpers/helpers/widgets/text.dart';
+import 'package:odin/data/models/auth_model.dart';
 import 'package:odin/theme.dart';
 
 class TextChip extends StatelessWidget {
@@ -42,26 +44,56 @@ class TextChipBig extends StatelessWidget {
   }
 }
 
+class HealthCheck extends ConsumerWidget {
+  const HealthCheck({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, ref) {
+    final healthy = ref.watch(healthProvider);
+
+    return healthy.when(
+      data: (value) => value
+          ? const SizedBox()
+          : Container(
+              color: AppColors.red,
+              padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 5),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  FaIcon(FontAwesomeIcons.triangleExclamation,
+                      size: 8, color: AppColors.darkGray),
+                  const SizedBox(width: 5),
+                  CaptionText("Connection error",
+                      style: TextStyle(color: AppColors.darkGray, fontSize: 8)),
+                ],
+              ),
+            ),
+      error: (_, __) => const BodyText1("Connection error"),
+      loading: () => const SizedBox(),
+    );
+  }
+}
+
 class OdinLogo extends StatelessWidget {
   final double height;
-  const OdinLogo({Key? key, this.height = 25}) : super(key: key);
+  final bool showText;
+  const OdinLogo({Key? key, this.height = 25, this.showText = true})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return OverflowBox(
-      maxHeight: double.infinity,
-      maxWidth: double.infinity,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SvgPicture.asset("assets/images/logo.svg", height: height),
-          SizedBox(width: height / 5),
-          Headline4(
-            "ODIN",
-            style: TextStyle(fontSize: height / 1.5),
-          ),
-        ],
-      ),
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SvgPicture.asset("assets/images/logo.svg", height: height),
+        showText ? SizedBox(width: height / 5) : const SizedBox(),
+        showText
+            ? Headline4(
+                "ODIN",
+                style: TextStyle(fontSize: height / 1.5),
+              )
+            : const SizedBox(),
+      ],
     );
   }
 }

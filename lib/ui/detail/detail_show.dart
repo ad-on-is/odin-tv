@@ -6,6 +6,7 @@ import 'package:odin/theme.dart';
 import 'package:odin/data/entities/trakt.dart';
 import 'package:odin/ui/widgets/buttons.dart';
 import 'package:odin/ui/widgets/ensure_visible.dart';
+import 'package:odin/ui/widgets/widgets.dart';
 
 import 'widgets.dart';
 
@@ -84,6 +85,7 @@ class Buttons extends ConsumerWidget {
             //     // show trakt Dialog
             //   },
             // )
+            const HealthCheck(),
           ],
         ),
       ),

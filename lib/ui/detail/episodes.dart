@@ -8,6 +8,7 @@ import 'package:odin/data/entities/trakt.dart';
 import 'package:odin/theme.dart';
 import 'package:odin/ui/cover/animated.dart';
 import 'package:odin/ui/cover/still_cover.dart';
+import 'package:odin/ui/dialogs/default.dart';
 import 'package:odin/ui/dialogs/streams.dart';
 import 'package:odin/ui/widgets/carousel.dart';
 
@@ -54,11 +55,7 @@ class Episodes extends ConsumerWidget {
                         onPressed: () {
                           showDialog(
                               context: context,
-                              builder: (context) => Dialog(
-                                    backgroundColor: AppColors.darkGray,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
+                              builder: (context) => DefaultDialog(
                                     child: StreamsDialog(
                                         item: season.episodes[itemIndex],
                                         season: season,
@@ -72,10 +69,7 @@ class Episodes extends ConsumerWidget {
                 onEnter: (idx) {
                   showDialog(
                       context: context,
-                      builder: (context) => Dialog(
-                            backgroundColor: AppColors.darkGray,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
+                      builder: (context) => DefaultDialog(
                             child: StreamsDialog(
                                 item: season.episodes[idx],
                                 season: season,

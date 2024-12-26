@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:odin/data/services/api.dart';
 import 'package:odin/data/services/db.dart';
 import 'package:odin/helpers.dart';
 import 'package:uuid/v4.dart';
@@ -11,15 +12,39 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 class AuthModel extends StateNotifier<bool> with BaseHelper {
   DB db;
+  HealthService health;
   final Ref ref;
   String code = "...";
-  AuthModel(this.ref, this.db) : super(false);
+  AuthModel(this.ref, this.db, this.health) : super(false);
 
   Future<bool> check() async {
     var creds = await getCredentials();
     var apiUrl = creds["url"];
     var device = creds["device"];
+    logInfo(apiUrl);
+    logInfo(device);
     return apiUrl != null && device != null;
+  }
+
+  Future<bool> credsValid() async {
+    var creds = await getCredentials();
+    var status = await validate(creds['url'], creds['device']);
+    return status > 0 && status < 300;
+  }
+
+  Future<bool> healthy() async {
+    var creds = await getCredentials();
+    var status = await validate(creds['url'], creds['device']);
+    return status != 0;
+  }
+
+  Future<void> clear() async {
+    await db.hive?.put("apiUrl", null);
+    await db.hive?.put("apiDevice", null);
+  }
+
+  Future<int> validate(String url, String id) async {
+    return (await health.check(url, id)).match((l) => 0, (r) => r);
   }
 
   Future<dynamic> getCredentials() async {
@@ -73,20 +98,21 @@ class AuthModel extends StateNotifier<bool> with BaseHelper {
     ref.read(urlProvider.notifier).state = url;
     await Future.delayed(const Duration(seconds: 5));
 
-    try {
-      final res = await Dio().get('$url/device/verify/$id');
-      logInfo(res.statusCode);
-      if ((res.statusCode ?? 400) >= 300) {
-        ref.read(errorProvider.notifier).state = "Connection error.";
-        return await login();
-      } else {
-        await db.hive?.put("apiUrl", url);
-        await db.hive?.put("apiDevice", id);
-        state = !state;
+    final status = await validate(url, id);
+
+    if (status > 0 && status < 300) {
+      await db.hive?.put("apiUrl", url);
+      await db.hive?.put("apiDevice", id);
+      state = !state;
+    } else {
+      if (status == 0) {
+        ref.read(errorProvider.notifier).state =
+            "Network error: Cannot reach URL";
       }
-    } catch (e) {
-      ref.read(errorProvider.notifier).state = "Connection error.";
-      logError(e, null);
+      if (status > 399) {
+        ref.read(errorProvider.notifier).state =
+            "Authorization error: Something is wrong";
+      }
       return await login();
     }
   }
@@ -100,11 +126,26 @@ final errorProvider = StateProvider<String>((ref) {
   return "";
 });
 
-final authProvider =
-    StateNotifierProvider((ref) => AuthModel(ref, ref.watch(dbProvider)));
+final authProvider = StateNotifierProvider(
+    (ref) => AuthModel(ref, ref.watch(dbProvider), ref.watch(healthService)));
 
 final codeProvider = StateProvider<String>((ref) {
   String c = const UuidV4().generate().split("-").first.toString();
-  print(c);
   return c;
+});
+
+final healthProvider = StreamProvider.autoDispose<bool>((ref) async* {
+  final auth = ref.read(authProvider.notifier);
+  var healthy = true;
+  // yield* Stream.periodic(const Duration(seconds: 1), (_) async {
+  // return true;
+
+  await for (final _ in Stream.periodic(const Duration(seconds: 5))) {
+    try {
+      healthy = await auth.healthy();
+      yield healthy;
+    } catch (_) {
+      yield false;
+    }
+  }
 });

@@ -8,6 +8,7 @@ import 'package:helpers/helpers.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:odin/controllers/app_controller.dart';
 import 'package:odin/data/entities/trakt.dart';
+import 'package:odin/data/models/auth_model.dart';
 import 'package:odin/theme.dart';
 import 'package:odin/ui/settings.dart';
 import 'package:odin/ui/widgets/widgets.dart';
@@ -30,10 +31,13 @@ class App extends HookConsumerWidget {
           child: Scaffold(
             backgroundColor: Colors.transparent,
             appBar: AppBar(
-              toolbarHeight: 60,
               leading: const Padding(
-                padding: EdgeInsets.only(left: 60, top: 0),
-                child: OdinLogo(),
+                padding: EdgeInsets.only(left: 70, top: 0),
+                child: OverflowBox(
+                  minWidth: 100,
+                  maxWidth: 100,
+                  child: OdinLogo(),
+                ),
               ),
               backgroundColor: Colors.transparent,
               shadowColor: Colors.transparent,
@@ -48,6 +52,7 @@ class App extends HookConsumerWidget {
                         height: 25,
                         child: Row(
                           children: [
+                            const HealthCheck(),
                             TextButton(
                               focusNode: FocusNode(
                                   canRequestFocus: mf, skipTraversal: !mf),
@@ -255,14 +260,14 @@ class RefreshNotification extends ConsumerWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  SizedBox(
+                  const SizedBox(
                       height: 10,
                       width: 10,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
                         color: Colors.white,
                       )),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   CaptionText(
                     'Refreshing',
                     style: TextStyle(color: AppColors.gray1),

@@ -13,24 +13,8 @@ class DefaultDialog extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Dialog(
       backgroundColor: AppColors.darkGray,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 10),
-            child: Headline4(title,
-                style: const TextStyle(overflow: TextOverflow.ellipsis)),
-          ),
-          SizedBox(
-            width: 200,
-            child: Divider(
-              height: 1,
-              color: AppColors.blue,
-            ),
-          ),
-          child,
-        ],
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: child,
     );
   }
 }

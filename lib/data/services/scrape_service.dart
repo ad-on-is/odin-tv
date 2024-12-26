@@ -42,6 +42,7 @@ class ScrapeService extends StateNotifier<bool> with BaseHelper {
         'country': "${show?.language}",
       };
     }
+    logInfo(data);
 
     await api.post('/scrape', data);
   }

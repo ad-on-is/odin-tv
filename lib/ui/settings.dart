@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:helpers/helpers.dart';
 import 'package:odin/data/models/settings_model.dart';
 import 'package:odin/theme.dart';
+import 'package:odin/ui/dialogs/default.dart';
 
 import '../controllers/settings_controller.dart';
 
@@ -24,15 +25,9 @@ class Settings extends ConsumerWidget {
           onTap: () {
             showDialog(
                 context: context,
-                builder: (ctx) => Dialog(
-                      backgroundColor: AppColors.darkGray,
-                      child: const ChangePlayer(),
+                builder: (ctx) => const DefaultDialog(
+                      child: ChangePlayer(),
                     ));
-            // Get.defaultDialog(
-            //     content: const ChangePlayer(),
-            //     title: '',
-            //     radius: 5,
-            //     backgroundColor: AppColors.darkGray.withAlpha(220));
           },
           minLeadingWidth: 20,
           leading: const Icon(FontAwesomeIcons.circlePlay,

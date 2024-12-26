@@ -17,7 +17,7 @@ class Login extends HookConsumerWidget {
           child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const OdinLogo(height: 50),
+          const OdinLogo(height: 100, showText: false),
           const SizedBox(height: 20),
           error != "" ? BodyText1(error) : const SizedBox(),
           url != ""
@@ -28,12 +28,14 @@ class Login extends HookConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Headline4('In the ODIN frontend:'),
-                      BodyText1("- Login as a regular user"),
-                      BodyText1("- Go to Devices"),
-                      BodyText1("- Click on 'Link Device'"),
-                      BodyText1("- Enter the code below"),
-                      BodyText1("- Click on 'Connect'"),
+                      Headline4(
+                          'Please use the ODIN frontend to link this device with your user account.'),
+                      BodyText1(
+                          "Devices -> Link Device -> Enter code -> Connect"),
+                      // BodyText1("- Go to Devices"),
+                      // BodyText1("- Click on 'Link Device'"),
+                      // BodyText1("- Enter the code below"),
+                      // BodyText1("- Click on 'Connect'"),
                     ],
                   ),
                 ),

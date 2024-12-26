@@ -24,12 +24,12 @@ String runtimeReadable(int runtime) {
   final int hrs = (runtime / 60).floor();
   final int ms = runtime % 60;
   if (hrs == 0) {
-    return '$ms min';
+    return '${ms}min';
   }
   if (ms == 0) {
-    return '$hrs h';
+    return '${hrs}h';
   }
-  return '$hrs h : $ms m';
+  return '${hrs}h:${ms}m';
 }
 
 String ratingCountToReadable(int count) {

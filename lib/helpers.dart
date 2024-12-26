@@ -3,6 +3,32 @@ import 'dart:developer' as developer;
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 
+class DLogger {
+  static void log(dynamic message) {
+    DebugLogger().log(message, "");
+  }
+
+  static void logWarning(dynamic message) {
+    DebugLogger().warn(message, "");
+  }
+
+  static void logOk(dynamic message) {
+    DebugLogger().ok(message, "");
+  }
+
+  static void logError(dynamic message, dynamic stack) {
+    DebugLogger().error(message, "", stack);
+  }
+
+  static void logInfo(dynamic message) {
+    DebugLogger().info(message, "");
+  }
+
+  static void logFatal(dynamic message, Error e, StackTrace s) {
+    DebugLogger().fatal(message, "", e, s);
+  }
+}
+
 class BaseHelper {
   void log(dynamic message) {
     DebugLogger().log(message, runtimeType.toString());

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:helpers/helpers/widgets/text.dart';
 import 'package:odin/controllers/detail_controller.dart';
+import 'package:odin/ui/dialogs/default.dart';
 import 'package:odin/ui/dialogs/streams.dart';
 // import 'package:odin/ui/dialogs/streams.dart';
 // import 'package:odin/ui/dialogs/trakt_actions.dart';
@@ -62,14 +63,12 @@ class Buttons extends ConsumerWidget {
                 node: controller.playButtonNode, onPress: () async {
               showDialog(
                   context: context,
-                  builder: (context) => Dialog(
-                        backgroundColor: AppColors.darkGray,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
+                  builder: (context) => DefaultDialog(
                         child: StreamsDialog(item: item),
                       ));
             }),
             const SizedBox(width: 20),
+            const HealthCheck()
             // ButtonWithIcon(
             //   'Trailer',
             //   icon: const Icon(FontAwesomeIcons.youtube,

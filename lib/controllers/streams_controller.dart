@@ -14,6 +14,7 @@ import 'package:odin/data/services/mqtt.dart';
 import 'package:odin/data/services/scrape_service.dart';
 import 'package:odin/data/services/trakt_service.dart';
 import 'package:odin/helpers.dart';
+import 'package:odin/ui/dialogs/default.dart';
 
 import '../theme.dart';
 
@@ -83,8 +84,7 @@ class StreamsController extends StateNotifier<bool> with BaseHelper {
   Future<void> confirmProbablyWatched(int percent, BuildContext ctx) async {
     return await showDialog(
         context: ctx,
-        builder: (dctx) => Dialog(
-              backgroundColor: AppColors.darkGray,
+        builder: (dctx) => DefaultDialog(
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
@@ -154,20 +154,23 @@ class StreamsController extends StateNotifier<bool> with BaseHelper {
       final MqttPublishMessage recMess = t[0].payload;
       final message =
           MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+      if (message == "SCRAPING_DONE") {
+        status = "Done";
+        state = !state;
+        return;
+      }
       final s = Scrape.fromJson(json.decode(message));
       String q = s.quality;
       if (q == '4K' && (s.info.contains('HDR') || s.info.contains('DV'))) {
         q = 'HDR';
       }
-      logInfo(s.title);
+      // logInfo(s.title);
       scrapes[q]!.add(s);
       state = !state;
     });
 
     await scrapeService.scrape(
         item: item!, show: show, season: season, doCache: cache);
-
-    status = "Done";
 
     await Future.delayed(const Duration(seconds: 1));
     state = !state;
