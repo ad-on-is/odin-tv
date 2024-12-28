@@ -7,16 +7,14 @@ class SettingsController extends StateNotifier<bool> {
 
   SettingsModel settings;
   Config get config => settings.config;
-  int player = 0;
 
   SettingsController(this.ref, this.settings) : super(false) {
     // auth = ref!.watch(authProvider);
   }
 
   void save() {
-    settings.config.player = players[player]['title'] ?? 'just';
     settings.save();
-    state = !state;
+    // state = !state;
   }
 }
 

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:odin/data/entities/tmdb.dart';
 import 'package:odin/data/entities/trakt.dart';
 import 'package:odin/data/entities/user.dart';
+import 'package:odin/data/models/settings_model.dart';
 import 'package:odin/data/services/api.dart';
 import 'package:odin/data/services/db.dart';
 import 'package:odin/data/services/tmdb_service.dart';
@@ -21,11 +22,12 @@ Future<Map<String, dynamic>> parseJsonList(String text) {
 class TraktService with BaseHelper {
   final Ref ref;
   DB hive;
+  SettingsModel settings;
   final ApiService api;
 
   WatchedItems watchedItems;
 
-  TraktService(this.ref, this.hive, this.watchedItems, this.api);
+  TraktService(this.ref, this.hive, this.watchedItems, this.api, this.settings);
 
   Future<void> setWatched(
       {required Trakt item, Trakt? show, Trakt? season}) async {
@@ -50,6 +52,7 @@ class TraktService with BaseHelper {
   }
 
   Future<dynamic> _scrobble(String endpoint, dynamic data) async {
+    if (!settings.config.scrobble) return;
     return (await api.post("/_trakt/scrobble/$endpoint", data))
         .match((l) => null, (r) => r);
   }
@@ -121,8 +124,12 @@ class TraktService with BaseHelper {
   }
 }
 
-final traktProvider = Provider((ref) => TraktService(ref, ref.watch(dbProvider),
-    ref.watch(watchedProvider.notifier), ref.watch(apiProvider)));
+final traktProvider = Provider((ref) => TraktService(
+    ref,
+    ref.watch(dbProvider),
+    ref.watch(watchedProvider.notifier),
+    ref.watch(apiProvider),
+    ref.watch(settingsProvider)));
 
 class WatchedItems extends StateNotifier<bool> {
   List<String> items = [];

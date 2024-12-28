@@ -58,8 +58,9 @@ class Buttons extends ConsumerWidget {
         height: 25,
         child: Row(
           children: [
-            ButtonWithIcon('Play',
-                icon: const Icon(FontAwesomeIcons.play, size: 15),
+            ButtonWithIcon('Watch now',
+                icon: const Icon(FontAwesomeIcons.play,
+                    size: 12, color: Colors.white),
                 node: controller.playButtonNode, onPress: () async {
               showDialog(
                   context: context,

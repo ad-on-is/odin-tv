@@ -1,4 +1,5 @@
 class Config {
   String player;
-  Config({this.player = 'Nova'});
+  bool scrobble;
+  Config({this.player = 'Just', this.scrobble = true});
 }

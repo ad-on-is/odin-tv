@@ -174,7 +174,6 @@ class OdinCarousel extends HookConsumerWidget with BaseHelper {
             },
             controller: controller,
             axisDirection: axis,
-            loop: false,
             scrollBehavior: ScrollConfiguration.of(context).copyWith(
               dragDevices: {
                 // Allows to swipe in web browsers

@@ -9,6 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:odin/controllers/app_controller.dart';
 import 'package:odin/data/entities/trakt.dart';
 import 'package:odin/data/models/auth_model.dart';
+import 'package:odin/data/services/api.dart';
 import 'package:odin/theme.dart';
 import 'package:odin/ui/settings.dart';
 import 'package:odin/ui/widgets/widgets.dart';
@@ -111,8 +112,10 @@ class App extends HookConsumerWidget {
                                   canRequestFocus: mf, skipTraversal: !mf),
                               icon: const Icon(FontAwesomeIcons.gear,
                                   size: 10, color: Colors.white),
-                              onPressed: () =>
-                                  Scaffold.of(context).openEndDrawer(),
+                              onPressed: () {
+                                ref.refresh(statusProvider.future);
+                                Scaffold.of(context).openEndDrawer();
+                              },
                             ),
                             const SizedBox(width: 20)
                           ],

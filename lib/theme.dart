@@ -101,6 +101,11 @@ class AppThemes {
         ),
         bodyMedium: const TextStyle(color: Colors.white, fontSize: 12),
       ),
+      drawerTheme: DrawerThemeData(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(0),
+        ),
+      ),
       scaffoldBackgroundColor: AppColors.darkGray);
 }
 

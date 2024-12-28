@@ -77,7 +77,7 @@ class ItemDetails extends ConsumerWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 150),
+              const SizedBox(height: 24),
               ItemRating(item: item),
               const SizedBox(
                 height: 10,

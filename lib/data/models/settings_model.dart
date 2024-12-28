@@ -27,13 +27,14 @@ class SettingsModel with BaseHelper {
 
   void init() async {
     var saved = await db.hive?.get('config');
-    if (saved != null) {
-      config = Config(player: saved['player']);
-    }
+    config = Config(
+        player: saved?['player'] ?? "Just",
+        scrobble: saved?['scrobble'] ?? true);
   }
 
   void save() {
-    db.hive?.put('config', {'player': config.player});
+    db.hive
+        ?.put('config', {'player': config.player, 'scrobble': config.scrobble});
   }
 }
 

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:odin/data/services/api.dart';
@@ -12,10 +11,10 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 class AuthModel extends StateNotifier<bool> with BaseHelper {
   DB db;
-  HealthService health;
+  ValidationService validation;
   final Ref ref;
   String code = "...";
-  AuthModel(this.ref, this.db, this.health) : super(false);
+  AuthModel(this.ref, this.db, this.validation) : super(false);
 
   Future<bool> check() async {
     var creds = await getCredentials();
@@ -44,7 +43,7 @@ class AuthModel extends StateNotifier<bool> with BaseHelper {
   }
 
   Future<int> validate(String url, String id) async {
-    return (await health.check(url, id)).match((l) => 0, (r) => r);
+    return (await validation.check(url, id)).match((l) => 0, (r) => r);
   }
 
   Future<dynamic> getCredentials() async {
@@ -126,26 +125,10 @@ final errorProvider = StateProvider<String>((ref) {
   return "";
 });
 
-final authProvider = StateNotifierProvider(
-    (ref) => AuthModel(ref, ref.watch(dbProvider), ref.watch(healthService)));
+final authProvider = StateNotifierProvider((ref) =>
+    AuthModel(ref, ref.watch(dbProvider), ref.watch(validationProvider)));
 
 final codeProvider = StateProvider<String>((ref) {
   String c = const UuidV4().generate().split("-").first.toString();
   return c;
-});
-
-final healthProvider = StreamProvider.autoDispose<bool>((ref) async* {
-  final auth = ref.read(authProvider.notifier);
-  var healthy = true;
-  // yield* Stream.periodic(const Duration(seconds: 1), (_) async {
-  // return true;
-
-  await for (final _ in Stream.periodic(const Duration(seconds: 5))) {
-    try {
-      healthy = await auth.healthy();
-      yield healthy;
-    } catch (_) {
-      yield false;
-    }
-  }
 });

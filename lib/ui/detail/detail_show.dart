@@ -55,13 +55,13 @@ class Buttons extends ConsumerWidget {
         height: 25,
         child: Row(
           children: [
-            // ButtonWithIcon('Seasons',
-            //     icon: const Icon(FontAwesomeIcons.film,
-            //         size: 15, color: Colors.white),
-            //     node: FocusNode(canRequestFocus: mf, skipTraversal: !mf),
-            //     onPress: () {
-            //   // model.showEpisodes();
-            // }),
+            ButtonWithIcon('Press DOWN arrow for seasons',
+                icon: const Icon(FontAwesomeIcons.circleArrowDown,
+                    size: 15, color: Colors.white),
+                node: FocusNode(canRequestFocus: mf, skipTraversal: !mf),
+                onPress: () {
+              // model.showEpisodes();
+            }),
             // const SizedBox(width: 20),
             // ButtonWithIcon(
             //   'Trailer',
