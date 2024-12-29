@@ -49,7 +49,7 @@ class AuthModel extends StateNotifier<bool> with BaseHelper {
   Future<dynamic> getCredentials() async {
     if (kDebugMode) {
       return {
-        "url": "http://adonis-PC.dnmc.lan:8090",
+        "url": "http://adonis-PC.dnmc.lan:6060",
         "device": "ucof4e5affm2jq0"
       };
     }

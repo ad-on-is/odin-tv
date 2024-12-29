@@ -42,18 +42,18 @@ class TraktService with BaseHelper {
   }
 
   Future<void> addToCollection(dynamic data) async {
-    await api.post("/_trakt/sync/collection", data);
+    await api.post("/-/trakt/sync/collection", data);
   }
 
   Future<void> addToWatchlist(dynamic data) async {
     // final res = await dio.post('/sync/watchlist', data: data);
-    return (await api.post("/_trakt/sync/watchlist", data))
+    return (await api.post("/-/trakt/sync/watchlist", data))
         .match((l) => null, (r) => r);
   }
 
   Future<dynamic> _scrobble(String endpoint, dynamic data) async {
     if (!settings.config.scrobble) return;
-    return (await api.post("/_trakt/scrobble/$endpoint", data))
+    return (await api.post("/-/trakt/scrobble/$endpoint", data))
         .match((l) => null, (r) => r);
   }
 
@@ -66,7 +66,7 @@ class TraktService with BaseHelper {
   }
 
   Future<User> getUser() async {
-    return (await api.get("/_trakt/users/settings"))
+    return (await api.get("/-/trakt/users/settings"))
         .match((l) => User(), (r) => User.fromTrakt(r));
   }
 
@@ -84,7 +84,7 @@ class TraktService with BaseHelper {
   }
 
   Future<List<Trakt>> getSeasons(int showId) async {
-    return (await api.get("/traktseasons/$showId"))
+    return (await api.get("/-/traktseasons/$showId"))
         .match((l) => [], (r) => _getItems(r));
   }
 
@@ -119,7 +119,7 @@ class TraktService with BaseHelper {
   }
 
   Future<List<Trakt>> getItems(String endpoint) async {
-    return (await api.get("/_trakt/$endpoint"))
+    return (await api.get("/-/trakt/$endpoint"))
         .match((l) => [], (r) => _getItems(r));
   }
 }

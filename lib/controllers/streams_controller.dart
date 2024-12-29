@@ -149,7 +149,7 @@ class StreamsController extends StateNotifier<bool> with BaseHelper {
     if (show != null) {
       topic = 'odin-movieshow/episode/${item!.ids.trakt}';
     }
-    await mqtt.initializeMQTTClient("wss://mqtt.dnmc.in", 443, topic);
+    await mqtt.initializeMQTTClient(topic);
     mqtt.client.updates!.listen((dynamic t) {
       final MqttPublishMessage recMess = t[0].payload;
       final message =

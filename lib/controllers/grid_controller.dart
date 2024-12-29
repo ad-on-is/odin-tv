@@ -7,7 +7,7 @@ final gridSectionProvider = FutureProvider.family
     .autoDispose<List<SectionItem>, String>((ref, type) async {
   ref.watch(watchedProvider);
   final api = ref.watch(apiProvider);
-  final u = await api.get('/user');
+  final u = await api.get('/-/user');
 
   if (u.isLeft()) {
     return [];

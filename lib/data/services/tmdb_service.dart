@@ -29,7 +29,7 @@ class TmdbService with BaseHelper {
   Future<Map<int, Map<int, String>>> getEpisodeImages(
       int showId, List<int> seasons) async {
     final res =
-        await dio.get('/tmdbseasons/$showId?seasons=${seasons.join(',')}');
+        await dio.get('/-/tmdbseasons/$showId?seasons=${seasons.join(',')}');
     Map<int, Map<int, String>> images = {};
     try {
       List<dynamic> list = res.data;

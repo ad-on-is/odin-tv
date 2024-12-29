@@ -76,7 +76,7 @@ final healthProvider = StreamProvider.autoDispose<bool>((ref) async* {
 
   await for (final _ in Stream.periodic(const Duration(seconds: 5))) {
     try {
-      healthy = (await api.get('/health?ping=true',
+      healthy = (await api.get('/-/health?ping=true',
               timeout: const Duration(seconds: 2)))
           .fold((l) => false, (r) => true);
       yield healthy;

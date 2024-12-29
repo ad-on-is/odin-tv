@@ -1,29 +1,26 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
-import 'package:odin/data/services/api.dart';
+import 'package:odin/data/models/auth_model.dart';
 import 'package:odin/helpers.dart';
 
 class MQTTService with BaseHelper {
-  ApiService api;
-  MQTTService(this.api);
-
-  // final String? host;
-  // final String? topic;
-  // final int? port;
+  MQTTService(this.auth);
+  AuthModel auth;
 
   String? topic;
 
   late MqttServerClient client;
 
-  Future initializeMQTTClient(String host, int port, String topic) async {
+  Future initializeMQTTClient(String topic) async {
     this.topic = topic;
+    final creds = await auth.getCredentials();
+    final uri = Uri.parse(creds["url"]);
+    final host = uri.host;
+    final proto = uri.scheme == "https" ? "wss://" : "ws://";
 
-    final res = await api.get('/mqttconfig');
-    final conf = res.match((l) => {}, (r) => r);
-
-    client = MqttServerClient(conf["url"], 'odin-movieshows-app')
-      ..port = port
+    client = MqttServerClient("$proto$host/ws/mqtt", 'odin-movieshows-app')
+      ..port = uri.port
       ..logging(on: false)
       ..onDisconnected = onDisConnected
       ..setProtocolV311()
@@ -32,7 +29,6 @@ class MQTTService with BaseHelper {
       ..useWebSocket = true
       ..autoReconnect = true
       ..resubscribeOnAutoReconnect = true
-      // ..secure = true
       ..onConnected = onConnected;
 
     final connMess = MqttConnectMessage()
@@ -43,12 +39,12 @@ class MQTTService with BaseHelper {
         .withWillQos(MqttQos.atLeastOnce);
     log('Connecting....');
     client.connectionMessage = connMess;
-    await connectMQTT(conf["user"], conf["password"]);
+    await connectMQTT();
   }
 
-  Future connectMQTT(String user, String password) async {
+  Future connectMQTT() async {
     try {
-      await client.connect(user, password);
+      await client.connect();
     } on NoConnectionException catch (e) {
       logWarning(e.toString());
       client.disconnect();
@@ -106,4 +102,5 @@ class MQTTService with BaseHelper {
   }
 }
 
-final mqttProvider = Provider((ref) => MQTTService(ref.watch(apiProvider)));
+final mqttProvider =
+    Provider((ref) => MQTTService(ref.watch(authProvider.notifier)));

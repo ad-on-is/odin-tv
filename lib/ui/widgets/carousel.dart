@@ -172,6 +172,7 @@ class OdinCarousel extends HookConsumerWidget with BaseHelper {
               //   onIndexChanged!(index);
               // }
             },
+            loop: false,
             controller: controller,
             axisDirection: axis,
             scrollBehavior: ScrollConfiguration.of(context).copyWith(

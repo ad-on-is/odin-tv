@@ -44,7 +44,7 @@ class ScrapeService extends StateNotifier<bool> with BaseHelper {
     }
     logInfo(data);
 
-    await api.post('/scrape', data);
+    await api.post('/-/scrape', data);
   }
 }
 

@@ -66,13 +66,13 @@ class QualityBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.black,
-      width: 35,
+      width: 30,
       child: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
           Container(
             padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 0),
-            child: Headline4(quality, style: const TextStyle(fontSize: 8)),
+            child: Headline4(quality, style: const TextStyle(fontSize: 7)),
           ),
           Container(
               width: double.infinity,
@@ -163,7 +163,7 @@ class StreamsDialogState extends ConsumerState<StreamsDialog>
         ),
         SizedBox(
             width: MediaQuery.of(context).size.width * 0.7,
-            height: MediaQuery.of(context).size.height * 0.6,
+            height: MediaQuery.of(context).size.height * 0.65,
             child: controller.allUrls().isEmpty
                 ? Center(child: BodyText2(controller.status))
                 : ListView.builder(
@@ -180,6 +180,7 @@ class StreamsDialogState extends ConsumerState<StreamsDialog>
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: Column(
                           children: [
+                            const SizedBox(height: 10),
                             Row(
                               mainAxisSize: MainAxisSize.max,
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -217,22 +218,24 @@ class StreamsDialogState extends ConsumerState<StreamsDialog>
                                                 color: AppColors.gray2,
                                                 fontSize: 8),
                                           ),
-                                          CaptionText(
-                                            filesize(controller
-                                                .allUrls()[index]
-                                                .filesize),
-                                            style: TextStyle(
-                                                color: AppColors.gray2,
-                                                fontSize: 8),
-                                          ),
                                         ],
                                       ),
                                     ],
                                   ),
                                 ),
+                                CaptionText(
+                                  filesize(
+                                      controller.allUrls()[index].filesize),
+                                  style: TextStyle(
+                                      color: AppColors.gray2, fontSize: 8),
+                                ),
                               ],
                             ),
-                            Divider(color: AppColors.gray3.withAlpha(80))
+                            const SizedBox(height: 10),
+                            Divider(
+                              color: AppColors.gray3.withAlpha(80),
+                              height: 0,
+                            ),
                           ],
                         ),
                       ),
