@@ -31,8 +31,10 @@ class ApiService with BaseHelper {
       var creds = await auth.getCredentials();
       var apiUrl = creds["url"];
       var device = creds["device"];
-      options.baseUrl = '$apiUrl';
-      options.headers.addAll({'Device': device});
+      if (apiUrl != null && device != null) {
+        options.baseUrl = '$apiUrl';
+        options.headers.addAll({'Device': device});
+      }
       // options.connectTimeout = const Duration(seconds: 2);
       // options.receiveTimeout = const Duration(minutes: 15);
       // options.sendTimeout = const Duration(minutes: 15);
@@ -88,7 +90,7 @@ final healthProvider = StreamProvider.autoDispose<bool>((ref) async* {
 
 final statusProvider = FutureProvider<dynamic>((ref) async {
   final api = ref.watch(apiProvider);
-  return (await api.get("/health")).match((l) => {}, (r) => r);
+  return (await api.get("/-/health")).match((l) => {}, (r) => r);
 });
 
 class ValidationService with BaseHelper {
@@ -116,7 +118,7 @@ class ValidationService with BaseHelper {
     }));
 
     try {
-      final resp = await dio2.get("$url/device/verify/$device");
+      final resp = await dio2.get("$url/-/device/verify/$device");
       return Right(resp.statusCode!);
     } on DioException catch (e) {
       logWarning(e);

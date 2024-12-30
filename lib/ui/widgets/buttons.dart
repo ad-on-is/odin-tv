@@ -1,6 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:helpers/helpers.dart';
 
+class DialogButton extends StatelessWidget {
+  final String text;
+  final Color color;
+  final Function? onPress;
+  const DialogButton(this.text,
+      {Key? key, this.color = Colors.white, this.onPress})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialButton(
+        onPressed: () {
+          if (onPress != null) {
+            onPress!();
+          }
+        },
+        child: BodyText1(text));
+  }
+}
+
 class ButtonWithIcon extends StatelessWidget {
   final Function? onPress;
   final FocusNode? node;

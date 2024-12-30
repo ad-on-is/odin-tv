@@ -14,7 +14,7 @@ class AuthModel extends StateNotifier<bool> with BaseHelper {
   ValidationService validation;
   final Ref ref;
   String code = "...";
-  AuthModel(this.ref, this.db, this.validation) : super(false);
+  AuthModel(this.ref, this.db, this.validation) : super(true);
 
   Future<bool> check() async {
     var creds = await getCredentials();
@@ -40,6 +40,8 @@ class AuthModel extends StateNotifier<bool> with BaseHelper {
   Future<void> clear() async {
     await db.hive?.put("apiUrl", null);
     await db.hive?.put("apiDevice", null);
+    state = false;
+    await login();
   }
 
   Future<int> validate(String url, String id) async {
@@ -47,12 +49,12 @@ class AuthModel extends StateNotifier<bool> with BaseHelper {
   }
 
   Future<dynamic> getCredentials() async {
-    if (kDebugMode) {
-      return {
-        "url": "http://adonis-PC.dnmc.lan:6060",
-        "device": "ucof4e5affm2jq0"
-      };
-    }
+    // if (kDebugMode) {
+    //   return {
+    //     "url": "http://adonis-PC.dnmc.lan:6060",
+    //     "device": "ucof4e5affm2jq0"
+    //   };
+    // }
 
     return {
       "url": await db.hive?.get("apiUrl"),
@@ -61,7 +63,8 @@ class AuthModel extends StateNotifier<bool> with BaseHelper {
   }
 
   Future<void> login() async {
-    final code = ref.watch(codeProvider);
+    ref.read(urlProvider.notifier).state = "";
+    final code = ref.refresh(codeProvider);
     logInfo(code);
     bool result = false;
 
@@ -102,7 +105,7 @@ class AuthModel extends StateNotifier<bool> with BaseHelper {
     if (status > 0 && status < 300) {
       await db.hive?.put("apiUrl", url);
       await db.hive?.put("apiDevice", id);
-      state = !state;
+      state = true;
     } else {
       if (status == 0) {
         ref.read(errorProvider.notifier).state =
@@ -112,6 +115,7 @@ class AuthModel extends StateNotifier<bool> with BaseHelper {
         ref.read(errorProvider.notifier).state =
             "Authorization error: Something is wrong";
       }
+      state = false;
       return await login();
     }
   }

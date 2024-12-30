@@ -33,11 +33,14 @@ class Settings extends HookConsumerWidget {
     final ad = useState("");
     final trakt = useState("");
     final user = useState("");
+    final device = useState("");
     final status = ref.watch(statusProvider);
     final auth = ref.watch(authProvider.notifier);
     final url = useState("");
     Future.delayed(const Duration(milliseconds: 100), () async {
-      url.value = (await auth.getCredentials())["url"];
+      final creds = await auth.getCredentials();
+      url.value = creds["url"];
+      device.value = creds["device"];
     });
 
     // ref.refresh(statusProvider);
@@ -91,7 +94,17 @@ class Settings extends HookConsumerWidget {
         ListTile(
           dense: true,
           focusColor: AppColors.gray4,
-          onTap: () {},
+          onTap: () async {
+            final select = await showDialog(
+                context: context,
+                builder: (ctx) => const DefaultDialog(
+                      child: Reauth(),
+                    ));
+
+            if (select == true) {
+              ref.read(authProvider.notifier).clear();
+            }
+          },
           minLeadingWidth: 20,
           leading: const Icon(
             FontAwesomeIcons.user,
@@ -100,7 +113,7 @@ class Settings extends HookConsumerWidget {
           ),
           title: BodyText1(user.value),
           subtitle: CaptionText(
-            url.value,
+            "${device.value}\n${url.value}",
             style: TextStyle(color: AppColors.gray2),
           ),
         ),
@@ -116,8 +129,9 @@ class Settings extends HookConsumerWidget {
             color: Colors.white,
             size: 17,
           ),
-          title: const BodyText1("Sync with Trakt (Scrobble)"),
-          subtitle: CaptionText(config.scrobble ? "Enabled" : "Disabled",
+          title: const BodyText1("Scrobble"),
+          subtitle: CaptionText(
+              "Sync with Trakt while watching\n${config.scrobble ? "Enabled" : "Disabled"}",
               style: TextStyle(color: AppColors.gray2)),
         ),
 
@@ -155,6 +169,27 @@ class Settings extends HookConsumerWidget {
           ]),
         ),
       ],
+    );
+  }
+}
+
+class Reauth extends ConsumerWidget {
+  const Reauth({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, ref) {
+    return SizedBox(
+      width: 100,
+      height: 130,
+      child: Column(children: [
+        const SizedBox(height: 10),
+        Icon(FontAwesomeIcons.triangleExclamation, color: AppColors.red),
+        const BodyText1("Are you sure you want to log out?"),
+        const SizedBox(height: 10),
+        DialogButton("Yes!", onPress: () {
+          Navigator.of(context).pop(true);
+        })
+      ]),
     );
   }
 }
