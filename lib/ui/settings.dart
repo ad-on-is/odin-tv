@@ -84,16 +84,15 @@ class Settings extends HookConsumerWidget {
           dense: true,
           focusColor: AppColors.gray4,
           onTap: () async {
-            ref.read(authProvider.notifier).switchUser();
-            // final select = await showDialog(
-            //     context: context,
-            //     builder: (ctx) => const DefaultDialog(
-            //           child: Reauth(),
-            //         ));
-            //
-            // if (select == true) {
-            //   ref.read(authProvider.notifier).clear("");
-            // }
+            final select = await showDialog(
+                context: context,
+                builder: (ctx) => const DefaultDialog(
+                      child: Confirm("Do you really want to switch user?"),
+                    ));
+
+            if (select == true) {
+              ref.read(authProvider.notifier).switchUser();
+            }
           },
           minLeadingWidth: 20,
           leading: const Icon(
@@ -163,7 +162,16 @@ class Settings extends HookConsumerWidget {
           dense: true,
           focusColor: AppColors.gray4,
           onTap: () async {
-            ref.read(authProvider.notifier).delete(me.device);
+            final select = await showDialog(
+                context: context,
+                builder: (ctx) => const DefaultDialog(
+                      child:
+                          Confirm("Do you really want to delete your account?"),
+                    ));
+
+            if (select == true) {
+              ref.read(authProvider.notifier).delete(me.device);
+            }
           },
           minLeadingWidth: 20,
           leading: Icon(
@@ -182,18 +190,20 @@ class Settings extends HookConsumerWidget {
   }
 }
 
-class Reauth extends ConsumerWidget {
-  const Reauth({Key? key}) : super(key: key);
+class Confirm extends ConsumerWidget {
+  final String text;
+  const Confirm(this.text, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, ref) {
     return SizedBox(
       width: 100,
-      height: 130,
+      height: 150,
       child: Column(children: [
-        const SizedBox(height: 10),
+        const SizedBox(height: 20),
         Icon(FontAwesomeIcons.triangleExclamation, color: AppColors.red),
-        const BodyText1("Are you sure you want to log out?"),
+        const SizedBox(height: 10),
+        BodyText1(text),
         const SizedBox(height: 10),
         DefaultButton("Yes!", onPress: () {
           Navigator.of(context).pop(true);
