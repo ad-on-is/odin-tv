@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive_ce_flutter/adapters.dart';
 import 'package:odin/data/entities/config.dart';
 import 'package:odin/data/models/auth_model.dart';
 import 'package:odin/helpers.dart';
@@ -29,7 +28,6 @@ class SettingsModel with BaseHelper {
       players.firstWhere((element) => element['title'] == config.player);
 
   void init() async {
-    logInfo("SETTING HERE");
     final dynamic mydb = await db.users?.get(auth.me!.device);
     final saved = mydb["settings"];
     config = Config(
@@ -40,6 +38,7 @@ class SettingsModel with BaseHelper {
   void save() async {
     final dynamic mydb = await db.users?.get(auth.me!.device);
     mydb["settings"] = {'player': config.player, 'scrobble': config.scrobble};
+    await db.users?.put(auth.me!.device, mydb);
   }
 }
 
