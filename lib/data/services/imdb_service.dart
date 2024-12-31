@@ -7,7 +7,7 @@ class ImdbService extends StateNotifier<bool> with BaseHelper {
   final ApiService api;
   Imdb? imdb;
 
-  ImdbService(this.api) : super(false) {}
+  ImdbService(this.api) : super(false);
 
   Future<void> getReviews(String id) async {
     var res = await api.get("/-/imdb/$id");

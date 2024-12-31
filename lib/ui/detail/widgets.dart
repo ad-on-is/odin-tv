@@ -134,11 +134,12 @@ class ItemDetails extends ConsumerWidget {
             ],
           ),
           item.tmdb!.logoBig.endsWith('.svg')
-              ? SvgPicture.network(item.tmdb!.logoSmall,
+              ? SvgPicture.network(
+                  item.tmdb!.logoSmall,
                   width: 400,
                   height: 150,
                   fit: BoxFit.contain,
-                  color: Colors.white)
+                )
               : CachedNetworkImage(
                   height: 150,
                   width: 400,
@@ -281,9 +282,9 @@ class ItemCast extends ConsumerWidget {
     List<TmdbCast> cast = item.tmdb!.credits.cast.take(20).toList();
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 50),
-          child: const Align(
+        const Padding(
+          padding: EdgeInsets.only(left: 50),
+          child: Align(
             alignment: Alignment.topLeft,
             child: Headline4("CAST & CHARACTERS"),
           ),
@@ -314,7 +315,7 @@ class ItemCast extends ConsumerWidget {
                             const SizedBox(height: 10),
                             Headline4(
                               c.name,
-                              style: TextStyle(fontSize: 10),
+                              style: const TextStyle(fontSize: 10),
                               overflow: TextOverflow.ellipsis,
                             ),
                             CaptionText(

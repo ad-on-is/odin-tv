@@ -7,7 +7,6 @@ import 'package:odin/data/entities/trakt.dart';
 import 'package:odin/data/entities/user.dart';
 import 'package:odin/data/models/settings_model.dart';
 import 'package:odin/data/services/api.dart';
-import 'package:odin/data/services/db.dart';
 import 'package:odin/data/services/tmdb_service.dart';
 import 'package:odin/helpers.dart';
 

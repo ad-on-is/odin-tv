@@ -1,12 +1,9 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:helpers/helpers.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:odin/data/models/auth_model.dart';
-import 'package:odin/data/models/settings_model.dart';
 import 'package:odin/data/services/db.dart';
 import 'package:odin/helpers.dart';
 import 'package:odin/theme.dart';

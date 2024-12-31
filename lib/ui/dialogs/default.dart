@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:helpers/helpers/widgets/text.dart';
 import 'package:odin/theme.dart';
 
 class DefaultDialog extends ConsumerWidget {

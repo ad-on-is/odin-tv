@@ -94,11 +94,12 @@ class BackdropCover extends HookConsumerWidget {
               children: [
                 const SizedBox(height: 55),
                 item.tmdb!.logoSmall.endsWith('.svg')
-                    ? SvgPicture.network(item.tmdb!.logoSmall,
+                    ? SvgPicture.network(
+                        item.tmdb!.logoSmall,
                         width: 80,
                         height: 40,
                         fit: BoxFit.contain,
-                        color: Colors.white)
+                      )
                     : CachedNetworkImage(
                         imageUrl: item.tmdb!.logoSmall,
                         errorWidget: (_, __, ___) => const SizedBox(height: 50),

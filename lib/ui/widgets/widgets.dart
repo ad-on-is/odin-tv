@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:helpers/helpers/widgets/text.dart';
-import 'package:odin/data/models/auth_model.dart';
 import 'package:odin/data/services/api.dart';
 import 'package:odin/theme.dart';
 

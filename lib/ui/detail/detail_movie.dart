@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:odin/controllers/detail_controller.dart';
 import 'package:odin/ui/dialogs/default.dart';
 import 'package:odin/ui/dialogs/streams.dart';
 import 'package:odin/ui/widgets/ensure_visible.dart';
@@ -45,7 +44,6 @@ class Buttons extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final controller = ref.read(detailController.notifier);
     return Padding(
       padding: const EdgeInsets.only(left: 50.0),
       child: SizedBox(

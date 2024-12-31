@@ -1,10 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:odin/data/services/api.dart';
 import 'package:odin/data/services/db.dart';
 import 'package:odin/helpers.dart';
@@ -72,12 +69,12 @@ class AuthModel extends StateNotifier<AuthState> with BaseHelper {
   }
 
   Future<bool> verify(AuthObject creds) async {
-    final status = await validate(creds.url, creds.device);
-    if (status == 0) {
+    final v = await validate(creds.url, creds.device);
+    if (v.status == 0) {
       state = AuthState.error;
       return false;
     }
-    if (status == 404) {
+    if (v.status == 404) {
       await clear(creds.device);
       login();
       return false;

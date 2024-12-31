@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
-import 'package:odin/helpers.dart';
 
 class DB extends StateNotifier<bool> {
   LazyBox? hive;

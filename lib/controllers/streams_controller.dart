@@ -16,8 +16,6 @@ import 'package:odin/data/services/trakt_service.dart';
 import 'package:odin/helpers.dart';
 import 'package:odin/ui/dialogs/default.dart';
 
-import '../theme.dart';
-
 class StreamUrl {
   String filename;
   int filesize;

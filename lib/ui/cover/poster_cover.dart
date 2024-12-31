@@ -126,7 +126,7 @@ class PosterCover extends HookConsumerWidget {
                         const SizedBox(width: 5),
                         Subtitle2(
                           item.roundedRating.toString(),
-                          style: TextStyle(fontSize: 8),
+                          style: const TextStyle(fontSize: 8),
                         ),
                       ],
                     ),

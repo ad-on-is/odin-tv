@@ -118,7 +118,7 @@ class App extends HookConsumerWidget {
                                   const SizedBox(width: 5),
                                   BodyText1(
                                     me?.user["username"] ?? "",
-                                    style: TextStyle(fontSize: 10),
+                                    style: const TextStyle(fontSize: 10),
                                   ),
                                 ],
                               ),

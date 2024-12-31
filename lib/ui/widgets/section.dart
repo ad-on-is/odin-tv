@@ -47,8 +47,8 @@ class Section extends HookConsumerWidget {
     double extent = e.big ? 225 : 90;
     //ref.watch(selectedItemProvider);
     final sec = ref.watch(selectedSectionProvider);
-    final af = ref.watch(afterFocusProvider);
-    final bf = ref.watch(beforeFocusProvider);
+    // final af = ref.watch(afterFocusProvider);
+    // final bf = ref.watch(beforeFocusProvider);
     return EnsureVisible(
       child: Column(
         mainAxisSize: MainAxisSize.min,

@@ -8,7 +8,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_carousel/infinite_carousel.dart';
 import 'package:odin/controllers/app_controller.dart';
 import 'package:odin/helpers.dart';
-import 'package:odin/ui/focusnodes.dart';
 
 class OdinCarousel extends HookConsumerWidget with BaseHelper {
   const OdinCarousel(
@@ -46,7 +45,7 @@ class OdinCarousel extends HookConsumerWidget with BaseHelper {
 
   @override
   Widget build(BuildContext context, ref) {
-    final dur = useState(300);
+    // final dur = useState(300);
     final dir = useState("");
     final idx = useState(0);
     final didx = useDebounced(idx.value, const Duration(milliseconds: 50));
