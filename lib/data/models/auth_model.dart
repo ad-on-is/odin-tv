@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:odin/data/services/api.dart';
@@ -34,13 +35,13 @@ class AuthModel extends StateNotifier<AuthState> with BaseHelper {
   AuthObject? me;
   AuthModel(this.ref, this.db, this.validation) : super(AuthState.error);
 
-  Future<void> check() async {
+  Future<void> check({bool showSelect = false}) async {
     final allcreds = await getAllCreds();
     if (allcreds.isEmpty) {
       login();
       return;
     }
-    if (allcreds.length > 0) {
+    if (allcreds.length > 1 || showSelect) {
       state = AuthState.multiple;
       return;
     }
@@ -87,8 +88,7 @@ class AuthModel extends StateNotifier<AuthState> with BaseHelper {
   Future<void> delete(String id) async {
     logWarning(id);
     await db.users?.delete(id);
-    logInfo(await getAllCreds());
-    check();
+    check(showSelect: true);
   }
 
   Future<void> clear(String device) async {

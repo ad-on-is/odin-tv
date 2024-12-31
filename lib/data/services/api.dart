@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -93,6 +94,15 @@ final statusProvider = FutureProvider<dynamic>((ref) async {
 });
 
 class ValidationService with BaseHelper {
+  Future<String> getDeviceInfo() async {
+    try {
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      return "${androidInfo.manufacturer} ${androidInfo.model}";
+    } catch (_) {}
+    return "Unknown";
+  }
+
   Future<Either<bool, dynamic>> check(String url, String device) async {
     final dio2 = Dio();
     (dio2.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
@@ -116,8 +126,10 @@ class ValidationService with BaseHelper {
       return handler.next(options);
     }));
 
+    final name = await getDeviceInfo();
+
     try {
-      final resp = await dio2.get("$url/-/device/verify/$device");
+      final resp = await dio2.get("$url/-/device/verify/$device/$name");
       return Right({"status": resp.statusCode!, "user": resp.data});
     } on DioException catch (e) {
       logWarning(e);

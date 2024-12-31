@@ -38,6 +38,7 @@ dependencies:
   mqtt_client:
   json_annotation:
   google_fonts:
+  device_info_plus:
   hive_ce:
   hive_ce_flutter:
   html_unescape:
