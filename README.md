@@ -2,7 +2,7 @@
 <img src="./assets/images/logo.svg" /><br />
 </h1>
 
-<h4 align="center">Android TV app for <a href="https://github.com/ad-on-is/odin-movieshow">Odin</a></h4>
+<h4 align="center">Android TV app for <a href="https://github.com/ad-on-is/odin-server">Odin</a></h4>
 
 ![screenshot](./screenshots/odin-tv.png)
 

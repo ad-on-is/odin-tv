@@ -186,7 +186,7 @@ class Reauth extends ConsumerWidget {
         Icon(FontAwesomeIcons.triangleExclamation, color: AppColors.red),
         const BodyText1("Are you sure you want to log out?"),
         const SizedBox(height: 10),
-        DialogButton("Yes!", onPress: () {
+        DefaultButton("Yes!", onPress: () {
           Navigator.of(context).pop(true);
         })
       ]),

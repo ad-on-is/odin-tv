@@ -1,20 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:helpers/helpers/widgets/text.dart';
 import 'package:odin/controllers/detail_controller.dart';
 import 'package:odin/ui/dialogs/default.dart';
 import 'package:odin/ui/dialogs/streams.dart';
-// import 'package:odin/ui/dialogs/streams.dart';
-// import 'package:odin/ui/dialogs/trakt_actions.dart';
-// import 'package:odin/ui/themes/default.dart';
-import 'package:odin/ui/widgets/buttons.dart';
 import 'package:odin/ui/widgets/ensure_visible.dart';
 import 'package:odin/ui/widgets/widgets.dart';
 import 'package:odin/data/entities/trakt.dart';
 // import 'package:';
 
-import '../../theme.dart';
 import 'widgets.dart';
 
 class DetailMovie extends StatelessWidget {
@@ -58,16 +52,27 @@ class Buttons extends ConsumerWidget {
         height: 25,
         child: Row(
           children: [
-            ButtonWithIcon('Watch now',
-                icon: const Icon(FontAwesomeIcons.play,
-                    size: 12, color: Colors.white),
-                node: controller.playButtonNode, onPress: () async {
-              showDialog(
-                  context: context,
-                  builder: (context) => DefaultDialog(
-                        child: StreamsDialog(item: item),
-                      ));
-            }),
+            DefaultButton(
+              "Watch now",
+              icon: FontAwesomeIcons.play,
+              onPress: () {
+                showDialog(
+                    context: context,
+                    builder: (context) => DefaultDialog(
+                          child: StreamsDialog(item: item),
+                        ));
+              },
+            ),
+            // ButtonWithIcon('Watch now',
+            //     icon: const Icon(FontAwesomeIcons.play,
+            //         size: 12, color: Colors.white),
+            //     node: controller.playButtonNode, onPress: () async {
+            //   showDialog(
+            //       context: context,
+            //       builder: (context) => DefaultDialog(
+            //             child: StreamsDialog(item: item),
+            //           ));
+            // }),
             const SizedBox(width: 20),
             const HealthCheck()
             // ButtonWithIcon(

@@ -18,6 +18,7 @@ class MQTTService with BaseHelper {
     final uri = Uri.parse(creds["url"]);
     final host = uri.host;
     final proto = uri.scheme == "https" ? "wss://" : "ws://";
+    logInfo("$proto$host:${uri.port}/ws/mqtt");
 
     client = MqttServerClient("$proto$host/ws/mqtt", 'odin-movieshows-app')
       ..port = uri.port

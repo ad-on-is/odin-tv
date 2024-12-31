@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:helpers/helpers.dart';
 
-class DialogButton extends StatelessWidget {
+class DefaultButton extends StatelessWidget {
   final String text;
   final Color color;
+  final IconData? icon;
   final Function? onPress;
-  const DialogButton(this.text,
-      {Key? key, this.color = Colors.white, this.onPress})
+  const DefaultButton(this.text,
+      {Key? key, this.color = Colors.white, this.onPress, this.icon})
       : super(key: key);
 
   @override
@@ -17,7 +19,13 @@ class DialogButton extends StatelessWidget {
             onPress!();
           }
         },
-        child: BodyText1(text));
+        child: icon != null
+            ? Row(children: [
+                Icon(icon, color: Colors.white, size: 12),
+                const SizedBox(width: 5),
+                BodyText1(text),
+              ])
+            : BodyText1(text));
   }
 }
 
