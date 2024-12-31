@@ -1,0 +1,36 @@
+name: CI - Build and push
+
+on:
+  push:
+    tags:
+      - "*"
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-push:
+    name: Build and push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Clone repository
+        uses: actions/checkout@v4
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter build apk
+      - name: "Upload Artifact"
+        uses: actions/upload-artifact@v2
+        with:
+          name: android
+          path: build/app/outputs/apk/release/app-release.apk
