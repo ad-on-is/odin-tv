@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:helpers/helpers.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:odin/data/models/auth_model.dart';
 import 'package:odin/data/models/settings_model.dart';
 import 'package:odin/data/services/db.dart';
@@ -12,6 +12,7 @@ import 'package:odin/helpers.dart';
 import 'package:odin/theme.dart';
 import 'package:odin/ui/app.dart';
 import 'package:odin/ui/login.dart';
+import 'package:odin/ui/userselect.dart';
 import 'package:odin/ui/widgets/widgets.dart';
 
 class PVLogger extends ProviderObserver with BaseHelper {
@@ -40,11 +41,15 @@ class PVLogger extends ProviderObserver with BaseHelper {
 
 final initProvider = StreamProvider<bool>((ref) async* {
   await Hive.initFlutter();
-  final db = ref.read(dbProvider);
-  db.hive = await Hive.openLazyBox('odin');
+  final db = ref.read(dbProvider.notifier);
+  final collection = await BoxCollection.open(
+    'OdinBox',
+    {'users'},
+    path: './',
+  );
+  db.users = await collection.openBox("users");
   final auth = ref.read(authProvider.notifier);
-
-  ref.read(settingsProvider).init();
+  // await db.users?.clear();
   await auth.check();
   yield true;
 });
@@ -74,7 +79,11 @@ class MyApp extends ConsumerWidget {
         theme: AppThemes.defaultTheme,
         themeMode: ThemeMode.dark,
         home: init.when(
-            data: (value) => auth == AuthState.ok ? const App() : const Login(),
+            data: (value) => auth == AuthState.ok
+                ? const App()
+                : auth == AuthState.multiple
+                    ? const UserSelect()
+                    : const Login(),
             error: (_, __) => Container(),
             loading: () => Container(
                   color: AppColors.darkGray,

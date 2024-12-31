@@ -22,6 +22,7 @@ class Settings extends HookConsumerWidget {
     final config = ref.read(settingsController.notifier).config;
     final scrobble = useState(config.scrobble);
     final player = useState(config.player);
+    final me = ref.read(authProvider.notifier).me!;
 
     useEffect(() {
       config.player = player.value;
@@ -32,18 +33,7 @@ class Settings extends HookConsumerWidget {
     final rd = useState("");
     final ad = useState("");
     final trakt = useState("");
-    final user = useState("");
-    final device = useState("");
     final status = ref.watch(statusProvider);
-    final auth = ref.watch(authProvider.notifier);
-    final url = useState("");
-    Future.delayed(const Duration(milliseconds: 100), () async {
-      final creds = await auth.getCredentials();
-      url.value = creds["url"];
-      device.value = creds["device"];
-    });
-
-    // ref.refresh(statusProvider);
 
     status.whenData((data) {
       var rduntil = data["realdebrid"]?["expiration"] ?? "";
@@ -63,7 +53,6 @@ class Settings extends HookConsumerWidget {
       }
 
       trakt.value = data["trakt"]?["user"]["username"] ?? "Not available";
-      user.value = data["user"]?["username"] ?? "Not available";
     });
     return Column(
       children: [
@@ -95,15 +84,16 @@ class Settings extends HookConsumerWidget {
           dense: true,
           focusColor: AppColors.gray4,
           onTap: () async {
-            final select = await showDialog(
-                context: context,
-                builder: (ctx) => const DefaultDialog(
-                      child: Reauth(),
-                    ));
-
-            if (select == true) {
-              ref.read(authProvider.notifier).clear();
-            }
+            ref.read(authProvider.notifier).switchUser();
+            // final select = await showDialog(
+            //     context: context,
+            //     builder: (ctx) => const DefaultDialog(
+            //           child: Reauth(),
+            //         ));
+            //
+            // if (select == true) {
+            //   ref.read(authProvider.notifier).clear("");
+            // }
           },
           minLeadingWidth: 20,
           leading: const Icon(
@@ -111,9 +101,9 @@ class Settings extends HookConsumerWidget {
             color: Colors.white,
             size: 17,
           ),
-          title: BodyText1(user.value),
+          title: BodyText1(me.user["username"]),
           subtitle: CaptionText(
-            "${device.value}\n${url.value}",
+            "${me.device}\n${me.url}",
             style: TextStyle(color: AppColors.gray2),
           ),
         ),
@@ -167,6 +157,25 @@ class Settings extends HookConsumerWidget {
               ],
             ),
           ]),
+        ),
+        Divider(color: AppColors.gray3),
+        ListTile(
+          dense: true,
+          focusColor: AppColors.gray4,
+          onTap: () async {
+            ref.read(authProvider.notifier).delete(me.device);
+          },
+          minLeadingWidth: 20,
+          leading: Icon(
+            FontAwesomeIcons.circleXmark,
+            color: AppColors.red,
+            size: 17,
+          ),
+          title: BodyText1("Delete Account"),
+          subtitle: CaptionText(
+            "This will remove the current user\nfrom this device",
+            style: TextStyle(color: AppColors.gray2),
+          ),
         ),
       ],
     );

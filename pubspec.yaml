@@ -38,8 +38,8 @@ dependencies:
   mqtt_client:
   json_annotation:
   google_fonts:
-  hive:
-  hive_flutter:
+  hive_ce:
+  hive_ce_flutter:
   html_unescape:
   intl:
   mime:

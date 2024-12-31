@@ -28,9 +28,8 @@ class ApiService with BaseHelper {
     };
     dio.interceptors
         .add(InterceptorsWrapper(onRequest: (options, handler) async {
-      var creds = await auth.getCredentials();
-      var apiUrl = creds["url"];
-      var device = creds["device"];
+      var apiUrl = auth.me?.url;
+      var device = auth.me?.device;
       if (apiUrl != null && device != null) {
         options.baseUrl = '$apiUrl';
         options.headers.addAll({'Device': device});
@@ -94,7 +93,7 @@ final statusProvider = FutureProvider<dynamic>((ref) async {
 });
 
 class ValidationService with BaseHelper {
-  Future<Either<bool, int>> check(String url, String device) async {
+  Future<Either<bool, dynamic>> check(String url, String device) async {
     final dio2 = Dio();
     (dio2.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
       final client = HttpClient();
@@ -119,7 +118,7 @@ class ValidationService with BaseHelper {
 
     try {
       final resp = await dio2.get("$url/-/device/verify/$device");
-      return Right(resp.statusCode!);
+      return Right({"status": resp.statusCode!, "user": resp.data});
     } on DioException catch (e) {
       logWarning(e);
       return const Left(true);

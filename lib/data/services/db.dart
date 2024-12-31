@@ -1,11 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:odin/helpers.dart';
 
-class DB {
+class DB extends StateNotifier<bool> {
   LazyBox? hive;
+  CollectionBox? users;
   final Ref ref;
-  DB(this.ref);
+  DB(this.ref) : super(false);
 }
 
-final dbProvider = Provider((ref) => DB(ref));
+final dbProvider = StateNotifierProvider((ref) => DB(ref));

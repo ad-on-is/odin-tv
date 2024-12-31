@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_ce_flutter/adapters.dart';
 import 'package:odin/data/entities/config.dart';
+import 'package:odin/data/models/auth_model.dart';
 import 'package:odin/helpers.dart';
 
 import '../services/db.dart';
@@ -14,9 +16,10 @@ List<Map<String, String>> players = [
 
 class SettingsModel with BaseHelper {
   final Ref ref;
-  DB db;
+  final DB db;
+  final AuthModel auth;
 
-  SettingsModel(this.ref, this.db) {
+  SettingsModel(this.ref, this.db, this.auth) {
     init();
   }
 
@@ -26,17 +29,19 @@ class SettingsModel with BaseHelper {
       players.firstWhere((element) => element['title'] == config.player);
 
   void init() async {
-    var saved = await db.hive?.get('config');
+    logInfo("SETTING HERE");
+    final dynamic mydb = await db.users?.get(auth.me!.device);
+    final saved = mydb["settings"];
     config = Config(
         player: saved?['player'] ?? "Just",
         scrobble: saved?['scrobble'] ?? true);
   }
 
-  void save() {
-    db.hive
-        ?.put('config', {'player': config.player, 'scrobble': config.scrobble});
+  void save() async {
+    final dynamic mydb = await db.users?.get(auth.me!.device);
+    mydb["settings"] = {'player': config.player, 'scrobble': config.scrobble};
   }
 }
 
-final settingsProvider =
-    Provider((ref) => SettingsModel(ref, ref.watch(dbProvider)));
+final settingsProvider = Provider((ref) => SettingsModel(
+    ref, ref.watch(dbProvider.notifier), ref.watch(authProvider.notifier)));

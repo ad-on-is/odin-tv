@@ -3,68 +3,128 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:odin/data/services/api.dart';
 import 'package:odin/data/services/db.dart';
 import 'package:odin/helpers.dart';
 import 'package:uuid/v4.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-enum AuthState { ok, bad, error }
+enum AuthState { ok, login, error, multiple, add, select }
+
+class ValidationStatus {
+  final int status;
+  final dynamic user;
+  ValidationStatus(this.status, this.user);
+}
+
+class AuthObject {
+  final String device;
+  final String url;
+  final dynamic user;
+
+  AuthObject(this.device, this.url, this.user);
+}
 
 class AuthModel extends StateNotifier<AuthState> with BaseHelper {
   DB db;
   ValidationService validation;
   final Ref ref;
   String code = "...";
+  AuthObject? me;
   AuthModel(this.ref, this.db, this.validation) : super(AuthState.error);
 
   Future<void> check() async {
-    var creds = await getCredentials();
-    if (creds["url"] == null || creds["device"] == null) {
-      logWarning("No credentials");
-      state = AuthState.bad;
+    final allcreds = await getAllCreds();
+    if (allcreds.isEmpty) {
       login();
       return;
     }
-    logOk(creds);
-    final status = await validate(creds['url'], creds['device']);
-    if (status == 0) {
-      state = AuthState.error;
+    if (allcreds.length > 0) {
+      state = AuthState.multiple;
       return;
     }
-    if (status == 404) {
-      state = AuthState.bad;
-      await clear();
-      login();
+
+    if (await verify(allcreds[0]) == false) {
       return;
     }
+    me = allcreds[0];
     state = AuthState.ok;
   }
 
-  Future<void> clear() async {
-    await db.hive?.put("apiUrl", null);
-    await db.hive?.put("apiDevice", null);
+  Future<void> newUser() async {
+    login();
   }
 
-  Future<int> validate(String url, String id) async {
-    return (await validation.check(url, id)).match((l) => 0, (r) => r);
+  switchUser() {
+    state = AuthState.multiple;
+  }
+
+  Future<void> selectUser(AuthObject creds) async {
+    logInfo("Selecting");
+    if (!await verify(creds)) {
+      return;
+    }
+    logInfo("Should be here");
+    me = creds;
+    state = AuthState.ok;
+  }
+
+  Future<bool> verify(AuthObject creds) async {
+    final status = await validate(creds.url, creds.device);
+    if (status == 0) {
+      state = AuthState.error;
+      return false;
+    }
+    if (status == 404) {
+      await clear(creds.device);
+      login();
+      return false;
+    }
+    return true;
+  }
+
+  Future<void> delete(String id) async {
+    logWarning(id);
+    await db.users?.delete(id);
+    logInfo(await getAllCreds());
+    check();
+  }
+
+  Future<void> clear(String device) async {
+    await db.users?.delete(device);
+  }
+
+  Future<ValidationStatus> validate(String url, String id) async {
+    return (await validation.check(url, id)).match(
+        (l) => ValidationStatus(0, null),
+        (r) => ValidationStatus(r["status"], r["user"]));
   }
 
   Future<dynamic> getCredentials() async {
-    // if (kDebugMode) {
-    //   return {
-    //     "url": "http://adonis-PC.dnmc.lan:6060",
-    //     "device": "ucof4e5affm2jq0"
-    //   };
-    // }
+    final allcreds = await getAllCreds();
+    final me = allcreds[0];
 
-    return {
-      "url": await db.hive?.get("apiUrl"),
-      "device": await db.hive?.get("apiDevice")
-    };
+    return {"url": me.url, "device": me.device};
+  }
+
+  Future<List<AuthObject>> getAllCreds() async {
+    final List<String>? allcreds = await db.users?.getAllKeys();
+    if (allcreds == null || allcreds.isEmpty) {
+      return [];
+    }
+
+    final creds = <AuthObject>[];
+    await Future.forEach(allcreds, (String c) async {
+      final data = await db.users?.get(c);
+      creds.add(AuthObject(c, data["apiUrl"], data["user"]));
+    });
+
+    return creds;
   }
 
   Future<void> login() async {
+    state = AuthState.login;
     ref.read(urlProvider.notifier).state = "";
     final code = ref.refresh(codeProvider);
     logInfo(code);
@@ -102,23 +162,23 @@ class AuthModel extends StateNotifier<AuthState> with BaseHelper {
     ref.read(urlProvider.notifier).state = url;
     await Future.delayed(const Duration(seconds: 5));
 
-    final status = await validate(url, id);
+    final v = await validate(url, id);
 
-    if (status > 0 && status < 300) {
-      await db.hive?.put("apiUrl", url);
-      await db.hive?.put("apiDevice", id);
+    if (v.status > 0 && v.status < 300) {
+      await db.users?.put(id, {"apiUrl": url, "user": v.user});
       logOk("Auth: Successful!");
+      me = AuthObject(id, url, v.user);
       state = AuthState.ok;
     } else {
-      if (status == 0) {
+      if (v.status == 0) {
         ref.read(errorProvider.notifier).state =
             "Network error: Cannot reach URL";
       }
-      if (status > 399) {
+      if (v.status > 399) {
         ref.read(errorProvider.notifier).state =
             "Authorization error: Something is wrong";
       }
-      state = AuthState.bad;
+      state = AuthState.login;
       return await login();
     }
   }
@@ -128,12 +188,16 @@ final urlProvider = StateProvider<String>((ref) {
   return "";
 });
 
+final usersProvider = FutureProvider<List<AuthObject>>((ref) {
+  return ref.watch(authProvider.notifier).getAllCreds();
+});
+
 final errorProvider = StateProvider<String>((ref) {
   return "";
 });
 
-final authProvider = StateNotifierProvider((ref) =>
-    AuthModel(ref, ref.watch(dbProvider), ref.watch(validationProvider)));
+final authProvider = StateNotifierProvider((ref) => AuthModel(
+    ref, ref.watch(dbProvider.notifier), ref.watch(validationProvider)));
 
 final codeProvider = StateProvider<String>((ref) {
   String c = const UuidV4().generate().split("-").first.toString();

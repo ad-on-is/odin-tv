@@ -47,6 +47,7 @@ class App extends HookConsumerWidget {
                 Consumer(
                   builder: (context, ref, child) {
                     final page = ref.watch(appPageProvider);
+                    final me = ref.read(authProvider.notifier).me;
                     return Padding(
                       padding: const EdgeInsets.only(top: 0.0),
                       child: SizedBox(
@@ -103,15 +104,24 @@ class App extends HookConsumerWidget {
                                 ref.read(appPageProvider.notifier).state = 2;
                               },
                             ),
-                            IconButton(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 0, vertical: 5),
-                              focusColor: Colors.white.withAlpha(40),
-                              splashRadius: 20,
+                            TextButton(
                               focusNode: FocusNode(
                                   canRequestFocus: mf, skipTraversal: !mf),
-                              icon: const Icon(FontAwesomeIcons.gear,
-                                  size: 10, color: Colors.white),
+                              style: ButtonStyle(
+                                  backgroundColor: WidgetStatePropertyAll(
+                                      AppColors.purple
+                                          .withAlpha(page == 2 ? 80 : 0))),
+                              child: Row(
+                                children: [
+                                  const Icon(FontAwesomeIcons.gear,
+                                      color: Colors.white, size: 10),
+                                  const SizedBox(width: 5),
+                                  BodyText1(
+                                    me?.user["username"] ?? "",
+                                    style: TextStyle(fontSize: 10),
+                                  ),
+                                ],
+                              ),
                               onPressed: () {
                                 ref.refresh(statusProvider.future);
                                 Scaffold.of(context).openEndDrawer();
