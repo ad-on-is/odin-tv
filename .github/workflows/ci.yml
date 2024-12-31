@@ -38,14 +38,10 @@ jobs:
           pub-cache-key: "flutter-pub:os:-:channel:-:version:-:arch:" # optional, change this to force refresh cache of dart pub get dependencies
           pub-cache-path: "${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:"
       - run: flutter build apk
-      - name: "Upload Artifact"
-        uses: actions/upload-artifact@v4
-        with:
-          name: odin-tv.apk
-          path: build/app/outputs/apk/release/app-release.apk
+      - name: "Rename"
+        run: mv build/app/outputs/apk/release/app-release.apk build/app/outputs/apk/release/odin-tv_${{ github.ref_name }}.apk
       - name: "Add to release"
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            odin-tv.apk
-            build/app/outputs/apk/release/app-release.apk
+            build/app/outputs/apk/release/odin-tv_${{ github.ref_name }}.apk
