@@ -9,39 +9,41 @@ import 'package:odin/helpers.dart';
 import 'package:uuid/v4.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-class AuthModel extends StateNotifier<bool> with BaseHelper {
+enum AuthState { ok, bad, error }
+
+class AuthModel extends StateNotifier<AuthState> with BaseHelper {
   DB db;
   ValidationService validation;
   final Ref ref;
   String code = "...";
-  AuthModel(this.ref, this.db, this.validation) : super(true);
+  AuthModel(this.ref, this.db, this.validation) : super(AuthState.error);
 
-  Future<bool> check() async {
+  Future<void> check() async {
     var creds = await getCredentials();
-    var apiUrl = creds["url"];
-    var device = creds["device"];
-    logInfo(apiUrl);
-    logInfo(device);
-    return apiUrl != null && device != null;
-  }
-
-  Future<bool> credsValid() async {
-    var creds = await getCredentials();
-    var status = await validate(creds['url'], creds['device']);
-    return status > 0 && status < 300;
-  }
-
-  Future<bool> healthy() async {
-    var creds = await getCredentials();
-    var status = await validate(creds['url'], creds['device']);
-    return status != 0;
+    if (creds["url"] == null || creds["device"] == null) {
+      logWarning("No credentials");
+      state = AuthState.bad;
+      login();
+      return;
+    }
+    logOk(creds);
+    final status = await validate(creds['url'], creds['device']);
+    if (status == 0) {
+      state = AuthState.error;
+      return;
+    }
+    if (status == 404) {
+      state = AuthState.bad;
+      await clear();
+      login();
+      return;
+    }
+    state = AuthState.ok;
   }
 
   Future<void> clear() async {
     await db.hive?.put("apiUrl", null);
     await db.hive?.put("apiDevice", null);
-    state = false;
-    await login();
   }
 
   Future<int> validate(String url, String id) async {
@@ -105,7 +107,8 @@ class AuthModel extends StateNotifier<bool> with BaseHelper {
     if (status > 0 && status < 300) {
       await db.hive?.put("apiUrl", url);
       await db.hive?.put("apiDevice", id);
-      state = true;
+      logOk("Auth: Successful!");
+      state = AuthState.ok;
     } else {
       if (status == 0) {
         ref.read(errorProvider.notifier).state =
@@ -115,7 +118,7 @@ class AuthModel extends StateNotifier<bool> with BaseHelper {
         ref.read(errorProvider.notifier).state =
             "Authorization error: Something is wrong";
       }
-      state = false;
+      state = AuthState.bad;
       return await login();
     }
   }

@@ -41,15 +41,11 @@ class PVLogger extends ProviderObserver with BaseHelper {
 final initProvider = StreamProvider<bool>((ref) async* {
   await Hive.initFlutter();
   final db = ref.read(dbProvider);
-  final auth = ref.read(authProvider.notifier);
   db.hive = await Hive.openLazyBox('odin');
+  final auth = ref.read(authProvider.notifier);
 
   ref.read(settingsProvider).init();
-  if (!await auth.check()) {
-    await auth.clear();
-    yield false;
-    await auth.login();
-  }
+  await auth.check();
   yield true;
 });
 
@@ -67,8 +63,6 @@ class MyApp extends ConsumerWidget {
     final init = ref.watch(initProvider);
     final auth = ref.watch(authProvider);
 
-    final loggedIn = ref.watch(authProvider) == true;
-
     return Shortcuts(
       shortcuts: <LogicalKeySet, Intent>{
         LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
@@ -79,32 +73,30 @@ class MyApp extends ConsumerWidget {
         title: 'Odin',
         theme: AppThemes.defaultTheme,
         themeMode: ThemeMode.dark,
-        home: !loggedIn
-            ? const Login()
-            : init.when(
-                data: (value) => value ? const App() : const Login(),
-                error: (_, __) => Container(),
-                loading: () => Container(
-                      color: AppColors.darkGray,
-                      child: Center(
-                          child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const OdinLogo(height: 50),
-                          const SizedBox(height: 15),
-                          const BodyText1(
-                              'Enjoy your favorite movies and tv shows'),
-                          const SizedBox(height: 50),
-                          SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              color: AppColors.red,
-                            ),
-                          ),
-                        ],
-                      )),
-                    )),
+        home: init.when(
+            data: (value) => auth == AuthState.ok ? const App() : const Login(),
+            error: (_, __) => Container(),
+            loading: () => Container(
+                  color: AppColors.darkGray,
+                  child: Center(
+                      child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const OdinLogo(height: 50),
+                      const SizedBox(height: 15),
+                      const BodyText1(
+                          'Enjoy your favorite movies and tv shows'),
+                      const SizedBox(height: 50),
+                      SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          color: AppColors.red,
+                        ),
+                      ),
+                    ],
+                  )),
+                )),
         // locale: Locale('en', 'US'),
       ),
     );
