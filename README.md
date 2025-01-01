@@ -9,13 +9,18 @@
 [![GitHub stars](https://img.shields.io/github/stars/ad-on-is/odin-tv.svg?style=social&label=Stars)]()
 
 ![screenshot](./screenshots/odin-tv.png)
+![screenshot2](./screenshots/odin-tv2.png)
 
 This is the Android TV app to enjoy Odin on your TV.
 
 # Installation
 
+- Install and setup the [Odin server](https://github.com/ad-on-is/odin-server) first
 - Download the latest APK from the [release](https://github.com/ad-on-is/odin-tv/releases) page
 - Sideload to your Android TV box
+- Follow the on-screen instructions
+
+![connect](./screenshots/connect.png)
 
 ## Compatible devices
 
@@ -45,8 +50,6 @@ Recommended players:
 
 - The navigation is a bit wonky. This is due to Flutters lack of keyboard and D-Pad navigation. I'm working my ass of to make this as smooth as possible.
   - If you experience issues, just smash the buttons on your remote.
-
-![screenshot2](./screenshots/odin-tv2.png)
 
 # Donations
 
