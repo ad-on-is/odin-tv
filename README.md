@@ -4,9 +4,9 @@
 
 <h4 align="center">Android TV app for <a href="https://github.com/ad-on-is/odin-server">Odin</a></h4>
 
-![release](https://github.com/ad-on-is/odin-server/actions/workflows/ci.yml/badge.svg?branch=)
-[![Version](https://img.shields.io/github/release/ad-on-is/odin-server.svg?style=flat)]()
-[![GitHub stars](https://img.shields.io/github/stars/ad-on-is/odin-server.svg?style=social&label=Star)]()
+![release](https://github.com/ad-on-is/odin-tv/actions/workflows/ci.yml/badge.svg?branch=)
+[![Version](https://img.shields.io/github/release/ad-on-is/odin-tv.svg?style=flat)]()
+[![GitHub stars](https://img.shields.io/github/stars/ad-on-is/odin-tv.svg?style=social&label=Stars)]()
 
 ![screenshot](./screenshots/odin-tv.png)
 
