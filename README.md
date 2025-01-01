@@ -12,6 +12,17 @@
 
 This is the Android TV app to enjoy Odin on your TV.
 
+# Installation
+
+- Download the latest APK from the [release](https://github.com/ad-on-is/odin-tv/releases) page
+- Sideload to your Android TV box
+
+## Compatible devices
+
+- Xiaomi MiBox
+- Amazon Fire TV Cube 2/3
+- Other devices need testing and confirmation
+
 > [!WARNING]
 >
 > The app does not come with a built-in video player. See below.
@@ -29,6 +40,11 @@ Recommended players:
 - Kodi
 - MX Player
 - VLC
+
+# Known issues
+
+- The navigation is a bit wonky. This is due to Flutters lack of keyboard and D-Pad navigation. I'm working my ass of to make this as smooth as possible.
+  - If you experience issues, just smash the buttons on your remote.
 
 ![screenshot2](./screenshots/odin-tv2.png)
 
