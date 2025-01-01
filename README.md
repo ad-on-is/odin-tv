@@ -48,6 +48,10 @@ Recommended players:
 
 ![screenshot2](./screenshots/odin-tv2.png)
 
+# Donations
+
+<img src="./screenshots/btc_donation.png" height="200" />
+
 ## License
 
 MIT
