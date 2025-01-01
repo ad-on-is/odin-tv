@@ -116,9 +116,16 @@ class ItemDetails extends ConsumerWidget {
                     ? const Watched()
                     : const SizedBox(height: 15),
               ),
-              Align(
-                  alignment: Alignment.topLeft,
-                  child: Headline4(item.tagline != '' ? item.tagline : '-')),
+              SizedBox(
+                width: 400,
+                child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Headline4(
+                      item.tagline != '' ? item.tagline : '-',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    )),
+              ),
               const SizedBox(height: 5),
               SizedBox(
                 width: 400,
@@ -133,20 +140,20 @@ class ItemDetails extends ConsumerWidget {
               ),
             ],
           ),
-          item.tmdb!.logoBig.endsWith('.svg')
-              ? SvgPicture.network(
-                  item.tmdb!.logoSmall,
-                  width: 400,
-                  height: 150,
-                  fit: BoxFit.contain,
-                )
-              : CachedNetworkImage(
-                  height: 150,
-                  width: 400,
-                  fit: BoxFit.contain,
-                  errorWidget: (_, __, ___) => const SizedBox(height: 30),
-                  placeholder: (_, __) => const SizedBox(height: 30),
-                  imageUrl: item.tmdb!.logoBig),
+          SizedBox(
+            width: 400,
+            height: 150,
+            child: item.tmdb!.logoBig.endsWith('.svg')
+                ? SvgPicture.network(
+                    item.tmdb!.logoSmall,
+                    fit: BoxFit.contain,
+                  )
+                : CachedNetworkImage(
+                    fit: BoxFit.contain,
+                    errorWidget: (_, __, ___) => const SizedBox(height: 30),
+                    placeholder: (_, __) => const SizedBox(height: 30),
+                    imageUrl: item.tmdb!.logoBig),
+          ),
         ],
       ),
     );

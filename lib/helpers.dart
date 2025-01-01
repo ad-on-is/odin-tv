@@ -157,26 +157,26 @@ class DebugLogger {
     switch (record.level.name) {
       case 'FINE':
         start = '\x1b[38;5;2m';
-        emoji = '✓';
+        emoji = '✓ OK';
         break;
       case 'FINEST':
         emoji = '●';
         start = '\x1b[38;5;7m';
         break;
       case 'INFO':
-        emoji = '★';
+        emoji = '★ INFO';
         start = '\x1b[38;5;6m';
         break;
       case 'WARNING':
-        emoji = 'ϟ';
+        emoji = 'ϟ WARN';
         start = '\x1b[38;5;222m';
         break;
       case 'SEVERE':
-        emoji = '✖';
+        emoji = '✖ SEVERE';
         start = '\x1b[38;5;1m';
         break;
       case 'SHOUT':
-        emoji = '❌❗❓';
+        emoji = '❕SHOUT';
         start = '\x1b[48;5;1m\x1b[37m';
         break;
     }

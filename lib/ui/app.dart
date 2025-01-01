@@ -107,10 +107,6 @@ class App extends HookConsumerWidget {
                             TextButton(
                               focusNode: FocusNode(
                                   canRequestFocus: mf, skipTraversal: !mf),
-                              style: ButtonStyle(
-                                  backgroundColor: WidgetStatePropertyAll(
-                                      AppColors.purple
-                                          .withAlpha(page == 2 ? 80 : 0))),
                               child: Row(
                                 children: [
                                   const Icon(FontAwesomeIcons.gear,

@@ -16,7 +16,8 @@ class OdinCarousel extends HookConsumerWidget with BaseHelper {
       required this.onIndexChanged,
       this.onEnter,
       this.anchor,
-      this.autofocus,
+      this.alignment,
+      this.ensureVisible,
       this.center,
       required this.extent,
       required this.keys,
@@ -29,17 +30,18 @@ class OdinCarousel extends HookConsumerWidget with BaseHelper {
   final void Function(int)? onEnter;
   final double extent;
   final double? anchor;
-  final bool? autofocus;
+  final double? alignment;
+  final bool? ensureVisible;
   final bool? center;
   final int count;
   final Axis axis;
   final List<PhysicalKeyboardKey> keys;
 
-  toggleBeforeFocus(bool focus, ref) {
+  allowBeforeFocus(bool focus, ref) {
     ref.read(beforeFocusProvider.notifier).state = focus;
   }
 
-  toggleAfterFocus(bool focus, ref) {
+  allowfterFocus(bool focus, ref) {
     ref.read(afterFocusProvider.notifier).state = focus;
   }
 
@@ -88,103 +90,106 @@ class OdinCarousel extends HookConsumerWidget with BaseHelper {
 
     final fn = useFocusNode();
 
+    if (ensureVisible ?? false) {
+      fn.addListener(() {
+        if (fn.hasFocus) {
+          Scrollable.ensureVisible(
+            context,
+            alignment: alignment ?? 0.10,
+            duration: const Duration(milliseconds: 100),
+            curve: Curves.linear,
+          );
+        }
+      });
+    }
+
     bool isSelect(PhysicalKeyboardKey key) {
       return [73014444264, 458840].contains(key.usbHidUsage);
     }
 
-    return FocusTraversalGroup(
-      child: KeyboardListener(
+    return KeyboardListener(
+        key: key,
+        focusNode: fn,
+        onKeyEvent: (KeyEvent keyEvent) {
+          if (keyEvent is KeyUpEvent) {
+            dir.value = "";
+            return;
+          }
+
+          if (isAnim.value) return;
+
+          if (![...keys, PhysicalKeyboardKey.enter]
+                  .contains(keyEvent.physicalKey) &&
+              !isSelect(keyEvent.physicalKey)) {
+            return;
+          }
+          if (keyEvent.physicalKey == PhysicalKeyboardKey.enter ||
+              isSelect(keyEvent.physicalKey)) {
+            if (onEnter != null) {
+              onEnter!(didx ?? 0);
+            }
+            return;
+          }
+
+          if (controller.offset <= extent) {
+            allowBeforeFocus(true, ref);
+            fn.skipTraversal = false;
+          } else {
+            allowBeforeFocus(false, ref);
+            fn.skipTraversal = true;
+          }
+
+          if (keyEvent.physicalKey == keys[0]) {
+            if (dir.value != "prev") {
+              dir.value = "prev";
+            }
+            // print(controller.value.offset);
+
+            if (controller.offset <= extent / 2) {
+              return;
+            }
+
+            controller.previousItem(
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.linearToEaseOut);
+            isAnim.value = true;
+          }
+          if (keyEvent.physicalKey == keys[1]) {
+            if (dir.value != "next") {
+              dir.value = "next";
+            }
+
+            // if (controller.offset >= (count - 1) * extent) {
+            //   return;
+            // }
+
+            controller.nextItem(
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.linearToEaseOut);
+
+            isAnim.value = true;
+          }
+        },
+        child: InfiniteCarousel.builder(
           key: key,
-          focusNode: fn,
-          autofocus: autofocus ?? false,
-          onKeyEvent: (KeyEvent keyEvent) {
-            if (keyEvent is KeyUpEvent) {
-              dir.value = "";
-              return;
-            }
-
-            if (isAnim.value) return;
-
-            if (![...keys, PhysicalKeyboardKey.enter]
-                    .contains(keyEvent.physicalKey) &&
-                !isSelect(keyEvent.physicalKey)) {
-              return;
-            }
-            if (keyEvent.physicalKey == PhysicalKeyboardKey.enter ||
-                isSelect(keyEvent.physicalKey)) {
-              if (onEnter != null) {
-                onEnter!(didx ?? 0);
-              }
-              return;
-            }
-
-            if (controller.offset <= extent) {
-              toggleBeforeFocus(true, ref);
-              fn.skipTraversal = false;
-            } else {
-              toggleBeforeFocus(false, ref);
-              fn.skipTraversal = true;
-            }
-
-            if (keyEvent.physicalKey == keys[0]) {
-              if (dir.value != "prev") {
-                dir.value = "prev";
-              }
-              // print(controller.value.offset);
-
-              if (controller.offset <= extent / 2) {
-                return;
-              }
-
-              controller.previousItem(
-                  duration: const Duration(milliseconds: 250),
-                  curve: Curves.linearToEaseOut);
-              isAnim.value = true;
-            }
-            if (keyEvent.physicalKey == keys[1]) {
-              if (dir.value != "next") {
-                dir.value = "next";
-              }
-
-              if (controller.offset >= (count - 1) * extent) {
-                return;
-              }
-
-              controller.nextItem(
-                  duration: const Duration(milliseconds: 250),
-                  curve: Curves.linearToEaseOut);
-
-              isAnim.value = true;
-            }
+          itemCount: count,
+          itemExtent: extent,
+          center: center ?? false,
+          anchor: anchor ?? 0.02,
+          velocityFactor: 0.2,
+          loop: false,
+          controller: controller,
+          axisDirection: axis,
+          scrollBehavior: ScrollConfiguration.of(context).copyWith(
+            dragDevices: {
+              // Allows to swipe in web browsers
+              PointerDeviceKind.touch,
+              PointerDeviceKind.mouse
+            },
+          ),
+          itemBuilder: (context, itemIndex, realIndex) {
+            return itemBuilder(context, itemIndex, realIndex, controller);
           },
-          child: InfiniteCarousel.builder(
-            key: key,
-            itemCount: count,
-            itemExtent: extent,
-            center: center ?? false,
-            anchor: anchor ?? 0.02,
-            velocityFactor: 0.2,
-            onIndexChanged: (index) {
-              // print(controller.hashCode);
-
-              // if (onIndexChanged != null) {
-              //   onIndexChanged!(index);
-              // }
-            },
-            loop: false,
-            controller: controller,
-            axisDirection: axis,
-            scrollBehavior: ScrollConfiguration.of(context).copyWith(
-              dragDevices: {
-                // Allows to swipe in web browsers
-                PointerDeviceKind.touch,
-                PointerDeviceKind.mouse
-              },
-            ),
-            itemBuilder: (context, itemIndex, realIndex) {
-              return itemBuilder(context, itemIndex, realIndex, controller);
-            },
-          )),
-    );
+        ));
   }
 }

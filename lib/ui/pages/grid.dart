@@ -18,16 +18,15 @@ class Grid extends ConsumerWidget {
     List<SectionItem> sections = [];
     provider.whenData((value) {
       sections = value;
-      if (value.isNotEmpty) {
-        Future.delayed(const Duration(milliseconds: 50), () {
-          ref.read(bgAlpha.notifier).state = 230;
-          ref.read(selectedSectionProvider.notifier).state = value[0].title;
-        });
-      }
+      // if (value.isNotEmpty) {
+      //   Future.delayed(const Duration(milliseconds: 50), () {
+      //     ref.read(bgAlpha.notifier).state = 230;
+      //     ref.read(selectedSectionProvider.notifier).state = value[0].title;
+      //   });
+      // }
     });
 
-    double extent = 190;
-    // double extent = 290;
+    double extent = 185;
 
     return sections.isEmpty
         ? const SizedBox()
@@ -35,7 +34,7 @@ class Grid extends ConsumerWidget {
             padding: const EdgeInsets.only(top: 150),
             child: OdinCarousel(
                 itemBuilder: (context, itemIndex, realIndex, controller) {
-                  return Section(e: sections[itemIndex]);
+                  return Section(e: sections[itemIndex], idx: itemIndex);
                 },
                 extent: extent,
                 onIndexChanged: (index) {

@@ -32,7 +32,7 @@ class HomePage extends HookConsumerWidget {
       }
     });
 
-    double extent = 183;
+    double extent = 185;
     return sections.isEmpty
         ? SizedBox(height: extent)
         : Container(
@@ -40,15 +40,20 @@ class HomePage extends HookConsumerWidget {
             height: extent * sections.length,
             child: OdinCarousel(
                 itemBuilder: (context, itemIndex, realIndex, controller) {
-                  return Section(e: sections[itemIndex]);
+                  return Section(e: sections[itemIndex], idx: itemIndex);
                 },
                 extent: extent,
+                // ensureFocus: true,
                 keys: const [
                   PhysicalKeyboardKey.arrowUp,
                   PhysicalKeyboardKey.arrowDown
                 ],
+                // ensureFocus: true,
                 onIndexChanged: (index) {
                   Future.delayed(const Duration(milliseconds: 100), () {
+                    if (index > sections.length - 1) {
+                      return;
+                    }
                     ref.read(selectedSectionProvider.notifier).state =
                         sections[index].title;
 
