@@ -9,6 +9,7 @@ import 'package:odin/helpers.dart';
 import 'package:odin/theme.dart';
 import 'package:odin/ui/app.dart';
 import 'package:odin/ui/login.dart';
+import 'package:odin/ui/selectbuttonfixer.dart';
 import 'package:odin/ui/userselect.dart';
 import 'package:odin/ui/widgets/widgets.dart';
 
@@ -36,7 +37,12 @@ class PVLogger extends ProviderObserver with BaseHelper {
   }
 }
 
+final selectButtonProvider = StateProvider<int>((ref) {
+  return 0;
+});
+
 final initProvider = StreamProvider<bool>((ref) async* {
+  final sb = ref.watch(selectButtonProvider);
   await Hive.initFlutter();
   final db = ref.read(dbProvider.notifier);
   final collection = await BoxCollection.open(
@@ -45,10 +51,15 @@ final initProvider = StreamProvider<bool>((ref) async* {
     path: './',
   );
   db.users = await collection.openBox("users");
+  db.hive = await Hive.openLazyBox("odin");
+  int select = (await db.hive?.get("selectKey")) ?? 0;
+  if (sb > 0) {
+    await db.hive?.put("selectKey", sb);
+    select = sb;
+  }
   final auth = ref.read(authProvider.notifier);
-  // await db.users?.clear();
   await auth.check();
-  yield true;
+  yield select != 0;
 });
 
 void main() async {
@@ -76,11 +87,13 @@ class MyApp extends ConsumerWidget {
         theme: AppThemes.defaultTheme,
         themeMode: ThemeMode.dark,
         home: init.when(
-            data: (value) => auth == AuthState.ok
-                ? const App()
-                : auth == AuthState.multiple
-                    ? const UserSelect()
-                    : const Login(),
+            data: (value) => !value
+                ? const SelectButtonFixer()
+                : auth == AuthState.ok
+                    ? const App()
+                    : auth == AuthState.multiple
+                        ? const UserSelect()
+                        : const Login(),
             error: (_, __) => Container(),
             loading: () => Container(
                   color: AppColors.darkGray,

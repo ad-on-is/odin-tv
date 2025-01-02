@@ -7,6 +7,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_carousel/infinite_carousel.dart';
 import 'package:odin/controllers/app_controller.dart';
+import 'package:odin/data/services/db.dart';
 import 'package:odin/helpers.dart';
 
 class OdinCarousel extends HookConsumerWidget with BaseHelper {
@@ -103,14 +104,15 @@ class OdinCarousel extends HookConsumerWidget with BaseHelper {
       });
     }
 
-    bool isSelect(PhysicalKeyboardKey key) {
-      return [73014444264, 458840].contains(key.usbHidUsage);
+    Future<bool> isSelect(PhysicalKeyboardKey key) async {
+      final saved = await ref.read(dbProvider.notifier).hive?.get("selectKey");
+      return [saved].contains(key.usbHidUsage);
     }
 
     return KeyboardListener(
         key: key,
         focusNode: fn,
-        onKeyEvent: (KeyEvent keyEvent) {
+        onKeyEvent: (KeyEvent keyEvent) async {
           if (keyEvent is KeyUpEvent) {
             dir.value = "";
             return;
@@ -120,11 +122,11 @@ class OdinCarousel extends HookConsumerWidget with BaseHelper {
 
           if (![...keys, PhysicalKeyboardKey.enter]
                   .contains(keyEvent.physicalKey) &&
-              !isSelect(keyEvent.physicalKey)) {
+              !await isSelect(keyEvent.physicalKey)) {
             return;
           }
           if (keyEvent.physicalKey == PhysicalKeyboardKey.enter ||
-              isSelect(keyEvent.physicalKey)) {
+              await isSelect(keyEvent.physicalKey)) {
             if (onEnter != null) {
               onEnter!(didx ?? 0);
             }
