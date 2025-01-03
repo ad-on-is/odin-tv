@@ -57,7 +57,7 @@ Recommended players:
 
 ## License
 
-MIT
+GPLv3
 
 ---
 
