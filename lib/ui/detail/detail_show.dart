@@ -26,7 +26,7 @@ class DetailShow extends HookConsumerWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  EnsureVisible(child: Buttons(item: item)),
+                  Buttons(item: item),
                   // const SizedBox(height: 10),
                   ItemDetails(item: item),
                 ],

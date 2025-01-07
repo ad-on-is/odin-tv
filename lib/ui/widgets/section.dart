@@ -93,19 +93,34 @@ class Section extends HookConsumerWidget with BaseHelper {
                       );
                     },
                     extent: extent,
+                    id: e.url,
                     ensureVisible: true,
-                    alignment: e.big ? 0.15 : 0.10,
-                    onIndexChanged: (index) {
+                    alignment: e.big ? 0.16 : 0.10,
+                    onRowIndexChanged: (index) {
                       Future.delayed(const Duration(milliseconds: 10), () {
-                        ref.read(selectedItemProvider.notifier).state =
-                            items[index].show ?? items[index];
-                        ref
-                            .read(
-                                selectedItemOfSectionProvider(e.title).notifier)
-                            .state = items[index];
-                        if (index == items.length - 1 && e.paginate) {
-                          ref.read(itemsProvider(e.url).notifier).next(e.url);
-                        }
+                        // ref.read(selectedItemProvider.notifier).state =
+                        //     items[index].show ?? items[index];
+                        // ref
+                        //     .read(
+                        //         selectedItemOfSectionProvider(e.title).notifier)
+                        //     .state = items[index];
+                        // if (index == items.length - 1 && e.paginate) {
+                        //   ref.read(itemsProvider(e.url).notifier).next(e.url);
+                        // }
+                      });
+                    },
+                    onChildIndexChanged: (index) {
+                      Future.delayed(const Duration(milliseconds: 10), () {
+                        // print("SECTION CHILD $index");
+                        // ref.read(selectedItemProvider.notifier).state =
+                        //     items[index].show ?? items[index];
+                        // ref
+                        //     .read(
+                        //         selectedItemOfSectionProvider(e.title).notifier)
+                        //     .state = items[index];
+                        // if (index == items.length - 1 && e.paginate) {
+                        //   ref.read(itemsProvider(e.url).notifier).next(e.url);
+                        // }
                       });
                     },
                     onEnter: (idx) {

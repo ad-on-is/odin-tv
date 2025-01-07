@@ -67,6 +67,54 @@ void main() async {
   runApp(ProviderScope(observers: [PVLogger()], child: const MyApp()));
 }
 
+class LoadingScreen extends StatelessWidget {
+  final String title;
+  const LoadingScreen(
+      {Key? key, this.title = "Enjoy your favorite movies and tv shows"})
+      : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: AppColors.darkGray,
+      child: Center(
+          child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const OdinLogo(height: 50),
+          const SizedBox(height: 15),
+          BodyText1(title),
+          const SizedBox(height: 50),
+          SizedBox(
+            width: 20,
+            height: 20,
+            child: CircularProgressIndicator(
+              color: AppColors.red,
+            ),
+          ),
+        ],
+      )),
+    );
+  }
+}
+
+class AppBasedOnAuth extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, ref) {
+    final auth = ref.watch(authProvider);
+    switch (auth) {
+      case AuthState.login:
+        return const Login();
+      case AuthState.multiple:
+        return const UserSelect();
+      case AuthState.error:
+        return const LoadingScreen(
+          title: "Error: Cannot connect to the API.",
+        );
+    }
+    return const App();
+  }
+}
+
 class MyApp extends ConsumerWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -74,7 +122,6 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final init = ref.watch(initProvider);
-    final auth = ref.watch(authProvider);
 
     return Shortcuts(
       shortcuts: <LogicalKeySet, Intent>{
@@ -87,34 +134,12 @@ class MyApp extends ConsumerWidget {
         theme: AppThemes.defaultTheme,
         themeMode: ThemeMode.dark,
         home: init.when(
-            data: (value) => !value
-                ? const SelectButtonFixer()
-                : auth == AuthState.ok
-                    ? const App()
-                    : auth == AuthState.multiple
-                        ? const UserSelect()
-                        : const Login(),
+            data: (value) =>
+                !value ? const SelectButtonFixer() : AppBasedOnAuth(),
             error: (_, __) => Container(),
             loading: () => Container(
                   color: AppColors.darkGray,
-                  child: Center(
-                      child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const OdinLogo(height: 50),
-                      const SizedBox(height: 15),
-                      const BodyText1(
-                          'Enjoy your favorite movies and tv shows'),
-                      const SizedBox(height: 50),
-                      SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          color: AppColors.red,
-                        ),
-                      ),
-                    ],
-                  )),
+                  child: const LoadingScreen(),
                 )),
         // locale: Locale('en', 'US'),
       ),

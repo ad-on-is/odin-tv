@@ -34,7 +34,7 @@ class AnimatedCover extends StatelessWidget {
 
         double f = s;
         double b = s;
-        // double o = s;
+        double o = s;
         if (s < minScale) {
           s = minScale;
         }

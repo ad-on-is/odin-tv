@@ -43,7 +43,7 @@ class Episodes extends ConsumerWidget {
             child: OdinCarousel(
                 itemBuilder: (context, itemIndex, realIndex, controller) {
                   return AnimatedCover(
-                    controller: controller,
+                    // controller: controller,
                     realIndex: realIndex,
                     extent: extent,
                     target: true,
@@ -64,7 +64,8 @@ class Episodes extends ConsumerWidget {
                         focus: itemIndex == 0),
                   );
                 },
-                onIndexChanged: (index) {},
+                onRowIndexChanged: (index) {},
+                onChildIndexChanged: (index) {},
                 onEnter: (idx) {
                   showDialog(
                       context: context,

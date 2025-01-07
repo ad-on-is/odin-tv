@@ -18,8 +18,8 @@ class PosterCover extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    useAutomaticKeepAlive();
-    useSingleTickerProvider();
+    // useAutomaticKeepAlive();
+    // useSingleTickerProvider();
     return Stack(
       children: [
         CachedNetworkImage(

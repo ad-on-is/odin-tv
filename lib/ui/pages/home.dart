@@ -43,24 +43,25 @@ class HomePage extends HookConsumerWidget {
                   return Section(e: sections[itemIndex], idx: itemIndex);
                 },
                 extent: extent,
-                // ensureFocus: true,
                 keys: const [
                   PhysicalKeyboardKey.arrowUp,
                   PhysicalKeyboardKey.arrowDown
                 ],
-                // ensureFocus: true,
-                onIndexChanged: (index) {
+                onRowIndexChanged: (index) {
                   Future.delayed(const Duration(milliseconds: 100), () {
-                    if (index > sections.length - 1) {
-                      return;
-                    }
-                    ref.read(selectedSectionProvider.notifier).state =
-                        sections[index].title;
-
-                    ref.read(selectedItemProvider.notifier).state = ref.read(
-                        selectedItemOfSectionProvider(sections[index].title));
+                    print("HOME ROW: $index");
+                    //   if (index > sections.length - 1) {
+                    //     return;
+                    //   }
+                    ref.read(currentRow.notifier).state = sections[index].url;
+                    //   ref.read(selectedSectionProvider.notifier).state =
+                    //       sections[index].title;
+                    //
+                    //   ref.read(selectedItemProvider.notifier).state = ref.read(
+                    //       selectedItemOfSectionProvider(sections[index].title));
                   });
                 },
+                onChildIndexChanged: (index) {},
                 anchor: 0.0,
                 count: sections.length,
                 axis: Axis.vertical));

@@ -37,13 +37,23 @@ class Grid extends ConsumerWidget {
                   return Section(e: sections[itemIndex], idx: itemIndex);
                 },
                 extent: extent,
-                onIndexChanged: (index) {
-                  Future.delayed(const Duration(milliseconds: 50), () {
-                    ref.read(selectedSectionProvider.notifier).state =
-                        sections[index].title;
-                    ref.read(selectedItemProvider.notifier).state = ref.read(
-                        selectedItemOfSectionProvider(sections[index].title));
-                  });
+                onRowIndexChanged: (index) {
+                  // Future.delayed(const Duration(milliseconds: 50), () {
+                  //   ref.read(selectedSectionProvider.notifier).state =
+                  //       sections[index].title;
+                  //   ref.read(currentRow.notifier).state = sections[index].url;
+                  //   ref.read(selectedItemProvider.notifier).state = ref.read(
+                  //       selectedItemOfSectionProvider(sections[index].title));
+                  // });
+                },
+                onChildIndexChanged: (index) {
+                  // Future.delayed(const Duration(milliseconds: 50), () {
+                  //   ref.read(selectedSectionProvider.notifier).state =
+                  //       sections[index].title;
+                  //   ref.read(currentRow.notifier).state = sections[index].url;
+                  //   ref.read(selectedItemProvider.notifier).state = ref.read(
+                  //       selectedItemOfSectionProvider(sections[index].title));
+                  // });
                 },
                 keys: const [
                   PhysicalKeyboardKey.arrowUp,

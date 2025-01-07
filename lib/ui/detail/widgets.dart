@@ -382,7 +382,8 @@ class ItemSlides extends ConsumerWidget {
                   PhysicalKeyboardKey.arrowUp,
                   PhysicalKeyboardKey.arrowDown
                 ],
-                onIndexChanged: (index) {},
+                onRowIndexChanged: (index) {},
+                onChildIndexChanged: (index) {},
                 anchor: 0.0,
                 count: slides.length,
                 center: false,

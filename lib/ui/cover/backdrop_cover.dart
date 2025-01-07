@@ -21,8 +21,8 @@ class BackdropCover extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    useAutomaticKeepAlive();
-    useSingleTickerProvider();
+    // useAutomaticKeepAlive();
+    // useSingleTickerProvider();
     return Stack(
       alignment: Alignment.topLeft,
       children: [

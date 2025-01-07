@@ -10,16 +10,21 @@ import 'package:odin/controllers/app_controller.dart';
 import 'package:odin/data/services/db.dart';
 import 'package:odin/helpers.dart';
 
+final childStreamController = StreamController<String>.broadcast();
+final currentRow = StateProvider<String>((ref) => "");
+
 class OdinCarousel extends HookConsumerWidget with BaseHelper {
   const OdinCarousel(
       {Key? key,
       required this.itemBuilder,
-      required this.onIndexChanged,
+      required this.onRowIndexChanged,
+      required this.onChildIndexChanged,
       this.onEnter,
       this.anchor,
       this.alignment,
       this.ensureVisible,
       this.center,
+      this.id,
       required this.extent,
       required this.keys,
       required this.count,
@@ -27,9 +32,11 @@ class OdinCarousel extends HookConsumerWidget with BaseHelper {
       : super(key: key);
   final Widget Function(BuildContext context, int itemIndex, int realIndex,
       InfiniteScrollController controller) itemBuilder;
-  final void Function(int) onIndexChanged;
+  final void Function(int) onRowIndexChanged;
+  final void Function(int) onChildIndexChanged;
   final void Function(int)? onEnter;
   final double extent;
+  final String? id;
   final double? anchor;
   final double? alignment;
   final bool? ensureVisible;
@@ -48,15 +55,199 @@ class OdinCarousel extends HookConsumerWidget with BaseHelper {
 
   @override
   Widget build(BuildContext context, ref) {
-    // final dur = useState(300);
+    final controller =
+        useMemoized(() => InfiniteScrollController(initialItem: 0), [key]);
+
+    final isChild = axis == Axis.horizontal;
+
+    final carousel = Carousel(
+        itemBuilder: itemBuilder,
+        controller: controller,
+        onIndexChanged: onChildIndexChanged,
+        extent: extent,
+        isChild: isChild,
+        id: id ?? "NOT-CHILD",
+        count: count,
+        axis: axis);
+
+    if (isChild) {
+      return carousel;
+    }
+
+    return Listener(
+      count: count,
+      controller: controller,
+      onIndexChanged: onRowIndexChanged,
+      onEnter: onEnter,
+      extent: extent,
+      id: id,
+      center: center,
+      child: carousel,
+    );
+  }
+}
+
+class Carousel extends HookConsumerWidget with BaseHelper {
+  const Carousel(
+      {required this.itemBuilder,
+      this.anchor,
+      this.alignment,
+      this.ensureVisible,
+      required this.isChild,
+      this.onIndexChanged,
+      this.center,
+      required this.id,
+      required this.controller,
+      required this.extent,
+      required this.count,
+      required this.axis,
+      Key? key})
+      : super(key: key);
+
+  final Widget Function(BuildContext context, int itemIndex, int realIndex,
+      InfiniteScrollController controller) itemBuilder;
+
+  final double extent;
+  final double? anchor;
+  final double? alignment;
+  final bool? ensureVisible;
+  final bool isChild;
+  final InfiniteScrollController controller;
+  final void Function(int)? onIndexChanged;
+  final bool? center;
+  final int count;
+  final Axis axis;
+  final String id;
+
+  @override
+  Widget build(BuildContext context, ref) {
+    final idx = useState(0);
+    final didx = useDebounced(idx.value, const Duration(milliseconds: 50));
+    if (isChild) {
+      useMemoized(() {
+        childStreamController.stream.listen((data) {
+          if (!data.startsWith(id)) {
+            return;
+          }
+          final dir = data.replaceAll("$id-", "");
+          if (dir == "next") {
+            controller.nextItem(
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.linearToEaseOut);
+          }
+          if (dir == "prev") {
+            controller.previousItem(
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.linearToEaseOut);
+          }
+
+          if (dir == "select") {
+            logInfo("SELECT ${idx.value}");
+          }
+          if (onIndexChanged != null) {
+            onIndexChanged!(idx.value);
+          }
+        });
+      });
+    }
+
+    useEffect(
+      () {
+        void listener() {
+          idx.value = (controller.offset / extent).round();
+        }
+
+        controller.addListener(listener);
+        return () => controller.removeListener(listener);
+      },
+    );
+
+    useEffect(() {
+      int index = didx ?? 0;
+      if (index > count) {
+        index = count;
+      }
+      if (index < 0) {
+        index = 0;
+      }
+      if (onIndexChanged != null) {
+        onIndexChanged!(index);
+      }
+      return;
+    }, [didx]);
+
+    return InfiniteCarousel.builder(
+      key: key,
+      itemCount: count,
+      itemExtent: extent,
+      center: center ?? false,
+      anchor: anchor ?? 0.02,
+      velocityFactor: 0.2,
+      loop: false,
+      controller: controller,
+      onIndexChanged: (i) {
+        idx.value = i;
+      },
+      axisDirection: axis,
+      physics: const NeverScrollableScrollPhysics(),
+      scrollBehavior: ScrollConfiguration.of(context).copyWith(
+        dragDevices: {
+          // Allows to swipe in web browsers
+          PointerDeviceKind.touch,
+          PointerDeviceKind.mouse
+        },
+      ),
+      itemBuilder: (context, itemIndex, realIndex) {
+        return itemBuilder(context, itemIndex, realIndex, controller);
+      },
+    );
+  }
+}
+
+class Listener extends HookConsumerWidget {
+  const Listener(
+      {required this.onIndexChanged,
+      this.center,
+      this.onEnter,
+      this.id,
+      required this.child,
+      required this.extent,
+      required this.count,
+      required this.controller,
+      Key? key})
+      : super(key: key);
+  final void Function(int) onIndexChanged;
+  final void Function(int)? onEnter;
+  final Widget child;
+  final double extent;
+  final InfiniteScrollController controller;
+  final bool? center;
+  final int count;
+  final String? id;
+
+  allowBeforeFocus(bool focus, ref) {
+    ref.read(beforeFocusProvider.notifier).state = focus;
+  }
+
+  allowfterFocus(bool focus, ref) {
+    ref.read(afterFocusProvider.notifier).state = focus;
+  }
+
+  @override
+  Widget build(BuildContext context, ref) {
+    final keys = [
+      PhysicalKeyboardKey.arrowLeft,
+      PhysicalKeyboardKey.arrowRight,
+      PhysicalKeyboardKey.arrowUp,
+      PhysicalKeyboardKey.arrowDown,
+    ];
     final dir = useState("");
     final idx = useState(0);
     final didx = useDebounced(idx.value, const Duration(milliseconds: 50));
     // print("REBUILDING ${count}");
 
-    final controller = useMemoized(() => InfiniteScrollController(), [key]);
-
     final isAnim = useState(false);
+    // final cw = ref.watch(currentRow);
 
     useEffect(
       () {
@@ -77,32 +268,18 @@ class OdinCarousel extends HookConsumerWidget with BaseHelper {
       return () => timer.cancel();
     });
 
+    final fn = useFocusNode();
     useEffect(() {
       int index = didx ?? 0;
       if (index > count) {
         index = count;
       }
-      if (index < 0) {
+      if (index <= 0) {
         index = 0;
-      }
+      } else {}
       onIndexChanged(index);
       return;
     }, [didx]);
-
-    final fn = useFocusNode();
-
-    if (ensureVisible ?? false) {
-      fn.addListener(() {
-        if (fn.hasFocus) {
-          Scrollable.ensureVisible(
-            context,
-            alignment: alignment ?? 0.10,
-            duration: const Duration(milliseconds: 100),
-            curve: Curves.linear,
-          );
-        }
-      });
-    }
 
     Future<bool> isSelect(PhysicalKeyboardKey key) async {
       final saved = await ref.read(dbProvider.notifier).hive?.get("selectKey");
@@ -120,6 +297,7 @@ class OdinCarousel extends HookConsumerWidget with BaseHelper {
 
           if (isAnim.value) return;
 
+          // ignore other keys
           if (![...keys, PhysicalKeyboardKey.enter]
                   .contains(keyEvent.physicalKey) &&
               !await isSelect(keyEvent.physicalKey)) {
@@ -127,21 +305,22 @@ class OdinCarousel extends HookConsumerWidget with BaseHelper {
           }
           if (keyEvent.physicalKey == PhysicalKeyboardKey.enter ||
               await isSelect(keyEvent.physicalKey)) {
+            childStreamController.add("${ref.read(currentRow)}-select");
             if (onEnter != null) {
               onEnter!(didx ?? 0);
             }
             return;
           }
 
-          if (controller.offset <= extent) {
-            allowBeforeFocus(true, ref);
-            fn.skipTraversal = false;
-          } else {
-            allowBeforeFocus(false, ref);
-            fn.skipTraversal = true;
-          }
+          // if (controller.offset <= extent) {
+          //   allowBeforeFocus(true, ref);
+          //   fn.skipTraversal = false;
+          // } else {
+          //   allowBeforeFocus(false, ref);
+          //   fn.skipTraversal = true;
+          // }
 
-          if (keyEvent.physicalKey == keys[0]) {
+          if (keyEvent.physicalKey == PhysicalKeyboardKey.arrowUp) {
             if (dir.value != "prev") {
               dir.value = "prev";
             }
@@ -156,7 +335,7 @@ class OdinCarousel extends HookConsumerWidget with BaseHelper {
                 curve: Curves.linearToEaseOut);
             isAnim.value = true;
           }
-          if (keyEvent.physicalKey == keys[1]) {
+          if (keyEvent.physicalKey == PhysicalKeyboardKey.arrowDown) {
             if (dir.value != "next") {
               dir.value = "next";
             }
@@ -171,27 +350,16 @@ class OdinCarousel extends HookConsumerWidget with BaseHelper {
 
             isAnim.value = true;
           }
+
+          if (keyEvent.physicalKey == PhysicalKeyboardKey.arrowLeft) {
+            childStreamController.add("${ref.read(currentRow)}-prev");
+            isAnim.value = true;
+          }
+          if (keyEvent.physicalKey == PhysicalKeyboardKey.arrowRight) {
+            childStreamController.add("${ref.read(currentRow)}-next");
+            isAnim.value = true;
+          }
         },
-        child: InfiniteCarousel.builder(
-          key: key,
-          itemCount: count,
-          itemExtent: extent,
-          center: center ?? false,
-          anchor: anchor ?? 0.02,
-          velocityFactor: 0.2,
-          loop: false,
-          controller: controller,
-          axisDirection: axis,
-          scrollBehavior: ScrollConfiguration.of(context).copyWith(
-            dragDevices: {
-              // Allows to swipe in web browsers
-              PointerDeviceKind.touch,
-              PointerDeviceKind.mouse
-            },
-          ),
-          itemBuilder: (context, itemIndex, realIndex) {
-            return itemBuilder(context, itemIndex, realIndex, controller);
-          },
-        ));
+        child: child);
   }
 }

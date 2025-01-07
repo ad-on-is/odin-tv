@@ -33,6 +33,7 @@ dependencies:
   animations:
   flutter_animate:
   infinite_carousel:
+  carousel_slider:
   cached_network_image:
   dio:
   mqtt_client:
