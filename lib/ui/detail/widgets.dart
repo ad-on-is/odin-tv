@@ -382,7 +382,11 @@ class ItemSlides extends ConsumerWidget {
                   PhysicalKeyboardKey.arrowUp,
                   PhysicalKeyboardKey.arrowDown
                 ],
-                onRowIndexChanged: (index) {},
+                onRowIndexChanged: (index) {
+                  Future.delayed(const Duration(milliseconds: 50), () {
+                    ref.read(currentRow.notifier).state = slides[index].title;
+                  });
+                },
                 onChildIndexChanged: (index) {},
                 anchor: 0.0,
                 count: slides.length,

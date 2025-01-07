@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:helpers/helpers/print.dart';
 import 'package:odin/data/services/trakt_service.dart';
 
 import 'package:odin/data/entities/trakt.dart';
@@ -110,6 +111,34 @@ class ItemsProvider extends StateNotifier<List<Trakt>> {
   }
 }
 
+// final pageProvider =
+//     AutoDisposeStateProviderFamily<int, String>((ref, url) => 0);
+//
+// final itemsProvider2 =
+//     AutoDisposeFutureProviderFamily<List<Trakt>, String>((ref, url) async {
+//   String getUrl(String url, int p) {
+//     var append = '?';
+//     if (url.contains('?')) {
+//       append = '&';
+//     }
+//     return '$url${append}limit=30&page=$p';
+//   }
+//
+//   final page = ref.watch(pageProvider(url));
+//   final trakt = ref.watch(traktProvider);
+//   return await trakt.getItems(getUrl(url, page));
+// });
+//
+// final itemsProvider3 =
+//     AutoDisposeStreamProviderFamily<List<Trakt>, String>((ref, url) async* {
+//   final items = <Trakt>[];
+//   ref.watch(itemsProvider2(url)).whenData((data) {
+//     items.addAll(data);
+//   });
+//   // print("IP3 ${items.length}");
+//   yield items;
+// });
+//
 final itemsProvider =
     AutoDisposeStateNotifierProviderFamily<ItemsProvider, List<Trakt>, String>(
         (ref, url) {

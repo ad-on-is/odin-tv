@@ -11,7 +11,6 @@ import 'package:odin/ui/cover/backdrop_cover.dart';
 import 'package:odin/ui/cover/poster_cover.dart';
 import 'package:odin/ui/detail/detail.dart';
 import 'package:odin/ui/widgets/carousel.dart';
-import 'package:odin/ui/widgets/ensure_visible.dart';
 
 import '../../data/entities/trakt.dart';
 
@@ -28,11 +27,11 @@ class Section extends HookConsumerWidget with BaseHelper {
     if (ref.watch(itemsProvider(e.url).notifier).page == 0) {
       ref.watch(itemsProvider(e.url).notifier).init(e.url);
     }
-    final genre = ref.watch(genreProvider(e.type ?? ""));
-    if (e.title == 'GENRE') {
-      e.title = "GENRE: ${genres[genre]["name"]}";
-      e.url = '/${e.type}/watched/monthly?genres=${genres[genre]["slug"]}';
-    }
+    // final genre = ref.watch(genreProvider(e.type ?? ""));
+    // if (e.title == 'GENRE') {
+    //   e.title = "GENRE: ${genres[genre]["name"]}";
+    //   e.url = '/${e.type}/watched/monthly?genres=${genres[genre]["slug"]}';
+    // }
     List<Trakt> items = ref.watch(itemsProvider(e.url));
 
     if (e.filterWatched) {
@@ -97,30 +96,21 @@ class Section extends HookConsumerWidget with BaseHelper {
                     ensureVisible: true,
                     alignment: e.big ? 0.16 : 0.10,
                     onRowIndexChanged: (index) {
-                      Future.delayed(const Duration(milliseconds: 10), () {
-                        // ref.read(selectedItemProvider.notifier).state =
-                        //     items[index].show ?? items[index];
-                        // ref
-                        //     .read(
-                        //         selectedItemOfSectionProvider(e.title).notifier)
-                        //     .state = items[index];
-                        // if (index == items.length - 1 && e.paginate) {
-                        //   ref.read(itemsProvider(e.url).notifier).next(e.url);
-                        // }
-                      });
+                      Future.delayed(const Duration(milliseconds: 10), () {});
                     },
                     onChildIndexChanged: (index) {
-                      Future.delayed(const Duration(milliseconds: 10), () {
-                        // print("SECTION CHILD $index");
-                        // ref.read(selectedItemProvider.notifier).state =
-                        //     items[index].show ?? items[index];
+                      Future.delayed(const Duration(milliseconds: 100), () {
+                        ref.read(selectedItemProvider.notifier).state =
+                            items[index].show ?? items[index];
                         // ref
                         //     .read(
                         //         selectedItemOfSectionProvider(e.title).notifier)
                         //     .state = items[index];
-                        // if (index == items.length - 1 && e.paginate) {
-                        //   ref.read(itemsProvider(e.url).notifier).next(e.url);
-                        // }
+                        if (items.isNotEmpty &&
+                            index == items.length - 1 &&
+                            e.paginate) {
+                          // ref.read(itemsProvider(e.url).notifier).next(e.url);
+                        }
                       });
                     },
                     onEnter: (idx) {

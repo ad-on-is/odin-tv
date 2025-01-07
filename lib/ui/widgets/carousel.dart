@@ -66,6 +66,7 @@ class OdinCarousel extends HookConsumerWidget with BaseHelper {
         onIndexChanged: onChildIndexChanged,
         extent: extent,
         isChild: isChild,
+        onEnter: onEnter,
         id: id ?? "NOT-CHILD",
         count: count,
         axis: axis);
@@ -96,6 +97,7 @@ class Carousel extends HookConsumerWidget with BaseHelper {
       required this.isChild,
       this.onIndexChanged,
       this.center,
+      this.onEnter,
       required this.id,
       required this.controller,
       required this.extent,
@@ -114,6 +116,7 @@ class Carousel extends HookConsumerWidget with BaseHelper {
   final bool isChild;
   final InfiniteScrollController controller;
   final void Function(int)? onIndexChanged;
+  final void Function(int)? onEnter;
   final bool? center;
   final int count;
   final Axis axis;
@@ -123,19 +126,26 @@ class Carousel extends HookConsumerWidget with BaseHelper {
   Widget build(BuildContext context, ref) {
     final idx = useState(0);
     final didx = useDebounced(idx.value, const Duration(milliseconds: 50));
+    final isAnim = useState(false);
     if (isChild) {
+      logInfo(id);
       useMemoized(() {
         childStreamController.stream.listen((data) {
           if (!data.startsWith(id)) {
             return;
           }
           final dir = data.replaceAll("$id-", "");
+          if (isAnim.value) {
+            return;
+          }
           if (dir == "next") {
+            // isAnim.value = true;
             controller.nextItem(
                 duration: const Duration(milliseconds: 250),
                 curve: Curves.linearToEaseOut);
           }
           if (dir == "prev") {
+            // isAnim.value = true;
             controller.previousItem(
                 duration: const Duration(milliseconds: 250),
                 curve: Curves.linearToEaseOut);
@@ -143,6 +153,9 @@ class Carousel extends HookConsumerWidget with BaseHelper {
 
           if (dir == "select") {
             logInfo("SELECT ${idx.value}");
+            if (onEnter != null) {
+              onEnter!(idx.value);
+            }
           }
           if (onIndexChanged != null) {
             onIndexChanged!(idx.value);
@@ -170,6 +183,7 @@ class Carousel extends HookConsumerWidget with BaseHelper {
       if (index < 0) {
         index = 0;
       }
+      // isAnim.value = false;
       if (onIndexChanged != null) {
         onIndexChanged!(index);
       }
@@ -312,13 +326,13 @@ class Listener extends HookConsumerWidget {
             return;
           }
 
-          // if (controller.offset <= extent) {
-          //   allowBeforeFocus(true, ref);
-          //   fn.skipTraversal = false;
-          // } else {
-          //   allowBeforeFocus(false, ref);
-          //   fn.skipTraversal = true;
-          // }
+          if (controller.offset <= 20) {
+            allowBeforeFocus(true, ref);
+            fn.skipTraversal = false;
+          } else {
+            allowBeforeFocus(false, ref);
+            fn.skipTraversal = true;
+          }
 
           if (keyEvent.physicalKey == PhysicalKeyboardKey.arrowUp) {
             if (dir.value != "prev") {

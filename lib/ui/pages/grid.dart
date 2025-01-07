@@ -38,13 +38,15 @@ class Grid extends ConsumerWidget {
                 },
                 extent: extent,
                 onRowIndexChanged: (index) {
-                  // Future.delayed(const Duration(milliseconds: 50), () {
-                  //   ref.read(selectedSectionProvider.notifier).state =
-                  //       sections[index].title;
-                  //   ref.read(currentRow.notifier).state = sections[index].url;
-                  //   ref.read(selectedItemProvider.notifier).state = ref.read(
-                  //       selectedItemOfSectionProvider(sections[index].title));
-                  // });
+                  Future.delayed(const Duration(milliseconds: 50), () {
+                    ref.read(currentRow.notifier).state = sections[index].url;
+
+                    //   ref.read(selectedSectionProvider.notifier).state =
+                    //       sections[index].title;
+                    //   ref.read(currentRow.notifier).state = sections[index].url;
+                    //   ref.read(selectedItemProvider.notifier).state = ref.read(
+                    //       selectedItemOfSectionProvider(sections[index].title));
+                  });
                 },
                 onChildIndexChanged: (index) {
                   // Future.delayed(const Duration(milliseconds: 50), () {

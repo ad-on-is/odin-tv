@@ -48,8 +48,8 @@ class HomePage extends HookConsumerWidget {
                   PhysicalKeyboardKey.arrowDown
                 ],
                 onRowIndexChanged: (index) {
-                  Future.delayed(const Duration(milliseconds: 100), () {
-                    print("HOME ROW: $index");
+                  Future.delayed(const Duration(milliseconds: 50), () {
+                    // print("HOME ROW: $index");
                     //   if (index > sections.length - 1) {
                     //     return;
                     //   }
