@@ -113,13 +113,22 @@ class Section extends HookConsumerWidget with BaseHelper {
                         }
                       });
                     },
-                    onEnter: (idx) {
-                      Navigator.of(context).push(MaterialPageRoute(
+                    onEnter: (idx) async {
+                      Future.delayed(const Duration(milliseconds: 50), () {
+                        ref.read(currentRowBeforeDetail.notifier).state =
+                            ref.read(currentRow);
+                      });
+                      await Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => Detail(
                             item: items[idx].type == "episode"
                                 ? items[idx].show!
                                 : items[idx]),
                       ));
+
+                      Future.delayed(const Duration(milliseconds: 50), () {
+                        ref.read(currentRow.notifier).state =
+                            ref.read(currentRowBeforeDetail);
+                      });
                     },
                     keys: const [
                       PhysicalKeyboardKey.arrowLeft,

@@ -12,6 +12,7 @@ import 'package:odin/helpers.dart';
 
 final childStreamController = StreamController<String>.broadcast();
 final currentRow = StateProvider<String>((ref) => "");
+final currentRowBeforeDetail = StateProvider<String>((ref) => "");
 
 class OdinCarousel extends HookConsumerWidget with BaseHelper {
   const OdinCarousel(
@@ -128,7 +129,6 @@ class Carousel extends HookConsumerWidget with BaseHelper {
     final didx = useDebounced(idx.value, const Duration(milliseconds: 50));
     final isAnim = useState(false);
     if (isChild) {
-      logInfo(id);
       useMemoized(() {
         childStreamController.stream.listen((data) {
           if (!data.startsWith(id)) {
@@ -152,7 +152,6 @@ class Carousel extends HookConsumerWidget with BaseHelper {
           }
 
           if (dir == "select") {
-            logInfo("SELECT ${idx.value}");
             if (onEnter != null) {
               onEnter!(idx.value);
             }
@@ -218,7 +217,7 @@ class Carousel extends HookConsumerWidget with BaseHelper {
   }
 }
 
-class Listener extends HookConsumerWidget {
+class Listener extends HookConsumerWidget with BaseHelper {
   const Listener(
       {required this.onIndexChanged,
       this.center,
