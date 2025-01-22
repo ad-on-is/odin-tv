@@ -12,6 +12,7 @@ import 'package:odin/helpers.dart';
 
 final childStreamController = StreamController<String>.broadcast();
 final currentRow = StateProvider<String>((ref) => "");
+final previousRow = StateProvider<String>((ref) => "");
 final currentRowBeforeDetail = StateProvider<String>((ref) => "");
 
 class OdinCarousel extends HookConsumerWidget with BaseHelper {

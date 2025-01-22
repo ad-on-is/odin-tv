@@ -26,8 +26,6 @@ class App extends HookConsumerWidget {
     final appBusy = ref.watch(appBusyProvider);
     final mf = ref.watch(beforeFocusProvider);
 
-    final crow = ref.read(currentRow);
-
     final fns = [
       useFocusNode(canRequestFocus: mf, skipTraversal: !mf),
       useFocusNode(canRequestFocus: mf, skipTraversal: !mf),
@@ -37,25 +35,27 @@ class App extends HookConsumerWidget {
 
     for (var fn in fns) {
       useEffect(() {
-        final listener = () {
+        listener() {
           if (fn.hasFocus) {
-            Future.delayed(const Duration(milliseconds: 100), () {
-              ref.read(currentRow.notifier).state = "";
+            Future.delayed(const Duration(milliseconds: 10), () {
+              ref.read(beforeFocusHasFocus.notifier).state = true;
             });
           } else {
             bool anyfocus = false;
             for (var fn2 in fns) {
               if (fn2.hasFocus) {
                 anyfocus = true;
+                break;
               }
             }
             if (!anyfocus) {
-              Future.delayed(const Duration(milliseconds: 100), () {
-                ref.read(currentRow.notifier).state = crow;
+              Future.delayed(const Duration(milliseconds: 10), () {
+                ref.read(beforeFocusHasFocus.notifier).state = false;
               });
             }
           }
-        };
+        }
+
         fn.addListener(listener);
         return () => fn.removeListener(listener);
       });

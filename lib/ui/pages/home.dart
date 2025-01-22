@@ -27,9 +27,10 @@ class HomePage extends HookConsumerWidget with BaseHelper {
     provider.whenData((value) {
       sections = value;
       if (value.isNotEmpty) {
-        Future.delayed(const Duration(milliseconds: 50), () {
-          ref.read(selectedSectionProvider.notifier).state = value[0].title;
-          ref.read(bgAlpha.notifier).state = 50;
+        Future.delayed(const Duration(milliseconds: 10), () {
+          ref.read(currentRow.notifier).state = sections[0].url;
+          // ref.read(selectedSectionProvider.notifier).state = value[0].title;
+          // ref.read(bgAlpha.notifier).state = 50;
         });
       }
     });

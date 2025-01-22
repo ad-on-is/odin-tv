@@ -22,4 +22,5 @@ final bgAlpha = StateProvider<int>((ref) => 230);
 final debugProvider = StateProvider<String>((ref) => "test");
 
 final beforeFocusProvider = StateProvider<bool>((ref) => false);
+final beforeFocusHasFocus = StateProvider<bool>((ref) => true);
 final afterFocusProvider = StateProvider<bool>((ref) => false);

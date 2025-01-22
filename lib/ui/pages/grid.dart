@@ -18,12 +18,13 @@ class Grid extends ConsumerWidget {
     List<SectionItem> sections = [];
     provider.whenData((value) {
       sections = value;
-      // if (value.isNotEmpty) {
-      //   Future.delayed(const Duration(milliseconds: 50), () {
-      //     ref.read(bgAlpha.notifier).state = 230;
-      //     ref.read(selectedSectionProvider.notifier).state = value[0].title;
-      //   });
-      // }
+      if (value.isNotEmpty) {
+        Future.delayed(const Duration(milliseconds: 10), () {
+          ref.read(currentRow.notifier).state = sections[0].url;
+          // ref.read(bgAlpha.notifier).state = 230;
+          // ref.read(selectedSectionProvider.notifier).state = value[0].title;
+        });
+      }
     });
 
     double extent = 185;

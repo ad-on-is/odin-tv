@@ -78,7 +78,7 @@ class Section extends HookConsumerWidget with BaseHelper {
                         controller: controller,
                         extent: extent,
                         realIndex: realIndex,
-                        target: sec == e.url,
+                        target: sec == e.url && !ref.watch(beforeFocusHasFocus),
                         child: e.big
                             ? BackdropCover(items[itemIndex])
                             : PosterCover(items[itemIndex]),
