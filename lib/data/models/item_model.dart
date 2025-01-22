@@ -79,7 +79,8 @@ class ItemsProvider extends StateNotifier<List<Trakt>> {
   // List<Trakt> items = [];
   ItemsProvider(this.ref, this.traktService, this.appRefreshProvider, this.data)
       : super([]) {
-    init();
+    page = 1;
+    load();
   }
 
   String getUrl(String url) {
@@ -90,27 +91,8 @@ class ItemsProvider extends StateNotifier<List<Trakt>> {
     return '$url${append}limit=30&page=$page';
   }
 
-  void init() async {
-    page = 1;
-    Future.delayed(const Duration(milliseconds: 100), () {
-      appRefreshProvider.state = true;
-    });
-
-    // items = await ref.watch(traktProvider).getItems(getUrl(url));
-    Future.delayed(const Duration(milliseconds: 100), () {
-      appRefreshProvider.state = false;
-    });
-    List<Trakt> list =
-        await ref.watch(traktProvider).getItems(getUrl(data.url));
-    if (data.filterWatched) {
-      list = list.where((i) => i.watched == false).toList();
-    }
-    state = list;
-  }
-
-  void next() async {
-    page++;
-    Future.delayed(const Duration(milliseconds: 100), () {
+  void load() async {
+    Future.delayed(const Duration(milliseconds: 10), () {
       appRefreshProvider.state = true;
     });
     List<Trakt> list =
@@ -121,9 +103,14 @@ class ItemsProvider extends StateNotifier<List<Trakt>> {
     }
 
     state = [...state, ...list];
-    Future.delayed(const Duration(milliseconds: 100), () {
+    Future.delayed(const Duration(milliseconds: 10), () {
       appRefreshProvider.state = false;
     });
+  }
+
+  void next() async {
+    page++;
+    load();
   }
 }
 

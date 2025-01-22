@@ -48,7 +48,12 @@ class HomePage extends HookConsumerWidget with BaseHelper {
                 extent: extent,
                 onRowIndexChanged: (index) {
                   Future.delayed(const Duration(milliseconds: 50), () {
+                    // final data = useMemoized(() => ItemsProviderData(
+                    //     sections[index].url, sections[index].filterWatched));
                     ref.read(currentRow.notifier).state = sections[index].url;
+
+                    // ref.read(selectedItemProvider.notifier).state =
+                    //     ref.read(itemsProvider(data))[0];
 
                     ref.read(selectedSectionProvider.notifier).state =
                         sections[index].title;

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:odin/controllers/app_controller.dart';
 import 'package:odin/controllers/grid_controller.dart';
 import 'package:odin/data/models/item_model.dart';
 import 'package:odin/ui/widgets/carousel.dart';

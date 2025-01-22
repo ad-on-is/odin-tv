@@ -29,16 +29,6 @@ class Section extends HookConsumerWidget with BaseHelper {
         useMemoized(() => ItemsProviderData(e.url, e.filterWatched));
     List<Trakt> items = ref.watch(itemsProvider(itemData));
 
-    // if (items.isNotEmpty && idx == 0) {
-    //   Future.delayed(const Duration(milliseconds: 300), () {
-    //     if (ref.read(selectedItemOfSectionProvider(e.title)).title == "") {
-    //       ref.read(selectedItemOfSectionProvider(e.title).notifier).state =
-    //           items[0];
-    //     }
-    //   });
-    // }
-    //
-
     double extent = e.big ? 225 : 90;
     //ref.watch(selectedItemProvider);
     final sec = ref.watch(currentRow);
@@ -90,11 +80,10 @@ class Section extends HookConsumerWidget with BaseHelper {
                     alignment: e.big ? 0.16 : 0.10,
                     onRowIndexChanged: (index) {},
                     onChildIndexChanged: (index) {
-                      Future.delayed(const Duration(milliseconds: 100), () {
+                      Future.delayed(const Duration(milliseconds: 10), () {
                         final items = ref.read(itemsProvider(itemData));
-
-                        // ref.read(selectedItemProvider.notifier).state =
-                        //     items[index].show ?? items[index];
+                        ref.read(selectedItemProvider.notifier).state =
+                            items[index].show ?? items[index];
                         // ref
                         //     .read(
                         //         selectedItemOfSectionProvider(e.title).notifier)
