@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:helpers/helpers.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:odin/controllers/app_controller.dart';
@@ -24,19 +25,9 @@ class Section extends HookConsumerWidget with BaseHelper {
 
   @override
   Widget build(BuildContext context, ref) {
-    if (ref.watch(itemsProvider(e.url).notifier).page == 0) {
-      ref.watch(itemsProvider(e.url).notifier).init(e.url);
-    }
-    // final genre = ref.watch(genreProvider(e.type ?? ""));
-    // if (e.title == 'GENRE') {
-    //   e.title = "GENRE: ${genres[genre]["name"]}";
-    //   e.url = '/${e.type}/watched/monthly?genres=${genres[genre]["slug"]}';
-    // }
-    List<Trakt> items = ref.watch(itemsProvider(e.url));
-
-    if (e.filterWatched) {
-      items = items.where((element) => element.watched == false).toList();
-    }
+    final itemData =
+        useMemoized(() => ItemsProviderData(e.url, e.filterWatched));
+    List<Trakt> items = ref.watch(itemsProvider(itemData));
 
     // if (items.isNotEmpty && idx == 0) {
     //   Future.delayed(const Duration(milliseconds: 300), () {
@@ -46,9 +37,11 @@ class Section extends HookConsumerWidget with BaseHelper {
     //     }
     //   });
     // }
+    //
+
     double extent = e.big ? 225 : 90;
     //ref.watch(selectedItemProvider);
-    final sec = ref.watch(selectedSectionProvider);
+    final sec = ref.watch(currentRow);
     // final af = ref.watch(afterFocusProvider);
     // final bf = ref.watch(beforeFocusProvider);
     return Column(
@@ -85,7 +78,7 @@ class Section extends HookConsumerWidget with BaseHelper {
                         controller: controller,
                         extent: extent,
                         realIndex: realIndex,
-                        target: sec == e.title,
+                        target: sec == e.url,
                         child: e.big
                             ? BackdropCover(items[itemIndex])
                             : PosterCover(items[itemIndex]),
@@ -95,13 +88,13 @@ class Section extends HookConsumerWidget with BaseHelper {
                     id: e.url,
                     ensureVisible: true,
                     alignment: e.big ? 0.16 : 0.10,
-                    onRowIndexChanged: (index) {
-                      Future.delayed(const Duration(milliseconds: 10), () {});
-                    },
+                    onRowIndexChanged: (index) {},
                     onChildIndexChanged: (index) {
                       Future.delayed(const Duration(milliseconds: 100), () {
-                        ref.read(selectedItemProvider.notifier).state =
-                            items[index].show ?? items[index];
+                        final items = ref.read(itemsProvider(itemData));
+
+                        // ref.read(selectedItemProvider.notifier).state =
+                        //     items[index].show ?? items[index];
                         // ref
                         //     .read(
                         //         selectedItemOfSectionProvider(e.title).notifier)
@@ -109,11 +102,13 @@ class Section extends HookConsumerWidget with BaseHelper {
                         if (items.isNotEmpty &&
                             index == items.length - 1 &&
                             e.paginate) {
-                          // ref.read(itemsProvider(e.url).notifier).next(e.url);
+                          ref.read(itemsProvider(itemData).notifier).next();
+                          // ref.read(pageProvider(e.url).notifier).state++;
                         }
                       });
                     },
                     onEnter: (idx) async {
+                      final items = ref.read(itemsProvider(itemData));
                       Future.delayed(const Duration(milliseconds: 50), () {
                         ref.read(currentRowBeforeDetail.notifier).state =
                             ref.read(currentRow);
@@ -124,16 +119,12 @@ class Section extends HookConsumerWidget with BaseHelper {
                                 ? items[idx].show!
                                 : items[idx]),
                       ));
-
+                      //
                       Future.delayed(const Duration(milliseconds: 50), () {
                         ref.read(currentRow.notifier).state =
                             ref.read(currentRowBeforeDetail);
                       });
                     },
-                    keys: const [
-                      PhysicalKeyboardKey.arrowLeft,
-                      PhysicalKeyboardKey.arrowRight
-                    ],
                     count: items.length,
                     axis: Axis.horizontal),
               )

@@ -79,10 +79,6 @@ class Episodes extends ConsumerWidget {
                 },
                 extent: extent,
                 anchor: 0.05,
-                keys: const [
-                  PhysicalKeyboardKey.arrowLeft,
-                  PhysicalKeyboardKey.arrowRight
-                ],
                 count: season.episodes.length,
                 axis: Axis.horizontal)),
         const SizedBox(height: 20),

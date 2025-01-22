@@ -356,10 +356,12 @@ class ItemSlides extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     List<Trakt> slides = [];
     slides.addAll([Trakt(title: "OdinCast"), Trakt(title: "OdinImdbReview")]);
-    ref.watch(seasonsProvider(item.ids)).whenData((value) {
-      slides.addAll(value);
-      //seasons = seasons.reversed.toList();
-    });
+    if (!item.isMovie) {
+      ref.watch(seasonsProvider(item.ids)).whenData((value) {
+        slides.addAll(value);
+        //seasons = seasons.reversed.toList();
+      });
+    }
 
     return slides.isEmpty
         ? const SizedBox(height: 200)
@@ -378,10 +380,6 @@ class ItemSlides extends ConsumerWidget {
                   return Episodes(season: slides[realIndex], show: item);
                 },
                 extent: 250,
-                keys: const [
-                  PhysicalKeyboardKey.arrowUp,
-                  PhysicalKeyboardKey.arrowDown
-                ],
                 onRowIndexChanged: (index) {
                   Future.delayed(const Duration(milliseconds: 50), () {
                     ref.read(currentRow.notifier).state = slides[index].title;

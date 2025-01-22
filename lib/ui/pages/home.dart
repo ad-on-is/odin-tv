@@ -45,23 +45,12 @@ class HomePage extends HookConsumerWidget with BaseHelper {
                   return Section(e: sections[itemIndex], idx: itemIndex);
                 },
                 extent: extent,
-                keys: const [
-                  PhysicalKeyboardKey.arrowUp,
-                  PhysicalKeyboardKey.arrowDown
-                ],
                 onRowIndexChanged: (index) {
                   Future.delayed(const Duration(milliseconds: 50), () {
-                    // print("HOME ROW: $index");
-                    //   if (index > sections.length - 1) {
-                    //     return;
-                    //   }
                     ref.read(currentRow.notifier).state = sections[index].url;
 
-                    //   ref.read(selectedSectionProvider.notifier).state =
-                    //       sections[index].title;
-                    //
-                    //   ref.read(selectedItemProvider.notifier).state = ref.read(
-                    //       selectedItemOfSectionProvider(sections[index].title));
+                    ref.read(selectedSectionProvider.notifier).state =
+                        sections[index].title;
                   });
                 },
                 onChildIndexChanged: (index) {},

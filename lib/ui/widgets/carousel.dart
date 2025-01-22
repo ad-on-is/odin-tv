@@ -27,7 +27,6 @@ class OdinCarousel extends HookConsumerWidget with BaseHelper {
       this.center,
       this.id,
       required this.extent,
-      required this.keys,
       required this.count,
       required this.axis})
       : super(key: key);
@@ -44,7 +43,6 @@ class OdinCarousel extends HookConsumerWidget with BaseHelper {
   final bool? center;
   final int count;
   final Axis axis;
-  final List<PhysicalKeyboardKey> keys;
 
   allowBeforeFocus(bool focus, ref) {
     ref.read(beforeFocusProvider.notifier).state = focus;
@@ -176,6 +174,7 @@ class Carousel extends HookConsumerWidget with BaseHelper {
 
     useEffect(() {
       int index = didx ?? 0;
+      // logInfo("INDEX: ${index} - count ${count}");
       if (index > count) {
         index = count;
       }
@@ -257,7 +256,6 @@ class Listener extends HookConsumerWidget with BaseHelper {
     final dir = useState("");
     final idx = useState(0);
     final didx = useDebounced(idx.value, const Duration(milliseconds: 50));
-    // print("REBUILDING ${count}");
 
     final isAnim = useState(false);
     // final cw = ref.watch(currentRow);
@@ -284,6 +282,7 @@ class Listener extends HookConsumerWidget with BaseHelper {
     final fn = useFocusNode();
     useEffect(() {
       int index = didx ?? 0;
+
       if (index > count) {
         index = count;
       }

@@ -41,8 +41,8 @@ class Grid extends ConsumerWidget {
                   Future.delayed(const Duration(milliseconds: 50), () {
                     ref.read(currentRow.notifier).state = sections[index].url;
 
-                    //   ref.read(selectedSectionProvider.notifier).state =
-                    //       sections[index].title;
+                    // ref.read(selectedSectionProvider.notifier).state =
+                    //     sections[index].url;
                     //   ref.read(currentRow.notifier).state = sections[index].url;
                     //   ref.read(selectedItemProvider.notifier).state = ref.read(
                     //       selectedItemOfSectionProvider(sections[index].title));
@@ -57,10 +57,6 @@ class Grid extends ConsumerWidget {
                   //       selectedItemOfSectionProvider(sections[index].title));
                   // });
                 },
-                keys: const [
-                  PhysicalKeyboardKey.arrowUp,
-                  PhysicalKeyboardKey.arrowDown
-                ],
                 anchor: 0.0,
                 count: sections.length,
                 axis: Axis.vertical));

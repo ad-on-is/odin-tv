@@ -12,6 +12,7 @@ import 'package:odin/data/models/auth_model.dart';
 import 'package:odin/data/services/api.dart';
 import 'package:odin/theme.dart';
 import 'package:odin/ui/settings.dart';
+import 'package:odin/ui/widgets/carousel.dart';
 import 'package:odin/ui/widgets/widgets.dart';
 
 import '../data/models/item_model.dart';
@@ -24,6 +25,42 @@ class App extends HookConsumerWidget {
     final pageState = ref.watch(appPageProvider);
     final appBusy = ref.watch(appBusyProvider);
     final mf = ref.watch(beforeFocusProvider);
+
+    final crow = ref.read(currentRow);
+
+    final fns = [
+      useFocusNode(canRequestFocus: mf, skipTraversal: !mf),
+      useFocusNode(canRequestFocus: mf, skipTraversal: !mf),
+      useFocusNode(canRequestFocus: mf, skipTraversal: !mf),
+      useFocusNode(canRequestFocus: mf, skipTraversal: !mf)
+    ];
+
+    for (var fn in fns) {
+      useEffect(() {
+        final listener = () {
+          if (fn.hasFocus) {
+            Future.delayed(const Duration(milliseconds: 100), () {
+              ref.read(currentRow.notifier).state = "";
+            });
+          } else {
+            bool anyfocus = false;
+            for (var fn2 in fns) {
+              if (fn2.hasFocus) {
+                anyfocus = true;
+              }
+            }
+            if (!anyfocus) {
+              Future.delayed(const Duration(milliseconds: 100), () {
+                ref.read(currentRow.notifier).state = crow;
+              });
+            }
+          }
+        };
+        fn.addListener(listener);
+        return () => fn.removeListener(listener);
+      });
+    }
+
     return Stack(
       children: [
         const AppBackground(key: Key("app")),
@@ -56,8 +93,7 @@ class App extends HookConsumerWidget {
                           children: [
                             const HealthCheck(),
                             TextButton(
-                              focusNode: FocusNode(
-                                  canRequestFocus: mf, skipTraversal: !mf),
+                              focusNode: fns[0],
                               // style: ButtonStyle(
                               //     backgroundColor: WidgetStatePropertyAll(
                               //         AppColors.purple
@@ -72,8 +108,7 @@ class App extends HookConsumerWidget {
                             ),
                             const SizedBox(width: 5),
                             TextButton(
-                              focusNode: FocusNode(
-                                  canRequestFocus: mf, skipTraversal: !mf),
+                              focusNode: fns[1],
                               style: ButtonStyle(
                                   backgroundColor: WidgetStatePropertyAll(
                                       AppColors.purple
@@ -90,8 +125,7 @@ class App extends HookConsumerWidget {
                             ),
                             const SizedBox(width: 5),
                             TextButton(
-                              focusNode: FocusNode(
-                                  canRequestFocus: mf, skipTraversal: !mf),
+                              focusNode: fns[2],
                               style: ButtonStyle(
                                   backgroundColor: WidgetStatePropertyAll(
                                       AppColors.purple
@@ -105,8 +139,7 @@ class App extends HookConsumerWidget {
                               },
                             ),
                             TextButton(
-                              focusNode: FocusNode(
-                                  canRequestFocus: mf, skipTraversal: !mf),
+                              focusNode: fns[3],
                               child: Row(
                                 children: [
                                   const Icon(FontAwesomeIcons.gear,

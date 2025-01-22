@@ -4,7 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:odin/controllers/app_controller.dart';
 import 'package:odin/theme.dart';
 import 'package:odin/data/entities/trakt.dart';
-import 'package:odin/ui/widgets/ensure_visible.dart';
 import 'package:odin/ui/widgets/widgets.dart';
 
 import 'widgets.dart';

@@ -3,6 +3,7 @@ import 'package:helpers/helpers/print.dart';
 import 'package:odin/data/services/trakt_service.dart';
 
 import 'package:odin/data/entities/trakt.dart';
+import 'package:odin/helpers.dart';
 
 var genres = [
   {"name": "Action", "slug": "action"},
@@ -70,12 +71,16 @@ class ListSetting {
 
 class ItemsProvider extends StateNotifier<List<Trakt>> {
   final Ref ref;
+  final ItemsProviderData data;
   final TraktService traktService;
   final dynamic appRefreshProvider;
   int page = 0;
+  // final page;
   // List<Trakt> items = [];
-  ItemsProvider(this.ref, this.traktService, this.appRefreshProvider)
-      : super([]);
+  ItemsProvider(this.ref, this.traktService, this.appRefreshProvider, this.data)
+      : super([]) {
+    init();
+  }
 
   String getUrl(String url) {
     var append = '?';
@@ -85,7 +90,7 @@ class ItemsProvider extends StateNotifier<List<Trakt>> {
     return '$url${append}limit=30&page=$page';
   }
 
-  void init(String url) async {
+  void init() async {
     page = 1;
     Future.delayed(const Duration(milliseconds: 100), () {
       appRefreshProvider.state = true;
@@ -95,55 +100,43 @@ class ItemsProvider extends StateNotifier<List<Trakt>> {
     Future.delayed(const Duration(milliseconds: 100), () {
       appRefreshProvider.state = false;
     });
-    state = await ref.watch(traktProvider).getItems(getUrl(url));
+    List<Trakt> list =
+        await ref.watch(traktProvider).getItems(getUrl(data.url));
+    if (data.filterWatched) {
+      list = list.where((i) => i.watched == false).toList();
+    }
+    state = list;
   }
 
-  void next(String url) async {
+  void next() async {
     page++;
     Future.delayed(const Duration(milliseconds: 100), () {
       appRefreshProvider.state = true;
     });
-    state = [...state, ...await ref.watch(traktProvider).getItems(getUrl(url))];
-    // state = !state;
+    List<Trakt> list =
+        await ref.watch(traktProvider).getItems(getUrl(data.url));
+
+    if (data.filterWatched) {
+      list = list.where((i) => i.watched == false).toList();
+    }
+
+    state = [...state, ...list];
     Future.delayed(const Duration(milliseconds: 100), () {
       appRefreshProvider.state = false;
     });
   }
 }
 
-// final pageProvider =
-//     AutoDisposeStateProviderFamily<int, String>((ref, url) => 0);
-//
-// final itemsProvider2 =
-//     AutoDisposeFutureProviderFamily<List<Trakt>, String>((ref, url) async {
-//   String getUrl(String url, int p) {
-//     var append = '?';
-//     if (url.contains('?')) {
-//       append = '&';
-//     }
-//     return '$url${append}limit=30&page=$p';
-//   }
-//
-//   final page = ref.watch(pageProvider(url));
-//   final trakt = ref.watch(traktProvider);
-//   return await trakt.getItems(getUrl(url, page));
-// });
-//
-// final itemsProvider3 =
-//     AutoDisposeStreamProviderFamily<List<Trakt>, String>((ref, url) async* {
-//   final items = <Trakt>[];
-//   ref.watch(itemsProvider2(url)).whenData((data) {
-//     items.addAll(data);
-//   });
-//   // print("IP3 ${items.length}");
-//   yield items;
-// });
-//
-final itemsProvider =
-    AutoDisposeStateNotifierProviderFamily<ItemsProvider, List<Trakt>, String>(
-        (ref, url) {
-  return ItemsProvider(
-      ref, ref.watch(traktProvider), ref.read(appRefreshProvider.notifier));
+class ItemsProviderData {
+  final String url;
+  final bool filterWatched;
+  ItemsProviderData(this.url, this.filterWatched);
+}
+
+final itemsProvider = AutoDisposeStateNotifierProviderFamily<ItemsProvider,
+    List<Trakt>, ItemsProviderData>((ref, data) {
+  return ItemsProvider(ref, ref.watch(traktProvider),
+      ref.read(appRefreshProvider.notifier), data);
 });
 
 final appRefreshProvider = StateProvider.autoDispose<bool>((ref) => false);
