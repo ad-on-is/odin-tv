@@ -1,9 +1,12 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:helpers/helpers.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:odin/controllers/app_controller.dart';
+import 'package:odin/data/entities/trakt.dart';
 import 'package:odin/data/models/item_model.dart';
 import 'package:odin/helpers.dart';
 import 'package:odin/theme.dart';
@@ -12,8 +15,6 @@ import 'package:odin/ui/cover/backdrop_cover.dart';
 import 'package:odin/ui/cover/poster_cover.dart';
 import 'package:odin/ui/detail/detail.dart';
 import 'package:odin/ui/widgets/carousel.dart';
-
-import '../../data/entities/trakt.dart';
 
 class Section extends HookConsumerWidget with BaseHelper {
   final int idx;
@@ -29,11 +30,10 @@ class Section extends HookConsumerWidget with BaseHelper {
         useMemoized(() => ItemsProviderData(e.url, e.filterWatched));
     List<Trakt> items = ref.watch(itemsProvider(itemData));
 
+    logInfo(items.length);
+
     double extent = e.big ? 225 : 90;
-    //ref.watch(selectedItemProvider);
     final sec = ref.watch(currentRow);
-    // final af = ref.watch(afterFocusProvider);
-    // final bf = ref.watch(beforeFocusProvider);
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,7 +81,7 @@ class Section extends HookConsumerWidget with BaseHelper {
                     onRowIndexChanged: (index) {},
                     onChildIndexChanged: (index) {
                       Future.delayed(const Duration(milliseconds: 10), () {
-                        final items = ref.read(itemsProvider(itemData));
+                        var items = ref.read(itemsProvider(itemData));
                         ref.read(selectedItemProvider.notifier).state =
                             items[index].show ?? items[index];
                         // ref
@@ -89,6 +89,7 @@ class Section extends HookConsumerWidget with BaseHelper {
                         //         selectedItemOfSectionProvider(e.title).notifier)
                         //     .state = items[index];
                         if (items.isNotEmpty &&
+                            index > 1 &&
                             index == items.length - 1 &&
                             e.paginate) {
                           ref.read(itemsProvider(itemData).notifier).next();
