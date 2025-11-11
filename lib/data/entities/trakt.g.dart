@@ -22,6 +22,27 @@ Map<String, dynamic> _$TraktIdsToJson(TraktIds instance) => <String, dynamic>{
       'tvdb': instance.tvdb,
     };
 
+TraktImages _$TraktImagesFromJson(Map<String, dynamic> json) => TraktImages(
+      fanart: (json['fanart'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      logo:
+          (json['logo'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+              const [],
+      poster: (json['poster'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+    );
+
+Map<String, dynamic> _$TraktImagesToJson(TraktImages instance) =>
+    <String, dynamic>{
+      'fanart': instance.fanart,
+      'logo': instance.logo,
+      'poster': instance.poster,
+    };
+
 TraktEpisode _$TraktEpisodeFromJson(Map<String, dynamic> json) => TraktEpisode(
       title: json['title'] as String? ?? '',
       season: json['season'] as int? ?? 0,
@@ -41,6 +62,9 @@ Trakt _$TraktFromJson(Map<String, dynamic> json) => Trakt(
       ids: json['ids'] == null
           ? const TraktIds()
           : TraktIds.fromJson(json['ids'] as Map<String, dynamic>),
+      images: json['ids'] == null
+          ? const TraktImages()
+          : TraktImages.fromJson(json['images'] as Map<String, dynamic>),
       type: json['type'] as String? ?? '',
       watched: json['watched'] as bool? ?? false,
       title: json['title'] as String? ?? '',
@@ -94,6 +118,7 @@ Trakt _$TraktFromJson(Map<String, dynamic> json) => Trakt(
 Map<String, dynamic> _$TraktToJson(Trakt instance) => <String, dynamic>{
       'type': instance.type,
       'ids': instance.ids.toJson(),
+      'images': instance.images.toJson(),
       'title': instance.title,
       'year': instance.year,
       'show': instance.show?.toJson(),

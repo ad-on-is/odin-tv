@@ -25,6 +25,21 @@ class TraktIds {
 }
 
 @JsonSerializable(explicitToJson: true)
+class TraktImages {
+  final List<String> fanart;
+  final List<String> logo;
+  final List<String> poster;
+
+  const TraktImages(
+      {this.fanart = const [], this.logo = const [], this.poster = const []});
+
+  factory TraktImages.fromJson(Map<String, dynamic> json) =>
+      _$TraktImagesFromJson(json);
+
+  Map<String, dynamic> toJson() => _$TraktImagesToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
 class TraktEpisode {
   String title;
   int season;
@@ -50,6 +65,7 @@ class TraktEpisode {
 class Trakt {
   String type;
   TraktIds ids;
+  TraktImages images;
   String title;
   int year;
   Trakt? show;
@@ -90,6 +106,10 @@ class Trakt {
   bool get isSeason => type == 'season';
   bool get isEpisode => type == 'episode';
 
+  String get backdrop => images.fanart.isEmpty ? '' : images.fanart[0];
+  String get poster => images.poster.isEmpty ? '' : images.poster[0];
+  String get logo => images.logo.isEmpty ? '' : images.logo[0];
+
   Trakt setType(String t) {
     type = t;
     return this;
@@ -104,6 +124,7 @@ class Trakt {
 
   Trakt(
       {this.ids = const TraktIds(),
+      this.images = const TraktImages(),
       this.type = '',
       this.watched = false,
       this.title = '',

@@ -6,8 +6,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:helpers/helpers.dart';
 import 'package:html_unescape/html_unescape_small.dart';
+import 'package:odin/controllers/detail_controller.dart';
 import 'package:odin/data/entities/tmdb.dart';
 import 'package:odin/data/services/imdb_service.dart';
+import 'package:odin/data/services/tmdb_service.dart';
 import 'package:odin/data/services/trakt_service.dart';
 import 'package:odin/helpers.dart';
 import 'package:odin/theme.dart';
@@ -68,6 +70,11 @@ class ItemDetails extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final String preTitle = item.year.toString();
     final String overview = item.overview;
+    List<TmdbProductionCompany> productionCompanies = [];
+    ref.watch(tmdbDetailProvider(item)).whenData((data) {
+      productionCompanies = data.productionCompanies;
+    });
+
     return Padding(
       padding: const EdgeInsets.only(left: 50, right: 20),
       child: Row(
@@ -103,8 +110,8 @@ class ItemDetails extends ConsumerWidget {
               Headline4(
                 item.network != ''
                     ? item.network
-                    : item.tmdb!.productionCompanies.isNotEmpty
-                        ? item.tmdb!.productionCompanies.first.name
+                    : productionCompanies.isNotEmpty
+                        ? productionCompanies.first.name
                         : '',
                 style: const TextStyle(fontSize: 7),
               ),
@@ -143,7 +150,7 @@ class ItemDetails extends ConsumerWidget {
           SizedBox(
             width: 400,
             height: 150,
-            child: item.tmdb!.logoBig.endsWith('.svg')
+            child: item.logo.contains('.svg')
                 ? SvgPicture.network(
                     item.tmdb!.logoSmall,
                     fit: BoxFit.contain,
@@ -152,7 +159,7 @@ class ItemDetails extends ConsumerWidget {
                     fit: BoxFit.contain,
                     errorWidget: (_, __, ___) => const SizedBox(height: 30),
                     placeholder: (_, __) => const SizedBox(height: 30),
-                    imageUrl: item.tmdb!.logoBig),
+                    imageUrl: item.logo),
           ),
         ],
       ),
@@ -167,6 +174,12 @@ class ItemRating extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     ref.watch(imdbProvider);
+    ref.watch(tmdbProvider);
+    Tmdb tmdb = Tmdb();
+
+    ref.watch(tmdbDetailProvider(item)).whenData((data) {
+      tmdb = data;
+    });
     return Row(
       children: [
         Row(
@@ -180,9 +193,9 @@ class ItemRating extends ConsumerWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Headline4(item.tmdb!.roundedRating.toString()),
+                Headline4(tmdb.roundedRating.toString() ?? '-'),
                 CaptionText(
-                  ratingCountToReadable(item.tmdb!.voteCount),
+                  ratingCountToReadable(tmdb?.voteCount ?? 0),
                   style: TextStyle(color: AppColors.gray1),
                 )
               ],
@@ -286,7 +299,13 @@ class ItemCast extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    List<TmdbCast> cast = item.tmdb!.credits.cast.take(20).toList();
+    // List<TmdbCast> cast = item.tmdb!.credits.cast.take(20).toList();
+    List<TmdbCast> cast = [];
+
+    ref.watch(tmdbDetailProvider(item)).whenData((data) {
+      cast = data.credits.cast.take(20).toList();
+    });
+
     return Column(
       children: [
         const Padding(

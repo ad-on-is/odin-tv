@@ -27,7 +27,7 @@ class BackdropCover extends HookConsumerWidget {
       alignment: Alignment.topLeft,
       children: [
         CachedNetworkImage(
-          imageUrl: item.tmdb!.backdropSmall,
+          imageUrl: item.backdrop,
           errorWidget: (_, __, ___) => Container(
             decoration: BoxDecoration(
                 color: Colors.black, borderRadius: BorderRadius.circular(5)),
@@ -86,15 +86,15 @@ class BackdropCover extends HookConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 55),
-              item.tmdb!.logoSmall.endsWith('.svg')
+              item.logo.contains('.svg')
                   ? SvgPicture.network(
-                      item.tmdb!.logoSmall,
+                      item.logo,
                       width: 80,
                       height: 40,
                       fit: BoxFit.contain,
                     )
                   : CachedNetworkImage(
-                      imageUrl: item.tmdb!.logoSmall,
+                      imageUrl: item.logo,
                       errorWidget: (_, __, ___) => const SizedBox(height: 50),
                       imageBuilder: (context, imageProvider) => Image(
                         image: imageProvider,

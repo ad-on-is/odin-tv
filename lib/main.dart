@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:helpers/helpers.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
@@ -52,6 +53,7 @@ final initProvider = StreamProvider<bool>((ref) async* {
   );
   db.users = await collection.openBox("users");
   db.hive = await Hive.openLazyBox("odin");
+  await dotenv.load(fileName: ".env");
   int select = (await db.hive?.get("selectKey")) ?? 0;
   if (sb > 0) {
     await db.hive?.put("selectKey", sb);

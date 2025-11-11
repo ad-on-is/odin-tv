@@ -55,6 +55,7 @@ dependencies:
   logging:
   flutter_riverpod:
   flutter_hooks: 0.20.5
+  flutter_dotenv:
   hooks_riverpod:
   uuid:
   web_socket_channel:
@@ -93,6 +94,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - .env
 
   # To add assets to your application, add an assets section, like this:
   # assets:

@@ -23,7 +23,7 @@ class PosterCover extends HookConsumerWidget {
     return Stack(
       children: [
         CachedNetworkImage(
-          imageUrl: item.tmdb!.posterSmall,
+          imageUrl: item.poster,
           errorWidget: (_, str, d) => Container(
             width: 100,
             height: 135,

@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:odin/data/services/api.dart';
 import 'package:odin/data/services/db.dart';
@@ -106,12 +108,17 @@ class AuthModel extends StateNotifier<AuthState> with BaseHelper {
   }
 
   Future<List<AuthObject>> getAllCreds() async {
+    final creds = <AuthObject>[];
+    if (kDebugMode) {
+      creds.add(AuthObject(
+          dotenv.env["TOKEN"] ?? "", dotenv.env["APP_URL"] ?? "", "test"));
+      return creds;
+    }
     final List<String>? allcreds = await db.users?.getAllKeys();
     if (allcreds == null || allcreds.isEmpty) {
       return [];
     }
 
-    final creds = <AuthObject>[];
     await Future.forEach(allcreds, (String c) async {
       final data = await db.users?.get(c);
       creds.add(AuthObject(c, data["apiUrl"], data["user"]));

@@ -216,9 +216,9 @@ class AppBackground extends HookConsumerWidget {
     final selectedItem = ref.watch(selectedItemProvider);
     String background = "";
     if (item != null) {
-      background = item?.tmdb?.backdropBig ?? "";
+      background = item?.backdrop ?? "";
     } else {
-      background = selectedItem.tmdb?.backdropBig ?? "";
+      background = selectedItem.backdrop ?? "";
     }
     final controller =
         useAnimationController(duration: const Duration(milliseconds: 300));

@@ -31,13 +31,13 @@ class SelectButtonFixer extends HookConsumerWidget {
             focusNode: fn,
             onKeyEvent: (KeyEvent keyEvent) async {
               final label = keyEvent.logicalKey.keyLabel;
+              final code = keyEvent.physicalKey.usbHidUsage;
               if (label == "Select" ||
                   label.toString().contains("Key with ID")) {
                 current.value = "${keyEvent.physicalKey.debugName}";
-                ref.read(selectButtonProvider.notifier).state =
-                    keyEvent.physicalKey.usbHidUsage;
+                ref.read(selectButtonProvider.notifier).state = code;
               } else {
-                current.value = "${label}";
+                current.value = "${label} - ${code}";
               }
             },
             child: Icon(FontAwesomeIcons.circleDot,

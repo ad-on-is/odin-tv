@@ -45,7 +45,7 @@ class AppThemes {
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(50),
               side: const BorderSide(color: Colors.white))),
-      tabBarTheme: TabBarTheme(
+      tabBarTheme: TabBarThemeData(
         labelColor: Colors.white,
         labelPadding: const EdgeInsets.all(0),
         unselectedLabelColor: Colors.white,
