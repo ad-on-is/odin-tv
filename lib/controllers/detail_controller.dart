@@ -32,9 +32,7 @@ class DetailController extends StateNotifier<bool> with BaseHelper {
       playButtonNode.requestFocus();
     } else {
       seasonButtonNode.requestFocus();
-      logInfo("${item?.type ?? "häää"} - ${item!.title}");
       seasons.addAll(await traktService.getSeasons(item!.ids.trakt));
-      logInfo(seasons.length.toString());
       state = !state;
       getEpisodeImages();
     }

@@ -29,6 +29,9 @@ class SettingsModel with BaseHelper {
 
   void init() async {
     final dynamic mydb = await db.users?.get(auth.me!.device);
+    if (mydb == null) {
+      config = Config(player: "Just", scrobble: true);
+    }
     final saved = mydb["settings"];
     config = Config(
         player: saved?['player'] ?? "Just",

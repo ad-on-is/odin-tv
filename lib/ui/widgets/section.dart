@@ -30,8 +30,6 @@ class Section extends HookConsumerWidget with BaseHelper {
         useMemoized(() => ItemsProviderData(e.url, e.filterWatched));
     List<Trakt> items = ref.watch(itemsProvider(itemData));
 
-    logInfo(items.length);
-
     double extent = e.big ? 225 : 90;
     final sec = ref.watch(currentRow);
     return Column(

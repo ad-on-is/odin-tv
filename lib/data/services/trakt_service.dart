@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:odin/data/entities/tmdb.dart';
 import 'package:odin/data/entities/trakt.dart';
 import 'package:odin/data/entities/user.dart';
@@ -82,6 +83,7 @@ class TraktService with BaseHelper {
   }
 
   Future<List<Trakt>> getSeasons(int showId) async {
+    logInfo("/-/traktseasons/$showId");
     return (await api.get("/-/traktseasons/$showId"))
         .match((l) => [], (r) => _getItems(r));
   }
@@ -141,7 +143,9 @@ class WatchedItems extends StateNotifier<bool> {
 final watchedProvider = StateNotifierProvider((ref) => WatchedItems());
 final seasonsProvider =
     FutureProviderFamily<List<Trakt>, TraktIds>((ref, ids) async {
-  final seasons = await ref.watch(traktProvider).getSeasons(ids.trakt);
+  final seasons = (await ref.watch(traktProvider).getSeasons(ids.trakt))
+      .filter((s) => s.episodes.isNotEmpty)
+      .toList();
   final episodeImages = await ref
       .watch(tmdbProvider)
       .getEpisodeImages(ids.tmdb, seasons.map((s) => s.number).toList());
